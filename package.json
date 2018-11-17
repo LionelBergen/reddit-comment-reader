@@ -1,0 +1,14 @@
+{
+  "name": "reddit-reader",
+  "version": "1.0.0",
+  "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
