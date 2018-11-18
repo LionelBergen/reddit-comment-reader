@@ -19,26 +19,6 @@ function filterCondition(comment)
 	return comment.body.includes('city');
 }*/
 
-const net = require('net');
+var io = require("socket.io");
 
-const client = net.createConnection({ port: 16801, host: 'reddit-agree-with-you.herokuapp.com'  }, () => {
-  // 'connect' listener
-  console.log('connected to server!');
-  client.write('world!\r\n');
-});
-
-client.on('data', (data) => {
-  console.log(data.toString());
-  client.end();
-});
-
-client.on('end', () => {
-  console.log('disconnected from server');
-});
-
-client.on('error', () => {
-  console.log('error?');
-});
-
-console.log('client: ');
-console.log(client);
+var socket = io('https://example.herokuapp.com');
