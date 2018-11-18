@@ -20,14 +20,14 @@ function filterCondition(comment)
 }*/
 
 var ioc = require( 'socket.io-client' );
-var client = ioc.connect( "ws://reddit-agree-with-you.herokuapp.com:" + 80 );
+var client = ioc.connect( "http://reddit-agree-with-you.herokuapp.com/", {
+	reconnection: true
+});
 
-client.once( "connect", function () {
-    console.log( 'Client: Connected to port ' + port );
-
-    client.emit( "echo", "Hello World", function ( message ) {
-        console.log( 'Echo received: ', message );
-        client.disconnect();
-        server.close();
-    } );
-} );
+client.on('connect', function () {
+    console.log('connected to localhost:3000');
+    socket.on('clientEvent', function (data) {
+        console.log('message from the server:', data);
+        socket.emit('serverEvent', "thanks server! for sending '" + data + "'");
+    });
+});
