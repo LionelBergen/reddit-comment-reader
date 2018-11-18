@@ -20,8 +20,9 @@ function filterCondition(comment)
 }*/
 
 let io = require( 'socket.io-client' );
+let faye = require('faye');
 
-var client = new faye.Client('http://reddit-agree-with-you.herokuapp.com:8000/');
+let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com:8000/');
 
 client.subscribe('/foo', function(message) {
 	console.log('glkfjgljkfdkjgfdjkgfdjklgjdf');
