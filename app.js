@@ -12,5 +12,5 @@ requestor.getNewComments('all').filter(filterCondition).then(console.log);
 
 function filterCondition(comment)
 {
-	return comment.body.includes('ee');
+	return comment.body.includes('eee');
 }
