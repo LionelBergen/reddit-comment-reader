@@ -1,29 +1,11 @@
-var express = require('express');
-var app = express();
+const Snoowrap = require('snoowrap');
 
-const snoowrap = require('snoowrap');
-
-const requestor = new snoowrap({
+const requestor = new Snoowrap({
   userAgent: 'Searching for certain keywords in all comments, displaying comments elsewhere',
-  clientId: 'EkRCRBmwlW9c1Q',
-  clientSecret: '_eUrRZr0qQ2ltrCuCg4JoRdj3zA',
+  clientId: 'Wi7mH5fRbfl7Dw',
+  clientSecret: 'Ysutdnu39r66jewCYd45gL37L-8',
   username: 'Lottery-Bot',
   password: 'redditFreinds123'
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
-
-app.get('/', function (req, res) 
-{
-  res.send('Hello World!');
-  console.log(requestor);
-  
-  requestor.getSubreddit('all').getComments();
-});
-
-app.listen(port, function () {
-  console.log('Example app listening on port ' + port + '!');
-});
+requestor.getNewComments('all').then(console.log);
