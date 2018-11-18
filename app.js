@@ -20,7 +20,7 @@ function filterCondition(comment)
 }*/
 
 var ioc = require( 'socket.io-client' );
-var client = ioc.connect( "http://reddit-agree-with-you.herokuapp.com/", {
+var client = ioc.connect( "ws://reddit-agree-with-you.herokuapp.com/", {
 	reconnection: true
 });
 
@@ -31,3 +31,10 @@ client.on('connect', function () {
         socket.emit('serverEvent', "thanks server! for sending '" + data + "'");
     });
 });
+
+/*var HOST = location.origin.replace(/^http/, 'ws')
+      var ws = new WebSocket(HOST);
+      var el = document.getElementById('server-time');
+      ws.onmessage = function (event) {
+        el.innerHTML = 'Server time: ' + event.data;
+      };*/
