@@ -10,11 +10,14 @@ const requestor = new Snoowrap({
 
 const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 
-setInterval(function() {
+/*setInterval(function() {
 	requestor.getNewComments('all').filter(filterCondition).forEach(comment => console.log(comment.body));
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
 {
 	return comment.body.includes('city');
-}
+}*/
+
+const net = require('net');
+

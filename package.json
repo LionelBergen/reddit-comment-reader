@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "net": "^1.0.2",
     "snoowrap": "^1.15.2"
   }
 }
