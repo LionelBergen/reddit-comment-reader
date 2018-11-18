@@ -19,26 +19,15 @@ function filterCondition(comment)
 	return comment.body.includes('city');
 }*/
 
-let net = require('net');
-let JsonSocket = require('json-socket');
+var ioc = require( 'socket.io-client' );
+var client = ioc.connect( "ws://reddit-agree-with-you.herokuapp.com:" + 80 );
 
-let port = 51361;
-let host = 'reddit-agree-with-you.herokuapp.com';
+client.once( "connect", function () {
+    console.log( 'Client: Connected to port ' + port );
 
-let socket = new JsonSocket(new net.Socket());
-
-socket.connect(port, host);
-
-socket.on('connect', function() 
-{
-    socket.sendMessage({a: 5, b: 7});
-	
-    socket.on('message', function(message) {
-        console.log('The result is: '+message.result);
-    });
-});
-
-socket.on('error', function(error) {
-	console.log('ERROR');
-	console.log(error);
-});
+    client.emit( "echo", "Hello World", function ( message ) {
+        console.log( 'Echo received: ', message );
+        client.disconnect();
+        server.close();
+    } );
+} );
