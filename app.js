@@ -20,8 +20,9 @@ setInterval(function() {
 function filterCondition(comment)
 {
 	var myregExp = new RegExp("^/r/theydidthemath$");
+	var regexp2 = new RegExp("^(?i)(no you|no u|nou)$");
 	
-	return myregExp.test(comment.body);
+	return myregExp.test(comment.body) || regexp2.test(comment.body);
 }
 
 function processComment(comment)
