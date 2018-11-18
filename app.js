@@ -23,6 +23,7 @@ function filterCondition(comment)
 	var regexp2 = new RegExp("^(no you|no u|nou)$", 'i');
 	
 	return myregExp.test(comment.body) || regexp2.test(comment.body);
+	//
 }
 
 function processComment(comment)
