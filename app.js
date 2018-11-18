@@ -24,11 +24,11 @@ let faye = require('faye');
 
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
-client.publish("/", {
+client.publish("/messages", {
 		text: 'gjfhklghjdfklhgfdkjhg'
 });
 
-client.subscribe('/', function(message) {
+client.subscribe('/messages', function(message) {
 	console.log('ggggggggggggggggggggggggggggggggggggggggglkfjgljkfdkjgfdjkgfdjklgjdf');
   // etc
 });
