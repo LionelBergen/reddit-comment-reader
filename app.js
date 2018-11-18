@@ -21,17 +21,14 @@ function filterCondition(comment)
 
 let io = require( 'socket.io-client' );
 
-var socket = io.connect('https://reddit-agree-with-you.herokuapp.com/', {reconnect: true});
+var client = new faye.Client('http://reddit-agree-with-you.herokuapp.com:8000/');
 
-console.log('2');
-
-// Add a connect listener
-socket.on('connect', function(socket) { 
-  console.log('Connected!');
+client.subscribe('/foo', function(message) {
+	console.log('glkfjgljkfdkjgfdjkgfdjklgjdf');
+  // etc
 });
 
-socket.on('error', function(err) { 
-  console.log(err);
+client.subscribe('/', function(message) {
+	console.log('ggggggggggggggggggggggggggggggggggggggggglkfjgljkfdkjgfdjkgfdjklgjdf');
+  // etc
 });
-
-console.log('3');
