@@ -16,5 +16,5 @@ setInterval(function() {
 
 function filterCondition(comment)
 {
-	return comment.body.includes('e');
+	return comment.body.includes('ee');
 }
