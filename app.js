@@ -24,9 +24,8 @@ let faye = require('faye');
 
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
-client.subscribe('/foo', function(message) {
-	console.log('glkfjgljkfdkjgfdjkgfdjklgjdf');
-  // etc
+client.publish("/", {
+		text: gjfhklghjdfklhgfdkjhg;
 });
 
 client.subscribe('/', function(message) {
