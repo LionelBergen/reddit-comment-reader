@@ -19,6 +19,21 @@ function filterCondition(comment)
 	return comment.body.includes('city');
 }*/
 
-var io = require("socket.io");
+let net = require('net');
+let JsonSocket = require('json-socket');
 
-var socket = io('https://example.herokuapp.com');
+let port = 51361;
+let host = 'reddit-agree-with-you.herokuapp.com';
+
+let socket = new JsonSocket(new net.Socket());
+
+socket.connect(port, host);
+
+socket.on('connect', function() 
+{
+    socket.sendMessage({a: 5, b: 7});
+	
+    socket.on('message', function(message) {
+        console.log('The result is: '+message.result);
+    });
+});

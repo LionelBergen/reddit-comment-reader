@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "snoowrap": "^1.15.2",
-    "socketio": "^1.0.0"
+    "json-socket": "^0.3.0",
+    "net": "^1.0.2",
+    "snoowrap": "^1.15.2"
   }
 }
