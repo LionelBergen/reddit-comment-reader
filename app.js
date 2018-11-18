@@ -11,10 +11,10 @@ const requestor = new Snoowrap({
 const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 
 setInterval(function() {
-	requestor.getNewComments('all').filter(filterCondition).foreach(comment => console.log(comment.body));
+	requestor.getNewComments('all').filter(filterCondition).forEach(comment => console.log(comment.body));
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
 {
-	return comment.body.includes('ee');
+	return comment.body.includes('city');
 }
