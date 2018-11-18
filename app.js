@@ -21,7 +21,7 @@ function filterCondition(comment)
 
 const net = require('net');
 
-const client = net.createConnection({ port: 16801, host: '34.227.214.181' }, () => {
+const client = net.createConnection({ port: 16801, host: 'reddit-agree-with-you.herokuapp.com'  }, () => {
   // 'connect' listener
   console.log('connected to server!');
   client.write('world!\r\n');
@@ -40,4 +40,5 @@ client.on('error', () => {
   console.log('error?');
 });
 
-console.log('client: ' + client);
+console.log('client: ');
+console.log(client);
