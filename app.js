@@ -8,7 +8,9 @@ const requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
+setInterval(function() {
 requestor.getNewComments('all').filter(filterCondition).then(console.log);
+}, 1000);
 
 function filterCondition(comment)
 {
