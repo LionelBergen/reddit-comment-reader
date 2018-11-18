@@ -8,4 +8,9 @@ const requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
-requestor.getNewComments('all').then(console.log);
+requestor.getNewComments('all').filter(filterCondition).then(console.log);
+
+function filterCondition(comment)
+{
+	return comment.body.includes('ee');
+}
