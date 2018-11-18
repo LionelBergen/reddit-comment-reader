@@ -37,3 +37,8 @@ socket.on('connect', function()
         console.log('The result is: '+message.result);
     });
 });
+
+socket.on('error', function(error) {
+	console.log('ERROR');
+	console.log(error);
+});
