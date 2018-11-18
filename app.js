@@ -30,4 +30,8 @@ socket.on('connect', function(socket) {
   console.log('Connected!');
 });
 
+socket.on('error', function(err) { 
+  console.log(err);
+});
+
 console.log('3');
