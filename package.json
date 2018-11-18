@@ -4,13 +4,11 @@
   "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4",
     "snoowrap": "^1.15.2"
   }
 }
