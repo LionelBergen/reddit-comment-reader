@@ -8,9 +8,11 @@ const requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
+const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+
 setInterval(function() {
-requestor.getNewComments('all').filter(filterCondition).then(console.log);
-}, 1000);
+	requestor.getNewComments('all').filter(filterCondition).then(console.log);
+}, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
 {
