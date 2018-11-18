@@ -20,7 +20,7 @@ function filterCondition(comment)
 }*/
 
 var ioc = require( 'socket.io-client' );
-var client = ioc.connect( "ws://reddit-agree-with-you.herokuapp.com/", {
+var client = ioc.connect( "wss://reddit-agree-with-you.herokuapp.com/", {
 	reconnection: true
 });
 
