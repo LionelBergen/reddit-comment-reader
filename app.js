@@ -14,10 +14,17 @@ let faye = require('faye');
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 setInterval(function() {
-	requestor.getNewComments('all').filter(filterCondition).forEach(comment => client.publish('/messages', {text: comment.body}));
+	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
 {
-	return comment.body.includes('city');
+	var myregExp = new RegExp("^/r/theydidthemath$");
+	
+	return myregExp.test(comment.body);
+}
+
+function processComment(comment)
+{
+	client.publish('/messages', {comment: comment.body});
 }
