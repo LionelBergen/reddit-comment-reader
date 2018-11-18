@@ -11,7 +11,7 @@ const requestor = new Snoowrap({
 const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 
 setInterval(function() {
-	requestor.getNewComments('all').filter(filterCondition).then(console.log);
+	requestor.getNewComments('all').filter(filterCondition).foreach(comment => console.log(comment.body));
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
