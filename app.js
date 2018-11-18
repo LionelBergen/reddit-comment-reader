@@ -19,7 +19,7 @@ function filterCondition(comment)
 	return comment.body.includes('city');
 }*/
 
-let ioc = require( 'socket.io-client' );
+let io = require( 'socket.io-client' );
 
 var socket = io.connect('https://reddit-agree-with-you.herokuapp.com/', {reconnect: true});
 
