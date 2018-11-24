@@ -32,7 +32,7 @@ function processComment(comment)
 {
 	commentCache.push(comment);
 	
-	client.publish('/messages', {comment: comment.body});
+	client.publish('/messages', {comment: comment});
 }
 
 function getArrayWithLimitedLength(length, allowDuplicates) 
