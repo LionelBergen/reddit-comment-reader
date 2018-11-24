@@ -1,6 +1,6 @@
 const Snoowrap = require('snoowrap');
 
-const requestor = new Snoowrap({
+let requestor = new Snoowrap({
   userAgent: 'Searching for certain keywords in all comments, displaying comments elsewhere',
   clientId: 'Wi7mH5fRbfl7Dw',
   clientSecret: 'Ysutdnu39r66jewCYd45gL37L-8',
@@ -8,7 +8,10 @@ const requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
-const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+let intervalToWaitBeforeSendingIdleMessage = 11000;
+
+var lastMessageSentAt = new Date().getTime();
 
 let faye = require('faye');
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
@@ -17,6 +20,13 @@ let commentCache = getArrayWithLimitedLength(1200, false);
 
 setInterval(function() {
 	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
+	
+	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
+	{
+		console.log('sending inactive message');
+		client.publish('/messages', {inactive: '1'});
+		lastMessageSentAt = new Date().getTime();
+	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
@@ -33,6 +43,13 @@ function processComment(comment)
 	commentCache.push(comment);
 	
 	client.publish('/messages', {comment: comment});
+	lastMessageSentAt = new Date().getTime();
+}
+
+function getSecondsSince(time)
+{
+	var distance = new Date().getTime() - time;
+	return Math.floor((distance % (1000 * 60)) / 1000);
 }
 
 function getArrayWithLimitedLength(length, allowDuplicates) 
