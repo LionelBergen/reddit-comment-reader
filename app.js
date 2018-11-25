@@ -8,8 +8,15 @@ let requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
+const config = {
+    user: 'postgres',
+    database: 'YOURDBNAME',
+    password: 'YOURPASSWORD',
+    port: 5432
+};
+
 let pg = require('pg');
-let pool = new pg.pool();
+let pool = new pg.pool(config);
 
 pool.connect(process.env.DATABASE_URL, function(err, client, done) {
   if(err) {
