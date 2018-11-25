@@ -9,8 +9,9 @@ let requestor = new Snoowrap({
 });
 
 let pg = require('pg');
+let pool = new pg.pool();
 
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+pool.connect(process.env.DATABASE_URL, function(err, client, done) {
   if(err) {
     return console.error('Client error.', err);
   }
