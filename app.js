@@ -1,4 +1,4 @@
-const Snoowrap = require('snoowrap');
+let Snoowrap = require('snoowrap');
 
 let requestor = new Snoowrap({
   userAgent: 'Searching for certain keywords in all comments, displaying comments elsewhere',
@@ -8,15 +8,37 @@ let requestor = new Snoowrap({
   password: 'redditFreinds123'
 });
 
+let pg = require('pg');
+
+var pg = require('pg');
+pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  if(err) {
+    return console.error('Client error.', err);
+  }
+  
+  client.query('SELECT * FROM RegexpComment', function(err, result) {
+    done();
+
+    if(err) {
+      return console.error('Query error.', err);
+    }
+    
+    console.log(result.rows);
+  });
+});
+
+// load all env variables from .env file into process.env object.
+require('dotenv').config();
+
 let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
-let intervalToWaitBeforeSendingIdleMessage = 11000;
+let intervalToWaitBeforeSendingIdleMessage = 60;
 
 var lastMessageSentAt = new Date().getTime();
 
 let faye = require('faye');
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
-let commentCache = getArrayWithLimitedLength(1200, false);
+let commentCache = getArrayWithLimitedLength(2400, false);
 
 setInterval(function() {
 	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));

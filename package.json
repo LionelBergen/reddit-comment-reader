@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^6.1.0",
     "faye": "^1.2.4",
+    "pg": "^7.6.1",
     "snoowrap": "^1.15.2"
   }
 }
