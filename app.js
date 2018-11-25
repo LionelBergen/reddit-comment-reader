@@ -10,7 +10,6 @@ let requestor = new Snoowrap({
 
 let pg = require('pg');
 
-var pg = require('pg');
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   if(err) {
     return console.error('Client error.', err);
