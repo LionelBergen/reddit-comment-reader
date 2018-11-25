@@ -15,7 +15,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   if(err) {
     return console.error('Client error.', err);
   }
-  
+  //
   client.query('SELECT * FROM RegexpComment', function(err, result) {
     done();
 
