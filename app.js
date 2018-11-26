@@ -13,7 +13,7 @@ let pg = require('pg');
 // load all env variables from .env file into process.env object.
 require('dotenv').config();
 
-let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+let intervalToWaitInMillisecondsBetweenReadingComments = 1200;
 let intervalToWaitBeforeSendingIdleMessage = 10;
 
 var lastMessageSentAt = new Date().getTime();
