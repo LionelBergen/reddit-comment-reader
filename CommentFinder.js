@@ -61,7 +61,7 @@ function testTheyDidTheMath(processor, index)
 
 function test(processor, comment, expectedResult, index)
 {
-	var actualResult = processor.searchComment(testComment);
+	var actualResult = processor.searchComment(comment);
 	
 	if (expectedResult && !actualResult)
 	{
