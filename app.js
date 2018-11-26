@@ -58,16 +58,20 @@ setInterval(function() {
 		client.publish('/messages', {inactive: '1'});
 		lastMessageSentAt = new Date().getTime();
 		
-		for (var c in commentSearchPredicates)
+		for (var i=0; i < commentSearchPredicates.length; i++)
 		{
-			console.log(c);
+			console.log(commentSearchPredicates[i]);
 		}
-		console.log(commentSearchPredicates);
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
 function filterCondition(comment)
 {
+	for (var i=0; i < commentSearchPredicates.length; i++)
+	{
+		
+	}
+	
 	var myregExp = new RegExp("^/r/theydidthemath$", 'i');
 	var regexp2 = new RegExp("^(no you|no u|nou)$", 'i');
 	
