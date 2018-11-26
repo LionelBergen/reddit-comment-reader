@@ -27,8 +27,10 @@ var lastMessageSentAt = new Date().getTime();
 let faye = require('faye');
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
-let commentSearchPredicates = GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
-let CommentFinder = new CommentSearchProcessor(commentSearchPredicates, commentCacheSize);
+var CommentFinder;
+GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
+	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
+});
 
 setInterval(function() {
 	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));

@@ -2,7 +2,7 @@ module.exports = function() {
 	this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
 };
 
-function getCommentSearchObjectsFromDatabase(pg, url)
+function getCommentSearchObjectsFromDatabase(pg, url, callbackFunction)
 {
 	var commentSearchPredicates = [];
 	pg.connect(url, function(err, client, done) {
@@ -19,6 +19,8 @@ function getCommentSearchObjectsFromDatabase(pg, url)
 				commentSearchPredicates.push(commentSearchObject);
 				console.log(commentSearchObject);
 			}
+			
+			callbackFunction(commentSearchPredicates);
 
 			if(err) {
 				return console.error('Query error.', err);
