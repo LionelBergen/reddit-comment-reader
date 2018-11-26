@@ -28,18 +28,6 @@ require('./DatabaseFetch.js')();
 
 let commentSearchPredicates = GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
-function createCommentSearchObjectFromDatabaseObject(dbResult)
-{
-	// Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
-	var subredditMatchExpression = new RegExp(dbResult.SubredditMatch.replace('(?i)', ''), 'i');
-	var commentMatchExpression = new RegExp(dbResult.CommentMatch.replace('(?i)', ''), 'i');
-	
-	return {SubredditMatch: subredditMatchExpression, 
-			CommentMatch: commentMatchExpression,
-			ReplyMessage: dbResult.ReplyMessage,
-			IsReplyRegexp: dbResult.IsReplyRegexp};
-}
-
 setInterval(function() {
 	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 	

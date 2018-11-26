@@ -1,5 +1,5 @@
 module.exports = function() {
-	this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;//function(a, b) { getCommentSearchObjectsFromDatabase(a, b); };
+	this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
 };
 
 function getCommentSearchObjectsFromDatabase(pg, url)
@@ -27,4 +27,17 @@ function getCommentSearchObjectsFromDatabase(pg, url)
 	});
 	
 	return commentSearchPredicates;
+}
+
+
+function createCommentSearchObjectFromDatabaseObject(dbResult)
+{
+	// Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
+	var subredditMatchExpression = new RegExp(dbResult.SubredditMatch.replace('(?i)', ''), 'i');
+	var commentMatchExpression = new RegExp(dbResult.CommentMatch.replace('(?i)', ''), 'i');
+	
+	return {SubredditMatch: subredditMatchExpression, 
+			CommentMatch: commentMatchExpression,
+			ReplyMessage: dbResult.ReplyMessage,
+			IsReplyRegexp: dbResult.IsReplyRegexp};
 }
