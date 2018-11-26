@@ -18,8 +18,8 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   }
   //
   client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-    done();
-
+    console.log(result);
+	done();
     if(err) {
       return console.error('Query error.', err);
     }
