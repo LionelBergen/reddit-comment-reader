@@ -26,9 +26,9 @@ class CommentSearchProcessor
 		
 		if (!this.commentCache.includes(comment))
 		{
-			for (var i=0; i < commentSearchPredicates.length; i++)
+			for (var i=0; i < this.CommentObjects.length; i++)
 			{
-				var commentPredicateObj = commentSearchPredicates[i];
+				var commentPredicateObj = this.CommentObjects[i];
 				
 				if (commentSearchObjMatchesComment(comment, commentPredicateObj))
 				{
@@ -76,6 +76,11 @@ function testTheyDidTheMath(processor)
 
 
 
+function commentSearchObjMatchesComment(comment, searcher)
+{
+	return searcher.SubredditMatch.test(comment.subreddit)
+	&& searcher.CommentMatch.test(comment.body);
+}
 
 function createTestDBObj(commentRegexp, subredditRegexp)
 {

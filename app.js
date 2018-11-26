@@ -43,12 +43,6 @@ setInterval(function() {
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
-function commentSearchObjMatchesComment(comment, searcher)
-{
-	return searcher.SubredditMatch.test(comment.subreddit)
-	&& searcher.CommentMatch.test(comment.body);
-}
-
 function processComment(comment)
 {
 	commentCache.push(comment);
