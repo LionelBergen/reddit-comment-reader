@@ -15,9 +15,6 @@ let requestor = new Snoowrap({
 
 let pg = require('pg');
 
-// load all env variables from .env file into process.env object.
-//require('dotenv').config();
-
 let intervalToWaitInMillisecondsBetweenReadingComments = 1200;
 let intervalToWaitBeforeSendingIdleMessage = 30;
 let commentCacheSize = 2400;
