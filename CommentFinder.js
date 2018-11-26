@@ -18,6 +18,9 @@ class CommentSearchProcessor
 		}
 		
 		var index = testTheyDidTheMath(this, 1);
+		index = testNoU(this, index);
+		
+		
 		console.log('tests finished');
 	}
 	
@@ -58,6 +61,40 @@ function testTheyDidTheMath(processor, index)
 	
 	// Test filter sub case insensitive
 	testComment = createTestComment('/r/theydidthemath', 'THeyDIDthEMATH');
+	test(processor, testComment, null, index++);
+	
+	// Test match only exactly
+	testComment = createTestComment('something /r/theydidthemath', 'THeyDIDthEMATH');
+	test(processor, testComment, null, index++);
+	
+	return index;
+}
+
+function testNoU(processor, index)
+{
+	var testComment = createTestComment('No you', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	
+	testComment = createTestComment('no u', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	
+	testComment = createTestComment('nou', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	
+	// Test case insensitive
+	testComment = createTestComment('no yOU', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	testComment = createTestComment('noU', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	testComment = createTestComment('NoU', 'fdfdfdfdf');
+	test(processor, testComment, 'No you both', index++);
+	
+	// test exact match only
+	testComment = createTestComment('something nou', 'fdfdfdfdf');
+	test(processor, testComment, null, index++);
+	testComment = createTestComment('something no you', 'fdfdfdfdf');
+	test(processor, testComment, null, index++);
+	testComment = createTestComment('no you something', 'fdfdfdfdf');
 	test(processor, testComment, null, index++);
 	
 	return index;
