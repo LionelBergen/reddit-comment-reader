@@ -44,7 +44,7 @@ class CommentSearchProcessor
 
 function testTheyDidTheMath(processor)
 {
-	var testComment = createTestDBObj('^/r/theydidthemath$', '/r/theydidthemonstermath');
+	var testComment = createTestComment('/r/theydidthemath', '/r/theydidthemonstermath');
 	
 	var result = processor.searchComment(testComment);
 	if (!result)
@@ -82,15 +82,9 @@ function commentSearchObjMatchesComment(comment, searcher)
 	&& searcher.CommentMatch.test(comment.body);
 }
 
-function createTestDBObj(commentRegexp, subredditRegexp)
+function createTestComment(comment, subreddit)
 {
-	var subredditMatchExpression = new RegExp(subredditRegexp, 'i');
-	var commentMatchExpression = new RegExp(commentRegexp, 'i');
-	
-	return {SubredditMatch: subredditMatchExpression, 
-			CommentMatch: commentMatchExpression,
-			ReplyMessage: '',
-			IsReplyRegexp: false};
+	return {body: comment, subreddit: subreddit };
 }
 
 function getArrayWithLimitedLength(length, allowDuplicates) 
