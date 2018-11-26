@@ -39,7 +39,7 @@ class CommentSearchProcessor
 			}
 		}
 
-		return foundPredicate.ReplyMessage;
+		return foundPredicate == null ? null : foundPredicate.ReplyMessage;
 	}
 }
 
