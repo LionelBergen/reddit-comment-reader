@@ -38,7 +38,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 		var commentSearchObject = { SubredditMatch: results[i].SubredditMatch, 
 			CommentMatch: results[i].CommentMatch,
 			ReplyMessage: results[i].ReplyMessage,
-			isReplyRegexp: results[i].isReplyRegexp};
+			IsReplyRegexp: results[i].IsReplyRegexp};
 		commentSearchPredicates.push(commentSearchObject);
 		console.log(commentSearchObject);
 	}
@@ -58,6 +58,10 @@ setInterval(function() {
 		client.publish('/messages', {inactive: '1'});
 		lastMessageSentAt = new Date().getTime();
 		
+		for (var c in commentSearchPredicates)
+		{
+			console.log(c);
+		}
 		console.log(commentSearchPredicates);
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
