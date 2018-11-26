@@ -17,7 +17,8 @@ class CommentSearchProcessor
 			throw "Expected rows: " + EXPECTED_NUMBER_OF_ROWS + " but was: " + this.CommentObjects.length;
 		}
 		
-		testTheyDidTheMath(this);
+		var index = testTheyDidTheMath(this, 1);
+		console.log('tests finished');
 	}
 	
 	searchComment(comment)
@@ -42,14 +43,40 @@ class CommentSearchProcessor
 	}
 }
 
-function testTheyDidTheMath(processor)
+function testTheyDidTheMath(processor, index)
 {
-	var testComment = createTestComment('/r/theydidthemath', '/r/theydidthemonstermath');
+	var testComment = createTestComment('/r/theydidthemath', 'fdfdfdfdf');
+	test(testComment, '/r/theydidthemonstermath', index++);
 	
-	var result = processor.searchComment(testComment);
-	if (!result)
+	// Test case insensitive
+	testComment = createTestComment('/r/ThEYDidTheMATH', 'theydidthemonstermath');
+	test(testComment, '/r/theydidthemonstermath', index++);
+	
+	// Test filter sub
+	testComment = createTestComment('/r/theydidthemath', '/r/theydidthemath');
+	test(testComment, null, index++);
+	
+	return index;
+}
+
+function test(comment, expectedResult, index)
+{
+	var actualResult = processor.searchComment(testComment);
+	
+	if (expectedResult && !actualResult)
 	{
-		throw "Comment did not succeed: " + testComment;
+		throw "FAILURE. returned null when expected a result. test failed: " + index;
+	}
+	else if (!expectedResult && actualResult)
+	{
+		throw "FAILURE Returned a result when expected null. test failed: " + index;
+	}
+	else
+	{
+		if (expectedResult != actualResult)
+		{
+			throw "FAILURE Did not match expected " + index;
+		}
 	}
 }
 
