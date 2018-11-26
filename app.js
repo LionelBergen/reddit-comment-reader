@@ -60,7 +60,7 @@ function createCommentSearchObjectFromDatabaseObject(dbResult)
 }
 
 setInterval(function() {
-	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
+	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 	
 	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 	{
