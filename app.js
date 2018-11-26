@@ -35,8 +35,8 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	
 	for (var i=0; i<results.length; i++)
 	{
-		var commentSearchObject = { SubredditMatch: results[i].SubredditMatch, 
-			CommentMatch: results[i].CommentMatch,
+		var commentSearchObject = { SubredditMatch: new RegExp(results[i].SubredditMatch), 
+			CommentMatch: new RegExp(results[i].CommentMatch),
 			ReplyMessage: results[i].ReplyMessage,
 			IsReplyRegexp: results[i].IsReplyRegexp};
 		commentSearchPredicates.push(commentSearchObject);
@@ -57,26 +57,34 @@ setInterval(function() {
 		console.log('sending inactive message');
 		client.publish('/messages', {inactive: '1'});
 		lastMessageSentAt = new Date().getTime();
-		
-		for (var i=0; i < commentSearchPredicates.length; i++)
-		{
-			console.log(commentSearchPredicates[i]);
-		}
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
+function commentSearchObjMatchesComment(comment, searcher)
+{
+	return searcher.SubredditMatch.test(comment.subreddit)
+	&& searcher.CommentMatch.test(comment.body);
+}
+
 function filterCondition(comment)
 {
-	for (var i=0; i < commentSearchPredicates.length; i++)
+	var foundPredicate = null;
+	
+	if (!commentCache.includes(comment))
 	{
-		
+		for (var i=0; i < commentSearchPredicates.length; i++)
+		{
+			var commentPredicateObj = commentSearchPredicates[i];
+			
+			if (commentSearchObjMatchesComment(comment, commentPredicateObj))
+			{
+				foundPredicate = commentPredicateObj;
+				break;
+			}
+		}
 	}
-	
-	var myregExp = new RegExp("^/r/theydidthemath$", 'i');
-	var regexp2 = new RegExp("^(no you|no u|nou)$", 'i');
-	
-	return (myregExp.test(comment.body) || regexp2.test(comment.body))
-		&& !commentCache.includes(comment);
+		
+	return foundPredicate != null;
 }
 
 function processComment(comment)
@@ -85,6 +93,8 @@ function processComment(comment)
 	
 	client.publish('/messages', {comment: comment});
 	//lastMessageSentAt = new Date().getTime();
+	console.log('FOUND!!!!');
+	console.log(comment);
 }
 
 function getSecondsSince(time)
