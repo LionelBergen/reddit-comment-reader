@@ -26,7 +26,7 @@ let commentCache = getArrayWithLimitedLength(2400, false);
 
 require('./DatabaseFetch.js')();
 
-let commentSearchPredicates = getCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
+let commentSearchPredicates = GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
 function createCommentSearchObjectFromDatabaseObject(dbResult)
 {

@@ -1,5 +1,5 @@
 module.exports = function() {
-	this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
+	this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;//function(a, b) { getCommentSearchObjectsFromDatabase(a, b); };
 };
 
 function getCommentSearchObjectsFromDatabase(pg, url)
