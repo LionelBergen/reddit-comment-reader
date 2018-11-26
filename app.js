@@ -10,24 +10,6 @@ let requestor = new Snoowrap({
 
 let pg = require('pg');
 
-console.log(process.env.DATABASE_URL);
-
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  if(err) {
-    return console.error('Client error.', err);
-  }
-  //
-  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-    console.log(result);
-	done();
-    if(err) {
-      return console.error('Query error.', err);
-    }
-    
-    console.log(result.rows);
-  });
-});
-
 // load all env variables from .env file into process.env object.
 require('dotenv').config();
 
@@ -41,6 +23,27 @@ let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 let commentCache = getArrayWithLimitedLength(2400, false);
 
+let commentSearchPredicates = [];
+
+pg.connect(process.env.DATABASE_URL, function(err, client, done) {
+  if(err) {
+    return console.error('Client error.', err);
+  }
+  
+  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
+	var results = result.result.rows;
+	
+	for (var i=0; i<results.length; i++)
+	{
+		commentSearchPredicates.push(results[i]);
+	}
+	
+    if(err) {
+      return console.error('Query error.', err);
+    }
+  });
+});
+
 setInterval(function() {
 	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 	
@@ -49,6 +52,8 @@ setInterval(function() {
 		console.log('sending inactive message');
 		client.publish('/messages', {inactive: '1'});
 		lastMessageSentAt = new Date().getTime();
+		
+		console.log(commentSearchPredicates);
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
@@ -66,7 +71,7 @@ function processComment(comment)
 	commentCache.push(comment);
 	
 	client.publish('/messages', {comment: comment});
-	lastMessageSentAt = new Date().getTime();
+	//lastMessageSentAt = new Date().getTime();
 }
 
 function getSecondsSince(time)
