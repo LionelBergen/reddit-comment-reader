@@ -31,7 +31,7 @@ GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
 });
 
 setInterval(function() {
-	requestor.getNewComments('all').forEach(
+	/*requestor.getNewComments('all').forEach(
 		comment => {
 			var replyMessage = CommentFinder.searchComment(comment);
 			
@@ -40,7 +40,7 @@ setInterval(function() {
 				processComment(comment, replyMessage);
 			}
 		}
-	);
+	);*/
 	
 	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 	{
