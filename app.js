@@ -1,3 +1,5 @@
+require('./DatabaseFetch.js')();
+
 let Snoowrap = require('snoowrap');
 
 let requestor = new Snoowrap({
@@ -5,14 +7,14 @@ let requestor = new Snoowrap({
   clientId: 'Wi7mH5fRbfl7Dw',
   clientSecret: 'Ysutdnu39r66jewCYd45gL37L-8',
   username: 'Lottery-Bot',
-  password: 'redditFreinds123'
+  password: 'redditFreinds123',
+  debug: true
 });
 
 let pg = require('pg');
 
 // load all env variables from .env file into process.env object.
 require('dotenv').config();
-//
 
 let intervalToWaitInMillisecondsBetweenReadingComments = 5200;
 let intervalToWaitBeforeSendingIdleMessage = 10;
@@ -24,12 +26,10 @@ let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 let commentCache = getArrayWithLimitedLength(2400, false);
 
-require('./DatabaseFetch.js')();
-
 let commentSearchPredicates = GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
 setInterval(function() {
-	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
+	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 	
 	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 	{
