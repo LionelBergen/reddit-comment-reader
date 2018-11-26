@@ -31,12 +31,13 @@ GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
 
 setInterval(function() {
 	requestor.getNewComments('all').forEach(
-			comment => 
-		var replyMessage = CommentFinder.searchComment(comment);
-		
-		if (replyMessage)
-		{
-			processComment(comment, replyMessage);
+		comment => {
+			var replyMessage = CommentFinder.searchComment(comment);
+			
+			if (replyMessage)
+			{
+				processComment(comment, replyMessage);
+			}
 		}
 	);
 	
