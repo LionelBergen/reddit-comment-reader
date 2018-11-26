@@ -35,14 +35,17 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	
 	for (var i=0; i<results.length; i++)
 	{
-		commentSearchPredicates.push(results[i]);
+		var commentSearchObject = { SubredditMatch: results[i].SubredditMatch, 
+			CommentMatch: results[i].CommentMatch
+			ReplyMessage: results[i].ReplyMessage,
+			isReplyRegexp: results[i].isReplyRegexp};
+		commentSearchPredicates.push(commentSearchObject);
+		console.log(commentSearchObject);
 	}
 	
     if(err) {
       return console.error('Query error.', err);
     }
-	
-	console.log(result);
   });
 });
 
