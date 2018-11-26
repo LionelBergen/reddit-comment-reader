@@ -14,7 +14,7 @@ let pg = require('pg');
 require('dotenv').config();
 
 let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
-let intervalToWaitBeforeSendingIdleMessage = 60;
+let intervalToWaitBeforeSendingIdleMessage = 10;
 
 var lastMessageSentAt = new Date().getTime();
 
@@ -41,6 +41,8 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     if(err) {
       return console.error('Query error.', err);
     }
+	
+	console.log(result);
   });
 });
 
