@@ -24,28 +24,9 @@ let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 let commentCache = getArrayWithLimitedLength(2400, false);
 
-let commentSearchPredicates = [];
+let DBFetchTool = require('DatabaseFetch');
 
-pg.connect(process.env.DATABASE_URL, function(err, client, done) {
-  if(err) {
-    return console.error('Client error.', err);
-  }
-  
-  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-	var results = result.rows;
-	
-	for (var i=0; i<results.length; i++)
-	{
-		var commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
-		commentSearchPredicates.push(commentSearchObject);
-		console.log(commentSearchObject);
-	}
-	
-    if(err) {
-      return console.error('Query error.', err);
-    }
-  });
-});
+let commentSearchPredicates = DBFetchTool.getCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
 function createCommentSearchObjectFromDatabaseObject(dbResult)
 {
