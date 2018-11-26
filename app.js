@@ -31,7 +31,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   }
   
   client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-	var results = result.result.rows;
+	var results = result.rows;
 	
 	for (var i=0; i<results.length; i++)
 	{
