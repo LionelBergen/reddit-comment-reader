@@ -24,7 +24,7 @@ let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 let commentCache = getArrayWithLimitedLength(2400, false);
 
-let DBFetchTool = require('/DatabaseFetch');
+let DBFetchTool = require('DatabaseFetch.js');
 
 let commentSearchPredicates = DBFetchTool.getCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
