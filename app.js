@@ -29,7 +29,7 @@ require('./DatabaseFetch.js')();
 let commentSearchPredicates = GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL);
 
 setInterval(function() {
-	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
+	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
 	
 	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 	{
