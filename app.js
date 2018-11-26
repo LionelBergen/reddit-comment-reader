@@ -9,9 +9,10 @@ let requestor = new Snoowrap({
   clientId: 'Wi7mH5fRbfl7Dw',
   clientSecret: 'Ysutdnu39r66jewCYd45gL37L-8',
   username: 'Lottery-Bot',
-  password: 'redditFreinds123',
-  debug: true
+  password: 'redditFreinds123'
 });
+
+requestor.config({debug: true});
 
 let pg = require('pg');
 
