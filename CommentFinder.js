@@ -24,7 +24,7 @@ class CommentSearchProcessor
 	{
 		var foundPredicate = null;
 		
-		if (!commentCache.includes(comment))
+		if (!this.commentCache.includes(comment))
 		{
 			for (var i=0; i < commentSearchPredicates.length; i++)
 			{
