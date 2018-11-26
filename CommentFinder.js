@@ -53,7 +53,11 @@ function testTheyDidTheMath(processor, index)
 	test(processor, testComment, '/r/theydidthemonstermath', index++);
 	
 	// Test filter sub
-	testComment = createTestComment('/r/theydidthemath', '/r/theydidthemath');
+	testComment = createTestComment('/r/theydidthemath', 'theydidthemath');
+	test(processor, testComment, null, index++);
+	
+	// Test filter sub case insensitive
+	testComment = createTestComment('/r/theydidthemath', 'THeyDIDthEMATH');
 	test(processor, testComment, null, index++);
 	
 	return index;
