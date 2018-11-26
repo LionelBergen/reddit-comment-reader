@@ -35,10 +35,7 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
 	
 	for (var i=0; i<results.length; i++)
 	{
-		var commentSearchObject = { SubredditMatch: new RegExp(results[i].SubredditMatch), 
-			CommentMatch: new RegExp(results[i].CommentMatch),
-			ReplyMessage: results[i].ReplyMessage,
-			IsReplyRegexp: results[i].IsReplyRegexp};
+		var commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
 		commentSearchPredicates.push(commentSearchObject);
 		console.log(commentSearchObject);
 	}
@@ -48,6 +45,18 @@ pg.connect(process.env.DATABASE_URL, function(err, client, done) {
     }
   });
 });
+
+function createCommentSearchObjectFromDatabaseObject(dbResult)
+{
+	// Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
+	var subredditMatchExpression = new RegExp(results[i].SubredditMatch.replace('(?i)', ''), 'i');
+	var commentMatchExpression = new RegExp(results[i].CommentMatch.replace('(?i)', ''), 'i');
+	
+	return {SubredditMatch: subredditMatchExpression, 
+			CommentMatch: commentMatchExpression,
+			ReplyMessage: results[i].ReplyMessage,
+			IsReplyRegexp: results[i].IsReplyRegexp};
+}
 
 setInterval(function() {
 	requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
