@@ -46,20 +46,20 @@ class CommentSearchProcessor
 function testTheyDidTheMath(processor, index)
 {
 	var testComment = createTestComment('/r/theydidthemath', 'fdfdfdfdf');
-	test(testComment, '/r/theydidthemonstermath', index++);
+	test(processor, testComment, '/r/theydidthemonstermath', index++);
 	
 	// Test case insensitive
 	testComment = createTestComment('/r/ThEYDidTheMATH', 'theydidthemonstermath');
-	test(testComment, '/r/theydidthemonstermath', index++);
+	test(processor, testComment, '/r/theydidthemonstermath', index++);
 	
 	// Test filter sub
 	testComment = createTestComment('/r/theydidthemath', '/r/theydidthemath');
-	test(testComment, null, index++);
+	test(processor, testComment, null, index++);
 	
 	return index;
 }
 
-function test(comment, expectedResult, index)
+function test(processor, comment, expectedResult, index)
 {
 	var actualResult = processor.searchComment(testComment);
 	
