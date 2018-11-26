@@ -1,6 +1,6 @@
 module.exports = {
 	getCommentSearchObjectsFromDatabase: getCommentSearchObjectsFromDatabase;
-}
+};
 
 function getCommentSearchObjectsFromDatabase(pg, url)
 {
