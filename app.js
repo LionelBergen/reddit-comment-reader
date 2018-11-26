@@ -10,12 +10,14 @@ let requestor = new Snoowrap({
 
 let pg = require('pg');
 
+console.log(process.env.DATABASE_URL);
+
 pg.connect(process.env.DATABASE_URL, function(err, client, done) {
   if(err) {
     return console.error('Client error.', err);
   }
   //
-  client.query('SELECT * FROM RegexpComment', function(err, result) {
+  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
     done();
 
     if(err) {
