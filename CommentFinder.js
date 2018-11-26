@@ -40,6 +40,11 @@ class CommentSearchProcessor
 					break;
 				}
 			}
+			
+			if (foundPredicate != null)
+			{
+				this.commentCache.push(foundPredicate);
+			}
 		}
 
 		return foundPredicate == null ? null : foundPredicate.ReplyMessage;

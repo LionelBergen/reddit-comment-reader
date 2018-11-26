@@ -30,7 +30,15 @@ GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
 });
 
 setInterval(function() {
-	//requestor.getNewComments('all').filter(filterCondition).forEach(comment => processComment(comment));
+	requestor.getNewComments('all').forEach(
+			comment => 
+		var replyMessage = CommentFinder.searchComment(comment);
+		
+		if (replyMessage)
+		{
+			processComment(comment, replyMessage);
+		}
+	);
 	
 	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 	{
@@ -40,14 +48,13 @@ setInterval(function() {
 	}
 }, intervalToWaitInMillisecondsBetweenReadingComments);
 
-function processComment(comment)
+function processComment(comment, replyMessage)
 {
-	commentCache.push(comment);
-	
-	client.publish('/messages', {comment: comment});
-	//lastMessageSentAt = new Date().getTime();
+	client.publish('/messages', {comment: comment, reply: replyMessage});
+	lastMessageSentAt = new Date().getTime();
 	console.log('FOUND!!!!');
 	console.log(comment);
+	console.log('reply: ' + replyMessage);
 }
 
 function getSecondsSince(time)
