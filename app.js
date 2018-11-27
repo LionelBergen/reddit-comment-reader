@@ -17,7 +17,7 @@ requestor.config({debug: true});
 
 let pg = require('pg');
 
-let intervalToWaitInMillisecondsBetweenReadingComments = 1200;
+let intervalToWaitInMillisecondsBetweenReadingComments = 5200;
 let intervalToWaitBeforeSendingIdleMessage = 30;
 let commentCacheSize = 2400;
 
@@ -33,6 +33,7 @@ GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
 });
 
 setInterval(function() {
+	redditClient.getRawResponse(100, 'all', 'new');
 	/*requestor.getNewComments('all').forEach(
 		comment => {
 			var replyMessage = CommentFinder.searchComment(comment);
