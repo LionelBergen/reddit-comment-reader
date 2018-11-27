@@ -28,6 +28,7 @@ function getRawResponse(numberOfPosts, subreddit, sortType)
 
 function getRawResponseFromUrl(url)
 {
+	console.log('trying: ' + url);
 	https.get(url, (resp) => {
 	let data = '';
 
