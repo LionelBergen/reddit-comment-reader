@@ -17,7 +17,7 @@ requestor.config({debug: true});
 
 let pg = require('pg');
 
-let intervalToWaitInMillisecondsBetweenReadingComments = 5200;
+let intervalToWaitInMillisecondsBetweenReadingComments = 15200;
 let intervalToWaitBeforeSendingIdleMessage = 30;
 let commentCacheSize = 2400;
 
