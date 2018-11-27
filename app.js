@@ -1,6 +1,7 @@
 // Local files
 require('./DatabaseFetch.js')();
 let CommentSearchProcessor = require('./CommentFinder.js');
+let RedditClient = require('./RedditClient.js');
 
 let Snoowrap = require('snoowrap');
 
@@ -26,6 +27,7 @@ let faye = require('faye');
 let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 var CommentFinder;
+var redditClient = new RedditClient();
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
 	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
 });

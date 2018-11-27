@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "faye": "^1.2.4",
+    "https": "^1.0.0",
     "pg": "^6.4.2",
     "snoowrap": "^1.15.2"
   }
