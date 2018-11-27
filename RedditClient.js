@@ -39,8 +39,9 @@ function getRawResponseFromUrl(url)
 
 	// The whole response has been received. Print out the result.
 	resp.on('end', () => {
-		console.log(data.kind);   //JSON.parse(data).explanation);
-		console.log(data[0]);   //JSON.parse(data).explanation);
+		var jsonified = JSON.parse(data);
+		console.log(jsonified.kind);   //JSON.parse(data).explanation);
+		console.log(jsonified[0]);   //JSON.parse(data).explanation);
 	});
 
 	}).on("error", (err) => {
