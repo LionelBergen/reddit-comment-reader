@@ -33,7 +33,7 @@ GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
 });
 
 setInterval(function() {
-	redditClient.getRawResponse(100, 'all', 'new');
+	console.log(redditClient.getRawResponse(100, 'all', 'new'));
 	/*requestor.getNewComments('all').forEach(
 		comment => {
 			var replyMessage = CommentFinder.searchComment(comment);
