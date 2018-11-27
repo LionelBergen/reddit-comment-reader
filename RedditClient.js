@@ -15,8 +15,10 @@ function getRawResponse(numberOfPosts, subreddit, sortType)
 	numberOfPosts = getValidNumberOfPosts(numberOfPosts);
 	
 	var url = SUBREDDIT_URL + subreddit + "/" + sortType + ".json?limit=" + numberOfPosts;
+	
+	// TODO:
 	// To ensure we're not spamming reddit
-	waitIfNeeded();
+	//waitIfNeeded();
 	
 	// Create get request
 	rawResponse = getRawResponseFromUrl(url);
