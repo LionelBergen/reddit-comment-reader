@@ -3,49 +3,82 @@ let https = require('https');
 
 class RedditClient
 {
-	getRawResponse(numberOfPosts, subreddit, sortType)
+	constructor(minimumWaitTimeBetweenRequestsInMilliseconds)
 	{
-		return getRawResponse(numberOfPosts, subreddit, sortType);
+		this.minimumWaitTimeBetweenRequestsInMilliseconds = minimumWaitTimeBetweenRequestsInMilliseconds;
+		this.lastRequestSentAt = 0;
+	}
+	
+	getCommentsFromSubreddit(numberOfPosts, subreddit, sortType, callbackFunction)
+	{
+		numberOfPosts = getValidNumberOfPosts(numberOfPosts);
+		let url = SUBREDDIT_URL + subreddit + "/" + sortType + ".json?limit=" + numberOfPosts;
+		
+		// TODO:
+		// To ensure we're not spamming reddit
+		//waitIfNeeded();
+		
+		this.getCommentsFromURL(url, function(data) {
+			callbackFunction(data);
+		});
+	}
+	
+	waitIfNeeded(runAfterWait)
+	{
+		// TODO: use Window.timout if needed......
+	}
+
+	getCommentsFromURL(url, callbackFunction)
+	{
+		getDataFromUrl(url, function(data)
+		{
+			let comments = getCommentObjectFromRawURLData(data);
+			callbackFunction(comments);
+		});
 	}
 }
 
-function getRawResponse(numberOfPosts, subreddit, sortType)
-{
-	var rawResponse = "";
-	numberOfPosts = getValidNumberOfPosts(numberOfPosts);
-	
-	var url = SUBREDDIT_URL + subreddit + "/" + sortType + ".json?limit=" + numberOfPosts;
-	
-	// TODO:
-	// To ensure we're not spamming reddit
-	//waitIfNeeded();
-	
-	// Create get request
-	rawResponse = getRawResponseFromUrl(url);
-	
-	return rawResponse;
-}
-
-function getRawResponseFromUrl(url)
+// TODO: move to inside class.
+function getDataFromUrl(url, callbackFunction)
 {
 	console.log('trying: ' + url);
-	https.get(url, (resp) => {
-	let data = '';
+	
+	https.get(url, (resp) => 
+	{
+		let data = '';
 
-	// A chunk of data has been recieved.
-	resp.on('data', (chunk) => {
-		data += chunk;
-	});
+		// A chunk of data has been recieved.
+		resp.on('data', (chunk) => {
+			data += chunk;
+		});
 
-	// The whole response has been received. Print out the result.
-	resp.on('end', () => {
-		var jsonified = JSON.parse(data);
-		console.log(jsonified.kind);   //JSON.parse(data).explanation);
-		console.log(jsonified[0]);   //JSON.parse(data).explanation);
-	});
-
+		// The whole response has been received. Print out the result.
+		resp.on('end', () => {
+			callbackFunction(data);
+		});
 	}).on("error", (err) => {
 		console.log("Error: " + err.message);
+	});
+}
+
+function getCommentObjectFromRawURLData(rawDataFromURL)
+{
+	return JSON.parse(rawDataFromURL).data.children.map(comment => 
+	{ 
+		comment = comment.data;
+		return {
+			comment: comment.selftext,
+			subreddit: comment.subreddit,
+			authorFullname: comment.author_fullname,
+			postTitle: comment.title,
+			name: comment.name,
+			ups: comment.ups,
+			score: comment.score,
+			created: comment.created,
+			id: comment.id,
+			author: comment.author,
+			url: comment.url
+		}
 	});
 }
 

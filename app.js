@@ -28,12 +28,15 @@ let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
 
 var CommentFinder;
 var redditClient = new RedditClient();
+console.log(process.env.DATABASE_URL);
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
 	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
 });
 
 setInterval(function() {
-	console.log(redditClient.getRawResponse(100, 'all', 'new'));
+	redditClient.getCommentsFromSubreddit(100, 'all', 'new', function(comments) {
+		console.log(comments);
+	});
 	/*requestor.getNewComments('all').forEach(
 		comment => {
 			var replyMessage = CommentFinder.searchComment(comment);
