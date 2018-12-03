@@ -3,10 +3,8 @@ let https = require('https');
 
 class RedditClient
 {
-	constructor(minimumWaitTimeBetweenRequestsInMilliseconds)
+	constructor()
 	{
-		this.minimumWaitTimeBetweenRequestsInMilliseconds = minimumWaitTimeBetweenRequestsInMilliseconds;
-		this.lastRequestSentAt = 0;
 	}
 	
 	getCommentsFromSubreddit(numberOfPosts, subreddit, sortType, callbackFunction)
@@ -14,51 +12,41 @@ class RedditClient
 		numberOfPosts = getValidNumberOfPosts(numberOfPosts);
 		let url = SUBREDDIT_URL + subreddit + "/" + sortType + ".json?limit=" + numberOfPosts;
 		
-		// TODO:
-		// To ensure we're not spamming reddit
-		//waitIfNeeded();
-		
 		this.getCommentsFromURL(url, function(data) {
 			callbackFunction(data);
 		});
 	}
-	
-	waitIfNeeded(runAfterWait)
-	{
-		// TODO: use Window.timout if needed......
-	}
 
 	getCommentsFromURL(url, callbackFunction)
 	{
-		getDataFromUrl(url, function(data)
+		this.getDataFromUrl(url, function(data)
 		{
 			let comments = getCommentObjectFromRawURLData(data);
 			callbackFunction(comments);
 		});
 	}
-}
-
-// TODO: move to inside class.
-function getDataFromUrl(url, callbackFunction)
-{
-	console.log('trying: ' + url);
 	
-	https.get(url, (resp) => 
+	getDataFromUrl(url, callbackFunction)
 	{
-		let data = '';
+		console.log('trying: ' + url);
+		https.get(url, (resp) => 
+		{
+			let data = '';
 
-		// A chunk of data has been recieved.
-		resp.on('data', (chunk) => {
-			data += chunk;
-		});
+			// A chunk of data has been recieved.
+			resp.on('data', (chunk) => {
+				data += chunk;
+			});
 
-		// The whole response has been received. Print out the result.
-		resp.on('end', () => {
-			callbackFunction(data);
+			// The whole response has been received. Print out the result.
+			resp.on('end', () => {
+				this.lastRequestSentAt = new Date().getTime();
+				callbackFunction(data);
+			});
+		}).on("error", (err) => {
+			console.log("Error: " + err.message);
 		});
-	}).on("error", (err) => {
-		console.log("Error: " + err.message);
-	});
+	}
 }
 
 function getCommentObjectFromRawURLData(rawDataFromURL)
@@ -67,7 +55,7 @@ function getCommentObjectFromRawURLData(rawDataFromURL)
 	{ 
 		comment = comment.data;
 		return {
-			comment: comment.selftext,
+			body: comment.body,
 			subreddit: comment.subreddit,
 			authorFullname: comment.author_fullname,
 			postTitle: comment.title,
@@ -77,7 +65,7 @@ function getCommentObjectFromRawURLData(rawDataFromURL)
 			created: comment.created,
 			id: comment.id,
 			author: comment.author,
-			url: comment.url
+			url: comment.link_url
 		}
 	});
 }

@@ -3,58 +3,65 @@ require('./DatabaseFetch.js')();
 let CommentSearchProcessor = require('./CommentFinder.js');
 let RedditClient = require('./RedditClient.js');
 
-let Snoowrap = require('snoowrap');
-
-let requestor = new Snoowrap({
-  userAgent: 'Searching for certain keywords in all comments, displaying comments elsewhere',
-  clientId: 'Wi7mH5fRbfl7Dw',
-  clientSecret: 'Ysutdnu39r66jewCYd45gL37L-8',
-  username: 'Lottery-Bot',
-  password: 'redditFreinds123'
-});
-
-requestor.config({debug: true});
-
 let pg = require('pg');
 
-let intervalToWaitInMillisecondsBetweenReadingComments = 15200;
+let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 let intervalToWaitBeforeSendingIdleMessage = 30;
-let commentCacheSize = 2400;
+let commentCacheSize = 2000;
+let dissallowedSubreddits = ['suicidewatch', 'depression' ];
 
 var lastMessageSentAt = new Date().getTime();
 
+let clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
+
 let faye = require('faye');
-let client = new faye.Client('http://reddit-agree-with-you.herokuapp.com/');
+let client = new faye.Client(clientConnection);
 
 var CommentFinder;
 var redditClient = new RedditClient();
-console.log(process.env.DATABASE_URL);
+
+console.log('is local: ' + isLocal() + '\nconnecting to: ' + clientConnection);
+
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
 	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
+	console.log('starting...');
+	start();
 });
 
-setInterval(function() {
-	redditClient.getCommentsFromSubreddit(100, 'all', 'new', function(comments) {
-		console.log(comments);
-	});
-	/*requestor.getNewComments('all').forEach(
-		comment => {
-			var replyMessage = CommentFinder.searchComment(comment);
-			
-			if (replyMessage)
-			{
-				processComment(comment, replyMessage);
-			}
-		}
-	);*/
+function start()
+{
+	client.publish('/messages', {message: 'starting up.'});
 	
-	if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
-	{
-		console.log('sending inactive message');
-		client.publish('/messages', {inactive: '1'});
-		lastMessageSentAt = new Date().getTime();
-	}
-}, intervalToWaitInMillisecondsBetweenReadingComments);
+	setInterval(function() {
+		redditClient.getCommentsFromSubreddit(100, 'all', 'comments', function(comments) {
+			comments.forEach(
+				comment => {
+					var replyMessage = CommentFinder.searchComment(comment);
+
+					if (replyMessage)
+					{
+						// filter by disallowed subreddits
+						if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
+						{
+							console.log('disallowed subreddit found: ');
+							console.log(comment);
+						}
+						else
+						{
+							processComment(comment, replyMessage);
+						}
+					}
+				});
+		});
+		
+		if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
+		{
+			console.log('sending inactive message');
+			client.publish('/messages', {inactive: '1'});
+			lastMessageSentAt = new Date().getTime();
+		}
+	}, intervalToWaitInMillisecondsBetweenReadingComments);
+}
 
 function processComment(comment, replyMessage)
 {
@@ -69,4 +76,10 @@ function getSecondsSince(time)
 {
 	var distance = new Date().getTime() - time;
 	return Math.floor((distance % (1000 * 60)) / 1000);
+}
+
+// TODO: Need better way
+function isLocal()
+{
+	return process.env.username.includes('Dustytrash');
 }
