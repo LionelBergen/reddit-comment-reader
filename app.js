@@ -131,5 +131,5 @@ function publishComment(comment, replyMessage)
 // TODO: Need better way
 function isLocal()
 {
-	return process.env.username.includes('Dustytrash');
+	return false; //process.env.username.includes('Dustytrash');
 }
