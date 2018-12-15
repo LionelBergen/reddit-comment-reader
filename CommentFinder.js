@@ -7,7 +7,7 @@ class CommentSearchProcessor
 	{
 		this.CommentPredicateObjects = commentPredicateObjects;
 		this.commentHistory = GetArrayWithLimitedLength(numberOfRowsInCache, false);
-		
+		//
 		TestAll(commentPredicateObjects, this);
 	}
 	
