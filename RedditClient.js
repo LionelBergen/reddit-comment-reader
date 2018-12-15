@@ -26,6 +26,34 @@ class RedditClient
 		});
 	}
 	
+	getSubredditModList(subreddit, callback)
+	{
+		var url = 'https://www.reddit.com/r/' + subreddit + '/about/moderators.json?';
+		console.log('trying get mod list from url : ' + subreddit + ' url: ' + url);
+		https.get(url, (res) => {
+			var message = '';
+			res.on('data', (d) => {
+				message += d;
+			});
+			
+			res.on('end',function(){
+				if (res.statusCode != 200) 
+				{
+					callback("Api call failed with response code " + res.statusCode);
+				} 
+				else 
+				{
+					var messages = JSON.parse(message).data.children;
+					var modNamesCommaDelimitedList = messages.map(function(m) { return m.name; });
+					callback(modNamesCommaDelimitedList);
+				}
+			});
+		}).on('error', (e) => {
+			console.log('error getting subreddit: ' + subreddit);
+			console.error(e);
+		});
+	}
+	
 	getDataFromUrl(url, callbackFunction)
 	{
 		console.log('trying: ' + url);
@@ -51,23 +79,32 @@ class RedditClient
 
 function getCommentObjectFromRawURLData(rawDataFromURL)
 {
-	return JSON.parse(rawDataFromURL).data.children.map(comment => 
-	{ 
-		comment = comment.data;
-		return {
-			body: comment.body,
-			subreddit: comment.subreddit,
-			authorFullname: comment.author_fullname,
-			postTitle: comment.title,
-			name: comment.name,
-			ups: comment.ups,
-			score: comment.score,
-			created: comment.created,
-			id: comment.id,
-			author: comment.author,
-			url: comment.link_url
-		}
-	});
+	try
+	{
+		return JSON.parse(rawDataFromURL).data.children.map(comment => 
+		{ 
+			comment = comment.data;
+			return {
+				body: comment.body,
+				subreddit: comment.subreddit,
+				authorFullname: comment.author_fullname,
+				postTitle: comment.title,
+				name: comment.name,
+				ups: comment.ups,
+				score: comment.score,
+				created: comment.created_utc,
+				id: comment.id,
+				author: comment.author,
+				url: comment.link_url
+			}
+		});
+	}
+	catch (err)
+	{
+		console.log('error while parsing JSON!!!');
+		console.log(err.message);
+		console.log('url to parse: ' + rawDataFromURL);
+	}
 }
 
 /**

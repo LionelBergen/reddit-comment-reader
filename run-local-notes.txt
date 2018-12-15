@@ -1,0 +1,1 @@
+SET DATABASE_URL=postgres://sxxlfboaserskq:2cbca4d250a7fd92d8e77c0be11a5bc370d570a13b703313f5069c96814142f3@ec2-50-19-249-121.compute-1.amazonaws.com:5432/dda1gc1aiu2evp?ssl=true&slfactory=org.postgresql.ssl.NonValidatingFactory

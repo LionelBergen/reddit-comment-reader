@@ -1,10 +1,12 @@
 // Local files
 require('./DatabaseFetch.js')();
+require('./CommonTools.js')();
 let CommentSearchProcessor = require('./CommentFinder.js');
 let RedditClient = require('./RedditClient.js');
 
 let pg = require('pg');
 
+let secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
 let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 let intervalToWaitBeforeSendingIdleMessage = 30;
 let commentCacheSize = 2000;
@@ -20,7 +22,11 @@ let client = new faye.Client(clientConnection);
 var CommentFinder;
 var redditClient = new RedditClient();
 
+let commentHistory = GetUniqueArray(3000);
+let subredditModsList = GetUniqueArray(3000);
+
 console.log('is local: ' + isLocal() + '\nconnecting to: ' + clientConnection);
+console.log(process.env.DATABASE_URL);
 
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
 	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
@@ -54,7 +60,7 @@ function start()
 				});
 		});
 		
-		if (getSecondsSince(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
+		if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 		{
 			console.log('sending inactive message');
 			client.publish('/messages', {inactive: '1'});
@@ -65,17 +71,61 @@ function start()
 
 function processComment(comment, replyMessage)
 {
-	client.publish('/messages', {comment: comment, reply: replyMessage});
-	lastMessageSentAt = new Date().getTime();
-	console.log('FOUND!!!!');
-	console.log(comment);
-	console.log('reply: ' + replyMessage);
+	// So we don't spam a subreddit with the same message
+	let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + replyMessage), created: comment.created };
+	let thisSubredditModList = {id: comment.subreddit};
+	
+	if (subredditModsList.includes(thisSubredditModList))
+	{
+		if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
+		{
+			console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
+			return;
+		}
+	}
+	else
+	{
+		redditClient.getSubredditModList(thisSubredditModList.id, function(modList) { 
+			thisSubredditModList.modList = modList;
+		    subredditModsList.push(thisSubredditModList);
+			console.log('pushed: ' + thisSubredditModList.id);
+			processComment(comment, replyMessage);
+			return;
+		});
+	}
+	
+	console.log('continue...');
+	
+	if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
+	{
+		publishComment(comment, replyMessage);
+		commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+	}
+	else
+	{
+		var existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
+		
+		if (GetSecondsSinceUTCTimestamp(existingComment.created) > secondsTimeToWaitBetweenPostingSameCommentToASubreddit)
+		{
+			publishComment(comment, replyMessage);
+			commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+		}
+		else 
+		{
+			console.log('skipping comment, we\'ve already posted to this subreddit recently!');
+			console.log(comment);
+			console.log(commentHistory);
+		}
+	}
 }
 
-function getSecondsSince(time)
+function publishComment(comment, replyMessage)
 {
-	var distance = new Date().getTime() - time;
-	return Math.floor((distance % (1000 * 60)) / 1000);
+	console.log('posting comment');
+	client.publish('/messages', {comment: comment, reply: replyMessage});
+	lastMessageSentAt = new Date().getTime();
+	console.log(comment);
+	console.log('reply: ' + replyMessage);
 }
 
 // TODO: Need better way

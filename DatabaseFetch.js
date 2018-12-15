@@ -34,12 +34,25 @@ function getCommentSearchObjectsFromDatabase(pg, url, callbackFunction)
 
 function createCommentSearchObjectFromDatabaseObject(dbResult)
 {
+	var commentExpressionText = dbResult.CommentMatch;
+	var subredditExpressionText = dbResult.SubredditMatch;
+	
 	// Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
-	var subredditMatchExpression = new RegExp(dbResult.SubredditMatch.replace('(?i)', ''), 'i');
-	var commentMatchExpression = new RegExp(dbResult.CommentMatch.replace('(?i)', ''), 'i');
+	commentExpressionText = commentExpressionText.replace('(?i)', '');
+	subredditExpressionText = subredditExpressionText.replace('(?i)', '');
+	replyMessageText = dbResult.ReplyMessage;
+	
+	// Support reddit line break
+	replyMessageText = replyMessageText.replace(/\\n/g, '  \r\n');
+	console.log('****************************');
+	console.log(replyMessageText);
+	console.log('****************************');
+	
+	var subredditMatchExpression = new RegExp(subredditExpressionText, 'i');
+	var commentMatchExpression = new RegExp(commentExpressionText, 'i');
 	
 	return {SubredditMatch: subredditMatchExpression, 
 			CommentMatch: commentMatchExpression,
-			ReplyMessage: dbResult.ReplyMessage,
+			ReplyMessage: replyMessageText,
 			IsReplyRegexp: dbResult.IsReplyRegexp};
 }
