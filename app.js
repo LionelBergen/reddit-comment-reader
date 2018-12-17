@@ -94,6 +94,12 @@ function processComment(comment, replyMessage)
 		});
 	}
 	
+	if (comment.author == 'agree-with-you')
+	{
+		console.log('Skipping comment, is posted by agree-with-you: ' + comment.author + ' comment: ' + comment.body);
+		return;
+	}
+	
 	console.log('continue...');
 	
 	if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
