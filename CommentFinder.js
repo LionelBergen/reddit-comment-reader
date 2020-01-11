@@ -38,6 +38,10 @@ class CommentSearchProcessor
 	}
 }
 
+/**
+ * removes a username mention and returns the modified comment.
+ * For example 'u/someUser' would be removed.
+*/
 function stripCommentOfUserMentions(comment)
 {
   if (comment.includes('u/')) {

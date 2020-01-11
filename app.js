@@ -11,6 +11,7 @@ const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 const intervalToWaitBeforeSendingIdleMessage = 30;
 const commentCacheSize = 2000;
 const dissallowedSubreddits = ['suicidewatch', 'depression' ];
+const userIgnoreList = ['agree-with-you'];
 
 var lastMessageSentAt = new Date().getTime();
 
@@ -100,9 +101,9 @@ function processComment(comment, replyMessage)
 		});
 	}
 	
-	if (comment.author == 'agree-with-you')
+	if (userIgnoreList.includes(comment.author))
 	{
-		console.log('Skipping comment, is posted by agree-with-you: ' + comment.author + ' comment: ' + comment.body);
+		console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
 		return;
 	}
 	
