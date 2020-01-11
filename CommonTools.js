@@ -6,6 +6,9 @@ module.exports = function() {
 	this.GetSecondsSinceTimeInSeconds = getSecondsSinceTimeInSeconds;
 };
 
+/**
+ * Returns an Array object, but overrides the push function given the paramaters
+*/
 function getArrayWithLimitedLength(length, allowDuplicates) 
 {
 	var array = new Array();
