@@ -25,8 +25,38 @@ function testComments(commentPredicateObjects, commentFinder)
 	testILoveYou(commentFinder);
 	testEveryoneClapped(commentFinder);
 	
-	
+	testUsernameFilter(commentFinder);
+  
 	console.log('tests finished');
+}
+
+/**
+ * Tests that replies to other users don't trigger our regularExpression.
+ * E.G: /u/noU
+*/
+function testUsernameFilter(processor)
+{
+  testComment = createTestComment('/u/nou', 'fdfdfdfdf');
+	test(processor, testComment, NO_REPLY, 1000);
+  
+  testComment = createTestComment('/u/nouser', 'fdfdfdfdf');
+	test(processor, testComment, NO_REPLY, 1001);
+  
+  testComment = createTestComment('/u/charmander', 'fdfdfdfdf');
+	test(processor, testComment, NO_REPLY, 1002);
+  
+  testComment = createTestComment('u/charmander', 'fdfdfdfdf');
+	test(processor, testComment, NO_REPLY, 1003);
+  
+  testComment = createTestComment('something /u/charmander something', 'fdfdfdfdf');
+	test(processor, testComment, NO_REPLY, 1004);
+  
+  // unrelated username mention should still work
+  let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Squirtle, one for my Bulbasaur, and one for my second Squirtle.';
+  testComment = createTestComment('/u/somedumbUser charmander', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 1005);
+  testComment = createTestComment('something u/somedumbUser charmander', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 1006);
 }
 
 function testEveryoneClapped(processor)

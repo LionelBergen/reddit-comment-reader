@@ -38,10 +38,22 @@ class CommentSearchProcessor
 	}
 }
 
+function stripCommentOfUserMentions(comment)
+{
+  if (comment.includes('u/')) {
+    return comment.replace(/u\/[A-Za-z0-9_]+/, '');
+  }
+  
+  return comment;
+}
+
 function commentSearchObjMatchesComment(comment, searcher)
 {
-	return searcher.SubredditMatch.test(comment.subreddit)
-	&& searcher.CommentMatch.test(comment.body);
+  if (searcher.SubredditMatch.test(comment.subreddit)) {
+    return searcher.CommentMatch.test(stripCommentOfUserMentions(comment.body));
+  }
+  
+  return false;
 }
 
 module.exports = CommentSearchProcessor;
