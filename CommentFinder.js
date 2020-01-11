@@ -41,7 +41,7 @@ class CommentSearchProcessor
 function stripCommentOfUserMentions(comment)
 {
   if (comment.includes('u/')) {
-    return comment.replace(/u\/[A-Za-z0-9_]+/, '');
+    return comment.replace(/u\/[A-Za-z0-9_-]+/, '');
   }
   
   return comment;
