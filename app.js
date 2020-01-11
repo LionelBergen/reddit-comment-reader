@@ -2,25 +2,25 @@
 require('./DatabaseFetch.js')();
 require('./CommonTools.js')();
 const CommentSearchProcessor = require('./CommentFinder.js');
-let RedditClient = require('./RedditClient.js');
+const RedditClientImport = require('./RedditClient.js');
 
-let pg = require('pg');
+const pg = require('pg');
 
-let secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
-let intervalToWaitInMillisecondsBetweenReadingComments = 1100;
-let intervalToWaitBeforeSendingIdleMessage = 30;
-let commentCacheSize = 2000;
-let dissallowedSubreddits = ['suicidewatch', 'depression' ];
+const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
+const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+const intervalToWaitBeforeSendingIdleMessage = 30;
+const commentCacheSize = 2000;
+const dissallowedSubreddits = ['suicidewatch', 'depression' ];
 
 var lastMessageSentAt = new Date().getTime();
 
-let clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
+const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
 
-let faye = require('faye');
-let client = new faye.Client(clientConnection);
+const faye = require('faye');
+const client = new faye.Client(clientConnection);
 
 var CommentFinder;
-var redditClient = new RedditClient();
+var redditClient = new RedditClientImport();
 
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
