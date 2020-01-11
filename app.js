@@ -25,12 +25,15 @@ var redditClient = new RedditClient();
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
 
-console.log('is local: ' + isLocal() + '\nconnecting to: ' + clientConnection);
-console.log(process.env.DATABASE_URL);
+console.log('is local?: ' + isLocal());
+console.log('connecting to: ' + clientConnection);
+console.log('Database URL: ' + process.env.DATABASE_URL);
 
-GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) { 
+GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
+  console.log('x is here: ' + x);
 	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
 	console.log('starting...');
+  throw 'EXIT EARLY';
 	start();
 });
 
