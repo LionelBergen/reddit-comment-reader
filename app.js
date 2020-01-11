@@ -45,7 +45,7 @@ function start()
 	client.publish('/messages', {message: 'starting up.'});
 	
 	setInterval(function() {
-		redditClient.getCommentsFromSubreddit(100, 'all', 'comments', function(comments) {
+		redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
 			comments.forEach(
 				comment => {
 					var replyMessage = CommentFinder.searchComment(comment);
@@ -55,7 +55,7 @@ function start()
 						// filter by disallowed subreddits
 						if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
 						{
-							console.log('disallowed subreddit found: ');
+							console.log('Ignoring comment, disallowed subreddit found for comment: ');
 							console.log(comment);
 						}
 						else

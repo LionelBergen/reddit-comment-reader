@@ -34,3 +34,5 @@ Other notes
 **Makes a request to a Reddit URL every 1100 milliseconds**. Reddit may block connections that make requests less than 1000 milliseconds and I've found using that exact limit causes issues
 
 **Ignores comments from blacklisted subreddits**. Some serious subreddits are hardcoded to be ignored, such as /r/depression
+
+**Doesn't post the same comment to the same subreddit too many times within a duration**

@@ -1,11 +1,16 @@
-const SUBREDDIT_URL = "https://www.reddit.com/r/";
 const https = require('https');
+
+const SUBREDDIT_URL = "https://www.reddit.com/r/";
+// This is the max number of posts Reddit allows to be retrieved at once. If a higher number is used, this is used anyway
+const MAX_NUM_POSTS = 100;
 
 class RedditClient
 {
 	constructor()
 	{
 	}
+  
+  static get MAX_NUM_POSTS() { return MAX_NUM_POSTS };
 	
 	getCommentsFromSubreddit(numberOfPosts, subreddit, sortType, callbackFunction)
 	{
