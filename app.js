@@ -134,11 +134,11 @@ function publishComment(comment, replyMessage)
 	console.log('reply: ' + replyMessage);
 }
 
-// TODO: Need better way
+/**
+ * Checks if this program is currently running locally
+ * We do this by checking if 'heroku' property is found in 'process.env._'
+*/
 function isLocal()
 {
-  console.log('process.env._ ? ' + process.env._);
-  console.log('process.env._.indexOf("heroku") ? ' + process.env._.indexOf("heroku"));
-  throw 'ggg';
-	return false; //process.env.username.includes('Dustytrash');
+	return !(process.env._ && process.env._.indexOf("heroku"));
 }
