@@ -1,5 +1,5 @@
-let SUBREDDIT_URL = "https://www.reddit.com/r/";
-let https = require('https');
+const SUBREDDIT_URL = "https://www.reddit.com/r/";
+const https = require('https');
 
 class RedditClient
 {
