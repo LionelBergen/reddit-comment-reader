@@ -29,11 +29,14 @@ console.log('is local?: ' + isLocal());
 console.log('connecting to: ' + clientConnection);
 console.log('Database URL: ' + process.env.DATABASE_URL);
 
-GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(x) {
-  console.log('x is here: ' + x);
-	CommentFinder = new CommentSearchProcessor(x, commentCacheSize);
+if (!process.env.DATABASE_URL) {
+  throw 'Please set process.env.DATABASE_URL!';
+}
+
+// Execute 
+GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
+	CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
 	console.log('starting...');
-  throw 'EXIT EARLY';
 	start();
 });
 
