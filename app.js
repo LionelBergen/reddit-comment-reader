@@ -1,7 +1,7 @@
 // Local files
 require('./DatabaseFetch.js')();
 require('./CommonTools.js')();
-let CommentSearchProcessor = require('./CommentFinder.js');
+const CommentSearchProcessor = require('./CommentFinder.js');
 let RedditClient = require('./RedditClient.js');
 
 let pg = require('pg');
