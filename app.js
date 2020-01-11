@@ -137,5 +137,7 @@ function publishComment(comment, replyMessage)
 // TODO: Need better way
 function isLocal()
 {
+  console.log(process.env._ && process.env._.indexOf("heroku"));
+  throw err 'ggg';
 	return false; //process.env.username.includes('Dustytrash');
 }
