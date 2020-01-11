@@ -30,7 +30,7 @@ console.log('connecting to: ' + clientConnection);
 console.log('Database URL: ' + process.env.DATABASE_URL);
 
 if (!process.env.DATABASE_URL) {
-  throw 'Please set process.env.DATABASE_URL!';
+  throw 'Please set process.env.DATABASE_URL! e.g ET DATABASE_URL=postgres://.....';
 }
 
 // Execute 
