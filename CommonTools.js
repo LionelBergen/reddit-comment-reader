@@ -28,7 +28,10 @@ function getArrayWithLimitedLength(length, allowDuplicates)
 }
 
 /**
- * On push, delete existing duplicate entry, replace with new.
+ * Returns an array Object with methods overriden
+ *
+ * On push, delete the existing duplicate entry & replace with new
+ * get & includes methods overriden to match by property 'id'
 */
 function getUniqueArray(maxSize) 
 {
