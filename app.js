@@ -67,10 +67,11 @@ function start()
 				});
 		});
 		
+    // Send a message every so often so Heroku or whatever doesn't auto-stop
 		if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
 		{
-			console.log('sending inactive message');
-			client.publish('/messages', {inactive: '1'});
+			console.log('sending active message');
+			client.publish('/messages', {active: '1'});
 			lastMessageSentAt = new Date().getTime();
 		}
 	}, intervalToWaitInMillisecondsBetweenReadingComments);
