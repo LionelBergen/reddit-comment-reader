@@ -25,9 +25,10 @@ class RedditClient
 
 	getCommentsFromURL(url, callbackFunction)
 	{
+    var self = this;
 		this.getDataFromUrl(url, function(data)
 		{
-			let comments = getCommentObjectFromRawURLData(data, this.errorHandler);
+			let comments = getCommentObjectFromRawURLData(data, self.errorHandler);
 			callbackFunction(comments);
 		});
 	}
