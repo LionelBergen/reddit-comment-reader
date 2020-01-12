@@ -27,7 +27,7 @@ class RedditClient
 	{
 		this.getDataFromUrl(url, function(data)
 		{
-			let comments = getCommentObjectFromRawURLData(data);
+			let comments = getCommentObjectFromRawURLData(data, this.errorHandler);
 			callbackFunction(comments);
 		});
 	}
@@ -82,7 +82,7 @@ class RedditClient
 	}
 }
 
-function getCommentObjectFromRawURLData(rawDataFromURL)
+function getCommentObjectFromRawURLData(rawDataFromURL, errorHandler)
 {
 	try
 	{
@@ -106,7 +106,7 @@ function getCommentObjectFromRawURLData(rawDataFromURL)
 	}
 	catch (err)
 	{
-    this.errorHandler.handleError('error while Parsing JSON comment from Raw URL data', err, ('data was: ' + rawDataFromURL));
+    errorHandler.handleError('error while Parsing JSON comment from Raw URL data', err, ('data was: ' + rawDataFromURL));
 	}
 }
 

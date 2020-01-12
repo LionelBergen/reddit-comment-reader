@@ -13,13 +13,13 @@ class CommentSearchProcessor
 	
 	searchComment(comment)
 	{
-		var foundPredicate = null;
+		let foundPredicate = null;
 		
 		if (!this.commentHistory.includes(comment.id))
 		{
-			for (var i=0; i < this.CommentPredicateObjects.length; i++)
+			for (let i=0; i < this.CommentPredicateObjects.length; i++)
 			{
-				var commentPredicateObj = this.CommentPredicateObjects[i];
+				let commentPredicateObj = this.CommentPredicateObjects[i];
 				
 				if (commentSearchObjMatchesComment(comment, commentPredicateObj))
 				{
