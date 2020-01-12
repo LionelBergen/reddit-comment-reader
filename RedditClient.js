@@ -33,7 +33,7 @@ class RedditClient
 	
 	getSubredditModList(subreddit, callback)
 	{
-		var url = 'https://www.reddit.com/r/' + subreddit + '/about/moderators.json?';
+		var url = SUBREDDIT_URL + subreddit + '/about/moderators.json?';
 		console.log('trying get mod list from url : ' + subreddit + ' url: ' + url);
 		https.get(url, (res) => {
 			var message = '';
