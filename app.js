@@ -49,6 +49,8 @@ function start()
 	
 	setInterval(function() {
 		redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
+      if (comments) 
+      {
 			comments.forEach(
 				comment => {
 					const replyMessage = CommentFinder.searchComment(comment);
@@ -67,6 +69,11 @@ function start()
 						}
 					}
 				});
+      }
+      else
+      {
+        console.log('comments was undefined, skipping.');
+      }
 		});
 		
     // Send a message every so often so Heroku or whatever doesn't auto-stop
