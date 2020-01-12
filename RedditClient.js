@@ -6,8 +6,9 @@ const MAX_NUM_POSTS = 100;
 
 class RedditClient
 {
-	constructor()
+	constructor(errorHandler)
 	{
+    this.errorHandler = errorHandler;
 	}
   
   static get MAX_NUM_POSTS() { return MAX_NUM_POSTS };
@@ -54,8 +55,7 @@ class RedditClient
 				}
 			});
 		}).on('error', (e) => {
-			console.log('error getting subreddit: ' + subreddit);
-			console.error(e);
+      this.errorHandler.handleError('error getting subreddit', e, ('subreddit is: ' + subreddit));
 		});
 	}
 	
@@ -77,7 +77,7 @@ class RedditClient
 				callbackFunction(data);
 			});
 		}).on("error", (err) => {
-			console.log("Error: " + err.message);
+      this.errorHandler.handleError('error getting data from url', err, ('url is: ' + url));
 		});
 	}
 }
@@ -106,9 +106,7 @@ function getCommentObjectFromRawURLData(rawDataFromURL)
 	}
 	catch (err)
 	{
-		console.log('error while parsing JSON!!!');
-		console.log(err.message);
-		console.log('url to parse: ' + rawDataFromURL);
+    this.errorHandler.handleError('error while Parsing JSON comment from Raw URL data', err, ('data was: ' + rawDataFromURL));
 	}
 }
 

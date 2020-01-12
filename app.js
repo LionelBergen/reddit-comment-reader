@@ -1,6 +1,7 @@
 // Local files
 require('./DatabaseFetch.js')();
 require('./CommonTools.js')();
+const ErrorHandler = require('./ErrorHandler.js');
 const CommentSearchProcessor = require('./CommentFinder.js');
 const RedditClientImport = require('./RedditClient.js');
 
@@ -21,7 +22,6 @@ const faye = require('faye');
 const client = new faye.Client(clientConnection);
 
 var CommentFinder;
-var redditClient = new RedditClientImport();
 
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
@@ -33,6 +33,8 @@ console.log('Database URL: ' + process.env.DATABASE_URL);
 if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
 }
+
+var redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATABASE_URL));
 
 // Execute 
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
