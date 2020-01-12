@@ -4,18 +4,18 @@ module.exports = function() {
 
 function getCommentSearchObjectsFromDatabase(pg, url, callbackFunction)
 {
-	var commentSearchPredicates = [];
+	let commentSearchPredicates = [];
 	pg.connect(url, function(err, client, done) {
 		if(err) {
 			return console.error('Client error.', err);
 		}
 
 		client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-			var results = result.rows;
+			let results = result.rows;
 
-			for (var i=0; i<results.length; i++)
+			for (let i=0; i<results.length; i++)
 			{
-				var commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
+				let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
 				commentSearchPredicates.push(commentSearchObject);
 				console.log(commentSearchObject);
 			}
@@ -34,8 +34,8 @@ function getCommentSearchObjectsFromDatabase(pg, url, callbackFunction)
 
 function createCommentSearchObjectFromDatabaseObject(dbResult)
 {
-	var commentExpressionText = dbResult.CommentMatch;
-	var subredditExpressionText = dbResult.SubredditMatch;
+	let commentExpressionText = dbResult.CommentMatch;
+	let subredditExpressionText = dbResult.SubredditMatch;
 	
 	// Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
 	commentExpressionText = commentExpressionText.replace('(?i)', '');
@@ -48,8 +48,8 @@ function createCommentSearchObjectFromDatabaseObject(dbResult)
 	console.log(replyMessageText);
 	console.log('****************************');
 	
-	var subredditMatchExpression = new RegExp(subredditExpressionText, 'i');
-	var commentMatchExpression = new RegExp(commentExpressionText, 'i');
+	let subredditMatchExpression = new RegExp(subredditExpressionText, 'i');
+	let commentMatchExpression = new RegExp(commentExpressionText, 'i');
 	
 	return {SubredditMatch: subredditMatchExpression, 
 			CommentMatch: commentMatchExpression,

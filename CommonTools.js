@@ -11,7 +11,7 @@ module.exports = function() {
 */
 function getArrayWithLimitedLength(length, allowDuplicates) 
 {
-	var array = new Array();
+	let array = new Array();
 
 	array.push = function () {
 		if (!allowDuplicates && this.includes(arguments[0]))
@@ -35,10 +35,10 @@ function getArrayWithLimitedLength(length, allowDuplicates)
 */
 function getUniqueArray(maxSize) 
 {
-	var array = new Array();
+	let array = new Array();
 
 	array.push = function () {
-		for (var i=0; i<this.length; i++)
+		for (let i=0; i<this.length; i++)
 		{
 			if (this[i].id === arguments[0].id)
 			{
@@ -54,7 +54,7 @@ function getUniqueArray(maxSize)
 	}
 	
 	array.get = function(otherObject) {
-		for (var i=0; i<this.length; i++)
+		for (let i=0; i<this.length; i++)
 		{
 			if (this[i].id === otherObject.id)
 			{
@@ -66,7 +66,7 @@ function getUniqueArray(maxSize)
 	}
 	
 	array.includes = function(otherObject) {
-		for (var i=0; i<this.length; i++)
+		for (let i=0; i<this.length; i++)
 		{
 			if (this[i].id === otherObject.id)
 			{
@@ -87,6 +87,6 @@ function getSecondsSinceUTCTimestamp(utcTimestamp)
 
 function getSecondsSinceTimeInSeconds(timeInSeconds)
 {
-	var distance = new Date().getTime() - timeInSeconds;
+	let distance = new Date().getTime() - timeInSeconds;
 	return Math.floor((distance % (1000 * 60)) / 1000);
 }

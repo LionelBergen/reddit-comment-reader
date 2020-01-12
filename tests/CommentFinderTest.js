@@ -63,7 +63,7 @@ function testEveryoneClapped(processor)
 {
 	let expectedReply = 'Can confirm this is true. I was also applauding.';
 	
-	var testComment = createTestComment('then everyone clapped', 'fdfdfdfdf');
+	let testComment = createTestComment('then everyone clapped', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 700);
 	
 	testComment = createTestComment('then everbody stood up and appluaded', 'fdfdfdfdf');
@@ -82,7 +82,7 @@ function testEveryoneClapped(processor)
 function testPokemonBulbasaur(processor)
 {
 	let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Charmander, one for my Squirtle, and one for my second Charmander.';
-	var testComment = createTestComment('bulbasauR', 'fdfdfdfdf');
+	let testComment = createTestComment('bulbasauR', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 600);
 	testComment = createTestComment('something something bulBasaur', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 601);
@@ -109,7 +109,7 @@ function testPokemonBulbasaur(processor)
 function testPokemonCharmander(processor)
 {
 	let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Squirtle, one for my Bulbasaur, and one for my second Squirtle.';
-	var testComment = createTestComment('chARMANDER', 'fdfdfdfdf');
+	let testComment = createTestComment('chARMANDER', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 600);
 	testComment = createTestComment('something something chARMANDER', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 601);
@@ -136,7 +136,7 @@ function testPokemonCharmander(processor)
 function testPokemonSquirtle(processor)
 {
 	let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Bulbasaur, one for my Charmander, and one for my second Bulbasaur.';
-	var testComment = createTestComment('Squirtle', 'fdfdfdfdf');
+	let testComment = createTestComment('Squirtle', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 600);
 	testComment = createTestComment('something something Squirtle', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 601);
@@ -163,7 +163,7 @@ function testPokemonSquirtle(processor)
 function testILoveYou(processor)
 {
 	let expectedReply = 'I love you both';
-	var testComment = createTestComment('I love you', 'fdfdfdfdf');
+	let testComment = createTestComment('I love you', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 500);
 	
 	testComment = createTestComment('I luv you', 'theydidthemonstermath');
@@ -185,7 +185,7 @@ function testILoveYou(processor)
 function testNotPossible(processor)
 {
 	let expectedReply = 'I agree, this does not seem possible.';
-	var testComment = createTestComment('this isn\'t possible', 'fdfdfdfdf');
+	let testComment = createTestComment('this isn\'t possible', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 400);
 	
 	testComment = createTestComment('that isn\'t possible', 'theydidthemonstermath');
@@ -201,7 +201,7 @@ function testNotPossible(processor)
 function testSeemsPossible(processor)
 {
 	let expectedReply = 'I agree, this does seem possible.';
-	var testComment = createTestComment('That seems possible', 'fdfdfdfdf');
+	let testComment = createTestComment('That seems possible', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 300);
 	
 	testComment = createTestComment('ya That seems possible', 'theydidthemonstermath');
@@ -225,7 +225,7 @@ function testSeemsPossible(processor)
 
 function testTheyDidTheMath(processor)
 {
-	var testComment = createTestComment('/r/theydidthemath', 'fdfdfdfdf');
+	let testComment = createTestComment('/r/theydidthemath', 'fdfdfdfdf');
 	test(processor, testComment, '/r/theydidthemonstermath', 1);
 	
 	// Test case insensitive
@@ -247,7 +247,7 @@ function testTheyDidTheMath(processor)
 
 function testNoU(processor)
 {
-	var testComment = createTestComment('No you', 'fdfdfdfdf');
+	let testComment = createTestComment('No you', 'fdfdfdfdf');
 	test(processor, testComment, 'No you both', 6);
 	
 	testComment = createTestComment('no u', 'fdfdfdfdf');
@@ -275,7 +275,7 @@ function testNoU(processor)
 
 function testThatSeemsPossible(processor)
 {
-	var testComment = createTestComment('That seems possible', 'fdfdfdfdf');
+	let testComment = createTestComment('That seems possible', 'fdfdfdfdf');
 	test(processor, testComment, 'I agree, this does seem possible.', 15);
 	testComment = createTestComment('ya thAt seems possible', 'fdfdfdfdf');
 	test(processor, testComment, 'I agree, this does seem possible.', 16);
@@ -316,7 +316,7 @@ function testThisDefinition(processor)
 			">*(used to indicate a person, thing, idea, state, event, time, remark, etc., as present, near, just mentioned or pointed out, supposed to be understood, or by way of emphasis):    " +
 			"e.g **This is my coat.**";
 
-	var testComment = createTestComment('what is tHis supposed to mean?', 'fdfdfdfdf');
+	let testComment = createTestComment('what is tHis supposed to mean?', 'fdfdfdfdf');
 	test(processor, testComment, expectedResponseText, 100);
 	
 	testComment = createTestComment('what is this suPPosed to mean', 'fdfdfdfdf');
@@ -376,7 +376,7 @@ function testThatDefinition(processor)
 			">*(used to indicate a person, thing, idea, state, event, time, remark, etc., as pointed out or present, mentioned before, supposed to be understood, or by way of emphasis):*    " +
 			"e.g **That is her mother. After that we saw each other.**";
 
-	var testComment = createTestComment('what is that supposed to mean?', 'fdfdfdfdf');
+	let testComment = createTestComment('what is that supposed to mean?', 'fdfdfdfdf');
 	test(processor, testComment, expectedResponseText, 1000);
 	
 	testComment = createTestComment('what is that suPPosed to mean', 'fdfdfdfdf');
@@ -430,7 +430,7 @@ function testThatDefinition(processor)
 
 function test(processor, comment, expectedResult, index)
 {
-	var actualResult = processor.searchComment(comment);
+	let actualResult = processor.searchComment(comment);
 	
 	if (expectedResult && !actualResult)
 	{

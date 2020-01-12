@@ -34,10 +34,10 @@ class RedditClient
 	
 	getSubredditModList(subreddit, callback)
 	{
-		var url = SUBREDDIT_URL + subreddit + '/about/moderators.json?';
+		const url = SUBREDDIT_URL + subreddit + '/about/moderators.json?';
 		console.log('trying get mod list from url : ' + subreddit + ' url: ' + url);
 		https.get(url, (res) => {
-			var message = '';
+			let message = '';
 			res.on('data', (d) => {
 				message += d;
 			});
@@ -49,8 +49,8 @@ class RedditClient
 				} 
 				else 
 				{
-					var messages = JSON.parse(message).data.children;
-					var modNamesCommaDelimitedList = messages.map(function(m) { return m.name; });
+					let messages = JSON.parse(message).data.children;
+					let modNamesCommaDelimitedList = messages.map(function(m) { return m.name; });
 					callback(modNamesCommaDelimitedList);
 				}
 			});

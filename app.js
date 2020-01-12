@@ -14,14 +14,14 @@ const commentCacheSize = 2000;
 const dissallowedSubreddits = ['suicidewatch', 'depression' ];
 const userIgnoreList = ['agree-with-you'];
 
-var lastMessageSentAt = new Date().getTime();
+let lastMessageSentAt = new Date().getTime();
 
 const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
 
 const faye = require('faye');
 const client = new faye.Client(clientConnection);
 
-var CommentFinder;
+let CommentFinder;
 
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
@@ -34,7 +34,7 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
 }
 
-var redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATABASE_URL));
+let redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATABASE_URL));
 
 // Execute 
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
@@ -51,7 +51,7 @@ function start()
 		redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
 			comments.forEach(
 				comment => {
-					var replyMessage = CommentFinder.searchComment(comment);
+					const replyMessage = CommentFinder.searchComment(comment);
 
 					if (replyMessage)
 					{
@@ -119,7 +119,7 @@ function processComment(comment, replyMessage)
 	}
 	else
 	{
-		var existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
+		const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
 		
 		if (GetSecondsSinceUTCTimestamp(existingComment.created) > secondsTimeToWaitBetweenPostingSameCommentToASubreddit)
 		{
