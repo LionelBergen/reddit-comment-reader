@@ -4,18 +4,72 @@ Reads comments from all of reddit and picks out *phrases*, then sends any found 
 
 Database Connection
 -------------------
-Phrases to look for are taken from the PostgreSQL database. 
-
-Database must contain **a table named RegexpComment with this layout:**
-
-|SubredditMatch|CommentMatch|ReplyMessage|IsReplyRegexp|id
-|--------------|------------|------------|-------------|--
-
 Database connection is expected to be contained in an evironment variable 'DATABASE_URL'
 
 Example: SET DATABASE_URL=postgres://XXXXX<span>:</span>XXXX<span>@</span>ecX-50-1X-XXX-1XX.compute-1.amazonaws.com:5432/XdaXXXXXiuXevp?ssl=true&slfactory=org.postgresql.ssl.NonValidatingFactory
 
 *Note on windows I get an error when setting the above, but it works regardless of error*
+
+Database Tables
+---------------
+**RegexpComment** - Phrases to look for are taken from the PostgreSQL database
+
+|SubredditMatch|CommentMatch|ReplyMessage|IsReplyRegexp|id
+|--------------|------------|------------|-------------|--
+
+<details>
+	<summary>RegexpComment Creation script</summary>
+	
+	-- Table: public."RegexpComment"
+	-- DROP TABLE public."RegexpComment";
+
+	CREATE TABLE public."RegexpComment"
+	(
+		"SubredditMatch" text COLLATE pg_catalog."default" NOT NULL DEFAULT '.*'::text,
+		"CommentMatch" text COLLATE pg_catalog."default" NOT NULL,
+		"ReplyMessage" text COLLATE pg_catalog."default" NOT NULL,
+		"IsReplyRegexp" boolean DEFAULT false,
+		id integer NOT NULL DEFAULT nextval('"RegexpComment_id_seq"'::regclass)
+	)
+	WITH (
+		OIDS = FALSE
+	)
+	TABLESPACE pg_default;
+
+	ALTER TABLE public."RegexpComment"
+		OWNER to uuhsiyqcwwsszg;
+</details>
+<br />
+
+**ErrorTable** - Errors are logged here. Application is hosted on Heroku, which doesn't keep a second log for errors
+
+|id|ErrorDescription|ErrorTrace|AdditionalInfo|CreatedOn
+|--|----------------|----------|--------------|---------
+
+<details>
+	<summary>ErrorTable Creation script</summary>
+	
+	-- Table: public."ErrorTable"
+	-- DROP TABLE public."ErrorTable";
+
+	CREATE TABLE public."ErrorTable"
+	(
+		id integer NOT NULL DEFAULT nextval('errortable_id_seq'::regclass),
+		errordescription character varying(255) COLLATE pg_catalog."default",
+		errortrace character varying(5000) COLLATE pg_catalog."default",
+		additionalinfo character varying(1000) COLLATE pg_catalog."default",
+		createdon timestamp without time zone NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		CONSTRAINT errortable_pkey PRIMARY KEY (id)
+	)
+	WITH (
+		OIDS = FALSE
+	)
+	TABLESPACE pg_default;
+
+	ALTER TABLE public."ErrorTable"
+		OWNER to uuhsiyqcwwsszg;
+</details>
+<br />
 
 Reddit API connection
 ---------------------
