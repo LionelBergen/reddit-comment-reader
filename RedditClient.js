@@ -88,7 +88,7 @@ function getCommentObjectFromRawURLData(rawDataFromURL, errorHandler)
 	try
 	{
 		return JSON.parse(rawDataFromURL).data.children.map(comment => 
-		{ 
+		{
 			comment = comment.data;
 			return {
 				body: comment.body,
@@ -101,7 +101,8 @@ function getCommentObjectFromRawURLData(rawDataFromURL, errorHandler)
 				created: comment.created_utc,
 				id: comment.id,
 				author: comment.author,
-				url: comment.link_url
+				url: comment.link_url,
+        permalink: comment.permalink
 			}
 		});
 	}

@@ -1,6 +1,7 @@
 // Local files
 require('./DatabaseFetch.js')();
 require('./CommonTools.js')();
+require('./DiscordSender.js')();
 const ErrorHandler = require('./ErrorHandler.js');
 const CommentSearchProcessor = require('./CommentFinder.js');
 const RedditClientImport = require('./RedditClient.js');
@@ -25,6 +26,8 @@ let CommentFinder;
 
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
+
+DiscordInit();
 
 console.log('is local?: ' + isLocal());
 console.log('connecting to: ' + clientConnection);
@@ -151,7 +154,7 @@ function publishComment(comment, commentObject)
     console.log(comment);
     console.log('reply: ' + commentObject);
   } else if (commentObject.ClientHandler == "DISCORD") {
-    
+    SendDiscordMessage(comment);
   } else {
     throw 'unrecognized handler: ' + commentObject.ClientHandler ;
   }

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord.js": "^11.5.1",
     "faye": "^1.2.4",
     "https": "^1.0.0",
     "pg": "^6.4.2"
