@@ -54,5 +54,6 @@ function createCommentSearchObjectFromDatabaseObject(dbResult)
 	return {SubredditMatch: subredditMatchExpression, 
 			CommentMatch: commentMatchExpression,
 			ReplyMessage: replyMessageText,
-			IsReplyRegexp: dbResult.IsReplyRegexp};
+			IsReplyRegexp: dbResult.IsReplyRegexp,
+      ClientHandler: dbResult.Handle};
 }

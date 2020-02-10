@@ -1,4 +1,4 @@
-let EXPECTED_NUMBER_OF_ROWS = 11;
+let EXPECTED_NUMBER_OF_ROWS = 16;
 let NO_REPLY = null;
 
 module.exports = function() {
@@ -24,6 +24,9 @@ function testComments(commentPredicateObjects, commentFinder)
 	testThatDefinition(commentFinder);
 	testILoveYou(commentFinder);
 	testEveryoneClapped(commentFinder);
+  
+  // not agree-with-you
+	testDAD(commentFinder);
 	
 	testUsernameFilter(commentFinder);
   
@@ -77,6 +80,26 @@ function testEveryoneClapped(processor)
 	
 	testComment = createTestComment('df gdf gdf gdf then everbody stood up and appluaded fgdf g df gdf g\r\ngfkjldgjdfglk', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 704);
+}
+
+function testDAD(processor)
+{
+	let expectedReply = 'hello';
+	
+	let testComment = createTestComment('Denton Alcohol Delivery', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5500);
+	
+	testComment = createTestComment('something Denton something Alcohol something Delivery something', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5501);
+	
+	testComment = createTestComment('something Deliver something Alcohol something Denton something', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5502);
+	
+	testComment = createTestComment('something Denton something Alcohol something Deliver something', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5503);
+  
+  testComment = createTestComment('something Denton something beer something DeliVer something', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5503);
 }
 
 function testPokemonBulbasaur(processor)
