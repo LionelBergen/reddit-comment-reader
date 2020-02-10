@@ -99,10 +99,13 @@ function testDAD(processor)
 	test(processor, testComment, expectedReply, 5503);
   
   testComment = createTestComment('something Denton something beer something DeliVer something', 'fdfdfdfdf');
-	test(processor, testComment, expectedReply, 5503);
+	test(processor, testComment, expectedReply, 5504);
   
   testComment = createTestComment('glkfjgldkfjgldfkg denton gfjgkldgjlkdfjg booze gdlfjgdslfkgj delivery gfdjglkfdg', 'fdfdfdfdf');
-	test(processor, testComment, expectedReply, 5503);
+	test(processor, testComment, expectedReply, 5505);
+  
+  testComment = createTestComment('Where to get beer delivered in denton', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5506);
 }
 
 function testPokemonBulbasaur(processor)
