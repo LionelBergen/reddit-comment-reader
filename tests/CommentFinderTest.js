@@ -100,6 +100,9 @@ function testDAD(processor)
   
   testComment = createTestComment('something Denton something beer something DeliVer something', 'fdfdfdfdf');
 	test(processor, testComment, expectedReply, 5503);
+  
+  testComment = createTestComment('glkfjgldkfjgldfkg denton gfjgkldgjlkdfjg booze gdlfjgdslfkgj delivery gfdjglkfdg', 'fdfdfdfdf');
+	test(processor, testComment, expectedReply, 5503);
 }
 
 function testPokemonBulbasaur(processor)

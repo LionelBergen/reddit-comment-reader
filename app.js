@@ -9,6 +9,7 @@ const RedditClientImport = require('./RedditClient.js');
 const pg = require('pg');
 
 const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
+const secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord = 10;
 const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
 const intervalToWaitBeforeSendingIdleMessage = 30;
 const commentCacheSize = 2000;
@@ -97,7 +98,7 @@ function processComment(comment, commentObject)
 	
 	if (subredditModsList.includes(thisSubredditModList))
 	{
-		if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
+		if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
 		{
 			console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
 			return;
@@ -131,7 +132,8 @@ function processComment(comment, commentObject)
 	{
 		const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
 		
-		if (GetSecondsSinceUTCTimestamp(existingComment.created) > secondsTimeToWaitBetweenPostingSameCommentToASubreddit)
+    let waitAmount = commentObject.ClientHandler != "DISCORD" ? secondsTimeToWaitBetweenPostingSameCommentToASubreddit : secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord
+		if (GetSecondsSinceUTCTimestamp(existingComment.created) > waitAmount)
 		{
 			publishComment(comment, commentObject);
 			commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
