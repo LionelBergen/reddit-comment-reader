@@ -467,7 +467,7 @@ function test(processor, comment, expectedResult, index)
 	{
 		// Actual result has spaces before line breaks.
 		expectedResult = expectedResult == null ? null : expectedResult.replace(/(?:\r\n|\r|\n)/g, '  ');
-		actualResult = actualResult == null ? null : actualResult.replace(/(?:\r\n|\r|\n)/g, '');
+		actualResult = actualResult == null ? null : actualResult.ReplyMessage.replace(/(?:\r\n|\r|\n)/g, '');
 		
 		if (expectedResult != actualResult)
 		{

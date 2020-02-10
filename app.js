@@ -53,9 +53,9 @@ function start()
       {
 			comments.forEach(
 				comment => {
-					const replyMessage = CommentFinder.searchComment(comment);
+          const foundMessage = CommentFinder.searchComment(comment)
 
-					if (replyMessage)
+					if (foundMessage)
 					{
 						// filter by disallowed subreddits
 						if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
@@ -65,7 +65,7 @@ function start()
 						}
 						else
 						{
-							processComment(comment, replyMessage);
+							processComment(comment, foundMessage);
 						}
 					}
 				});
@@ -86,10 +86,10 @@ function start()
 	}, intervalToWaitInMillisecondsBetweenReadingComments);
 }
 
-function processComment(comment, replyMessage)
+function processComment(comment, commentObject)
 {
 	// So we don't spam a subreddit with the same message
-	let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + replyMessage), created: comment.created };
+	let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
 	let thisSubredditModList = {id: comment.subreddit};
 	
 	if (subredditModsList.includes(thisSubredditModList))
@@ -106,7 +106,7 @@ function processComment(comment, replyMessage)
 			thisSubredditModList.modList = modList;
 		    subredditModsList.push(thisSubredditModList);
 			console.log('pushed: ' + thisSubredditModList.id);
-			processComment(comment, replyMessage);
+			processComment(comment, commentObject);
 			return;
 		});
 	}
@@ -121,7 +121,7 @@ function processComment(comment, replyMessage)
 	
 	if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
 	{
-		publishComment(comment, replyMessage);
+		publishComment(comment, commentObject);
 		commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
 	}
 	else
@@ -130,7 +130,7 @@ function processComment(comment, replyMessage)
 		
 		if (GetSecondsSinceUTCTimestamp(existingComment.created) > secondsTimeToWaitBetweenPostingSameCommentToASubreddit)
 		{
-			publishComment(comment, replyMessage);
+			publishComment(comment, commentObject);
 			commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
 		}
 		else 
@@ -142,13 +142,19 @@ function processComment(comment, replyMessage)
 	}
 }
 
-function publishComment(comment, replyMessage)
+function publishComment(comment, commentObject)
 {
-	console.log('posting comment');
-	client.publish('/messages', {comment: comment, reply: replyMessage});
-	lastMessageSentAt = new Date().getTime();
-	console.log(comment);
-	console.log('reply: ' + replyMessage);
+  if (commentObject.ClientHandler == "Agree-with-you") {
+    console.log('posting comment to agree-with-you');
+    client.publish('/messages', {comment: comment, reply: commentObject.ReplyMessage});
+    lastMessageSentAt = new Date().getTime();
+    console.log(comment);
+    console.log('reply: ' + commentObject);
+  } else if (commentObject.ClientHandler == "DISCORD") {
+    
+  } else {
+    throw 'unrecognized handler: ' + commentObject.ClientHandler ;
+  }
 }
 
 /**
