@@ -1,4 +1,4 @@
-let EXPECTED_NUMBER_OF_ROWS = 16;
+let EXPECTED_NUMBER_OF_ROWS = 17;
 let NO_REPLY = null;
 
 module.exports = function() {
