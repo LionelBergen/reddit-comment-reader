@@ -30,6 +30,9 @@ let subredditModsList = GetUniqueArray(3000);
 
 DiscordInit();
 
+// read from .env
+require('dotenv').config();
+
 console.log('is local?: ' + isLocal());
 console.log('connecting to: ' + clientConnection);
 console.log('Database URL: ' + process.env.DATABASE_URL);
