@@ -2,6 +2,10 @@ Reddit Comment Reader
 ---------------------
 Reads comments from all of reddit and picks out *phrases*, then sends any found matches to either 'localhost' if local, or another heroku application depending on if application is run locally or on heroku
 
+`npm run start` - Starts the program  
+`npm run test` - Runs tests, not including 'live' tests, which require environment variables filled with tokens.  
+`npm run eslint` - Used to keep consistent format. This should be pass before every commit  
+
 Database Connection
 -------------------
 Database connection is expected to be contained in an evironment variable 'DATABASE_URL'
