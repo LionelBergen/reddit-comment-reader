@@ -3,43 +3,41 @@ const client = new Discord.Client();
 
 const REDDIT_CHANNEL_NAME = 'reddit';
 
-var channelToCommunicateWith;
-
-function discordInit()
+function initNewDiscordClient(discordToken)
 {
   client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
-    
-    channelToCommunicateWith = findChannelByName(client.channels, REDDIT_CHANNEL_NAME)
-    
-    if (!channelToCommunicateWith) {
-      throw 'Could not find channel: ' + REDDIT_CHANNEL_NAME;
-    }
-    else {
-      console.log('channel has been set.');
-    }
+	console.log(`Logged in as ${client.user.tag}`);
   });
+  
+  return client.login(discordToken).then(function(e) {
+	  console.log(`Logged in as ${client.user.tag}`);
+  });
+}
 
-  client.login(process.env.DISCORD_TOKEN);
+function Logout(discordToken) {
+	return client.destroy(discordToken);
+}
 
-  function findChannelByName(listOfChannels, channelName)
-  {
-    return listOfChannels.find(channel => channel.name == channelName);
+function sendDiscordMessage(channelName, redditComment) {
+  const channelToCommunicateWith = findChannelByName(client.channels, channelName);
+  
+  if (!channelToCommunicateWith) {
+    throw 'ChannelToComminicateWith is null!!';
+  } else if (!redditComment || !redditComment.body || !redditComment.permalink) {
+	  throw 'Comment not well formed!';
+  } else {
+    channelToCommunicateWith.send(`Comment: ${redditComment.body}\r\nlink: https://reddit.com${redditComment.permalink}`);
   }
 }
 
-function sendDiscordMessage(comment) {
-  if (!channelToCommunicateWith) {
-    throw 'ChannelToComminicateWith is null!!';
-  }
-  else {
-    channelToCommunicateWith.send(`Comment: ${comment.body}\r\nlink: https://reddit.com${comment.permalink}`);
-  }
+function findChannelByName(listOfChannels, channelName)
+{
+  return listOfChannels.find(channel => channel.name == channelName);
 }
 
 
 module.exports = function() {
-  // TODO: init is stupid
-  this.DiscordInit = discordInit;
+  this.DiscordInitNewClient = initNewDiscordClient;
   this.SendDiscordMessage = sendDiscordMessage;
+  this.LogoutOfDiscord = Logout;
 }

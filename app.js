@@ -28,6 +28,7 @@ let CommentFinder;
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
 
+// process.env.DISCORD_TOKEN
 DiscordInit();
 
 // read from .env
