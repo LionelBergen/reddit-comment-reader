@@ -9,9 +9,9 @@ subredditModsList.push(var1);
 
 if (!subredditModsList.includes({id:'oneTwoThree'}))
 {
-	throw 'failure, includes fail';
+  throw 'failure, includes fail';
 }
 else if (subredditModsList.get({id:'oneTwoThree'}) == null)
 {
-	throw 'failure, get fail, value was: ' + subredditModsList.get({id:'oneTwoThree'});
+  throw 'failure, get fail, value was: ' + subredditModsList.get({id:'oneTwoThree'});
 }

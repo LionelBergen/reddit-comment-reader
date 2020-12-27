@@ -46,109 +46,109 @@ let redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATAB
 
 // Execute 
 GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
-	CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
-	console.log('starting...');
-	start();
+  CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
+  console.log('starting...');
+  start();
 });
 
 function start()
 {
-	client.publish('/messages', {message: 'starting up.'});
+  client.publish('/messages', {message: 'starting up.'});
 	
-	setInterval(function() {
-		redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
+  setInterval(function() {
+    redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
       if (comments) 
       {
-			comments.forEach(
-				comment => {
-          const foundMessage = CommentFinder.searchComment(comment)
+        comments.forEach(
+          comment => {
+            const foundMessage = CommentFinder.searchComment(comment);
 
-					if (foundMessage)
-					{
-						// filter by disallowed subreddits
-						if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
-						{
-							console.log('Ignoring comment, disallowed subreddit found for comment: ');
-							console.log(comment);
-						}
-						else
-						{
-							processComment(comment, foundMessage);
-						}
-					}
-				});
+            if (foundMessage)
+            {
+              // filter by disallowed subreddits
+              if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
+              {
+                console.log('Ignoring comment, disallowed subreddit found for comment: ');
+                console.log(comment);
+              }
+              else
+              {
+                processComment(comment, foundMessage);
+              }
+            }
+          });
       }
       else
       {
         console.log('comments was undefined, skipping.');
       }
-		});
+    });
 		
     // Send a message every so often so Heroku or whatever doesn't auto-stop
-		if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
-		{
-			console.log('sending active message');
-			client.publish('/messages', {active: '1'});
-			lastMessageSentAt = new Date().getTime();
-		}
-	}, intervalToWaitInMillisecondsBetweenReadingComments);
+    if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
+    {
+      console.log('sending active message');
+      client.publish('/messages', {active: '1'});
+      lastMessageSentAt = new Date().getTime();
+    }
+  }, intervalToWaitInMillisecondsBetweenReadingComments);
 }
 
 function processComment(comment, commentObject)
 {
-	// So we don't spam a subreddit with the same message
-	let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
-	let thisSubredditModList = {id: comment.subreddit};
+  // So we don't spam a subreddit with the same message
+  let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
+  let thisSubredditModList = {id: comment.subreddit};
 	
-	if (subredditModsList.includes(thisSubredditModList))
-	{
-		if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
-		{
-			console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
-			return;
-		}
-	}
-	else
-	{
-		redditClient.getSubredditModList(thisSubredditModList.id, function(modList) { 
-			thisSubredditModList.modList = modList;
+  if (subredditModsList.includes(thisSubredditModList))
+  {
+    if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
+    {
+      console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
+      return;
+    }
+  }
+  else
+  {
+    redditClient.getSubredditModList(thisSubredditModList.id, function(modList) { 
+      thisSubredditModList.modList = modList;
 		    subredditModsList.push(thisSubredditModList);
-			console.log('pushed: ' + thisSubredditModList.id);
-			processComment(comment, commentObject);
-			return;
-		});
-	}
+      console.log('pushed: ' + thisSubredditModList.id);
+      processComment(comment, commentObject);
+      return;
+    });
+  }
 	
-	if (userIgnoreList.includes(comment.author))
-	{
-		console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
-		return;
-	}
+  if (userIgnoreList.includes(comment.author))
+  {
+    console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
+    return;
+  }
 	
-	console.log('continue...');
+  console.log('continue...');
 	
-	if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
-	{
-		publishComment(comment, commentObject);
-		commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-	}
-	else
-	{
-		const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
+  if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
+  {
+    publishComment(comment, commentObject);
+    commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+  }
+  else
+  {
+    const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
 		
-    let waitAmount = commentObject.ClientHandler != "DISCORD" ? secondsTimeToWaitBetweenPostingSameCommentToASubreddit : secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord
-		if (GetSecondsSinceUTCTimestamp(existingComment.created) > waitAmount)
-		{
-			publishComment(comment, commentObject);
-			commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-		}
-		else 
-		{
-			console.log('skipping comment, we\'ve already posted to this subreddit recently!');
-			console.log(comment);
-			console.log(commentHistory);
-		}
-	}
+    let waitAmount = commentObject.ClientHandler != "DISCORD" ? secondsTimeToWaitBetweenPostingSameCommentToASubreddit : secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord;
+    if (GetSecondsSinceUTCTimestamp(existingComment.created) > waitAmount)
+    {
+      publishComment(comment, commentObject);
+      commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+    }
+    else 
+    {
+      console.log('skipping comment, we\'ve already posted to this subreddit recently!');
+      console.log(comment);
+      console.log(commentHistory);
+    }
+  }
 }
 
 function publishComment(comment, commentObject)
@@ -172,5 +172,5 @@ function publishComment(comment, commentObject)
 */
 function isLocal()
 {
-	return !(process.env._ && process.env._.indexOf("heroku"));
+  return !(process.env._ && process.env._.indexOf("heroku"));
 }

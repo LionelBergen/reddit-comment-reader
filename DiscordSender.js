@@ -6,7 +6,7 @@ const REDDIT_CHANNEL_NAME = 'reddit';
 function initNewDiscordClient(discordToken)
 {
   client.on('ready', () => {
-	console.log(`Logged in as ${client.user.tag}`);
+    console.log(`Logged in as ${client.user.tag}`);
   });
   
   return client.login(discordToken).then(function(e) {
@@ -15,7 +15,7 @@ function initNewDiscordClient(discordToken)
 }
 
 function Logout(discordToken) {
-	return client.destroy(discordToken);
+  return client.destroy(discordToken);
 }
 
 function sendDiscordMessage(channelName, redditComment) {
@@ -40,4 +40,4 @@ module.exports = function() {
   this.DiscordInitNewClient = initNewDiscordClient;
   this.SendDiscordMessage = sendDiscordMessage;
   this.LogoutOfDiscord = Logout;
-}
+};

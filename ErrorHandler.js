@@ -1,10 +1,10 @@
 class ErrorHandler
 {
-	constructor(pg, databaseConnectionUrl)
-	{
-		this.pg = pg;
-		this.databaseConnectionUrl = databaseConnectionUrl;
-	}
+  constructor(pg, databaseConnectionUrl)
+  {
+    this.pg = pg;
+    this.databaseConnectionUrl = databaseConnectionUrl;
+  }
   
   handleError(errorDescription, errorTrace, additionalInfo)
   {
@@ -23,7 +23,7 @@ class ErrorHandler
         } else {
           console.log(res.rows[0]);
         }
-      })
+      });
     });
   }
 }

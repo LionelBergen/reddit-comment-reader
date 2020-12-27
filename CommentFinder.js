@@ -3,39 +3,39 @@ require('./CommonTools.js')();
 
 class CommentSearchProcessor
 {
-	constructor(commentPredicateObjects, numberOfRowsInCache)
-	{
-		this.CommentPredicateObjects = commentPredicateObjects;
-		this.commentHistory = GetArrayWithLimitedLength(numberOfRowsInCache, false);
-		//
-		TestAll(commentPredicateObjects, this);
-	}
+  constructor(commentPredicateObjects, numberOfRowsInCache)
+  {
+    this.CommentPredicateObjects = commentPredicateObjects;
+    this.commentHistory = GetArrayWithLimitedLength(numberOfRowsInCache, false);
+    //
+    TestAll(commentPredicateObjects, this);
+  }
 	
-	searchComment(comment)
-	{
-		let foundPredicate = null;
+  searchComment(comment)
+  {
+    let foundPredicate = null;
 		
-		if (!this.commentHistory.includes(comment.id))
-		{
-			for (let i=0; i < this.CommentPredicateObjects.length; i++)
-			{
-				let commentPredicateObj = this.CommentPredicateObjects[i];
+    if (!this.commentHistory.includes(comment.id))
+    {
+      for (let i=0; i < this.CommentPredicateObjects.length; i++)
+      {
+        let commentPredicateObj = this.CommentPredicateObjects[i];
 				
-				if (commentSearchObjMatchesComment(comment, commentPredicateObj))
-				{
-					foundPredicate = commentPredicateObj;
-					break;
-				}
-			}
+        if (commentSearchObjMatchesComment(comment, commentPredicateObj))
+        {
+          foundPredicate = commentPredicateObj;
+          break;
+        }
+      }
 			
-			if (foundPredicate != null)
-			{
-				this.commentHistory.push(comment.id);
-			}
-		}
+      if (foundPredicate != null)
+      {
+        this.commentHistory.push(comment.id);
+      }
+    }
 
-		return foundPredicate;
-	}
+    return foundPredicate;
+  }
 }
 
 /**
