@@ -4,7 +4,9 @@
   "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint": "eslint --ignore-path .gitignore ."
   },
   "author": "",
   "license": "ISC",
@@ -14,5 +16,9 @@
     "faye": "^1.2.4",
     "https": "^1.0.0",
     "pg": "^6.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.10.0",
+    "eslint-config-strongloop": "^2.1.0"
   }
 }
