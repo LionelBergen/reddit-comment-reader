@@ -397,6 +397,14 @@ function testThisDefinition(processor)
   test(processor, testComment, expectedResponseText, 116);
 }
 
+describe('Regexp Test That Definition', () => {
+  it('should find match', () => {
+    let testComment = createTestComment('what is that supposed to mean?', 'fdfdfdfdf');
+    test(processor, testComment, expectedResponseText, 1000);
+    assert.equal(1 + 1, 2);
+  });
+});
+
 function testThatDefinition(processor)
 {
   let expectedResponseText = ">that\r\n" + 
@@ -404,9 +412,6 @@ function testThatDefinition(processor)
 			">1.  \r\n" + 
 			">*(used to indicate a person, thing, idea, state, event, time, remark, etc., as pointed out or present, mentioned before, supposed to be understood, or by way of emphasis):*    " +
 			"e.g **That is her mother. After that we saw each other.**";
-
-  let testComment = createTestComment('what is that supposed to mean?', 'fdfdfdfdf');
-  test(processor, testComment, expectedResponseText, 1000);
 	
   testComment = createTestComment('what is that suPPosed to mean', 'fdfdfdfdf');
   test(processor, testComment, expectedResponseText, 1001);

@@ -5,8 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "eslint": "eslint --ignore-path .gitignore ."
+    "test": "mocha",
+    "eslint": "eslint --ignore-path .gitignore .",
+    "lint_auto_fix": "eslint --fix --ignore-path .gitignore ."
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "eslint": "^7.10.0",
-    "eslint-config-strongloop": "^2.1.0"
+    "eslint-config-strongloop": "^2.1.0",
+    "mocha": "^8.2.1"
   }
 }
