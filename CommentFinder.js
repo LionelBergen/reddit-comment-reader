@@ -1,4 +1,3 @@
-require('./tests/CommentFinderTest.js')();
 require('./CommonTools.js')();
 
 class CommentSearchProcessor
@@ -7,8 +6,6 @@ class CommentSearchProcessor
   {
     this.CommentPredicateObjects = commentPredicateObjects;
     this.commentHistory = GetArrayWithLimitedLength(numberOfRowsInCache, false);
-    //
-    TestAll(commentPredicateObjects, this);
   }
 	
   searchComment(comment)
