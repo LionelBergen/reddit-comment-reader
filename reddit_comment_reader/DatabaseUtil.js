@@ -1,15 +1,31 @@
 module.exports = function() {
   this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
+  this.WriteErrorToDatabase = writeErrorToDatabase;
 };
 
 const { Pool, Client } = require('pg');
+
+function writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo) {
+  const client = createPgClient(databaseConnectionString);
+  const queryText = 'INSERT INTO "ErrorTable"(ErrorDescription, ErrorTrace, AdditionalInfo) VALUES($1, $2, $3)';
+  const tableValues = [errorDescription, errorTrace, additionalInfo];
+  
+  client.query(queryText, tableValues, (err, res) => {
+    if (err) {
+      console.error(err.stack);
+    } else {
+      console.error(res.rows[0]);
+    }
+    client.end();
+  });
+}
 
 function getCommentSearchObjectsFromDatabase(databaseConnectionString, callbackFunction)
 {
   let commentSearchPredicates = [];
   
-  const client = new Client(databaseConnectionString);
-  client.connect();
+  const client = createPgClient(databaseConnectionString);
+  
   client.query('SELECT * FROM "RegexpComment"', function(err, result) {
     let results = result.rows;
 
@@ -31,6 +47,12 @@ function getCommentSearchObjectsFromDatabase(databaseConnectionString, callbackF
   return commentSearchPredicates;
 }
 
+function createPgClient(databaseConnectionString) {
+  const client = new Client(databaseConnectionString);
+  client.connect();
+  
+  return client;
+}
 
 function createCommentSearchObjectFromDatabaseObject(dbResult)
 {

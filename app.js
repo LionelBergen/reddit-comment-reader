@@ -1,10 +1,10 @@
 // Local files
-require('./DatabaseFetch.js')();
-require('./CommonTools.js')();
-require('./DiscordSender.js')();
-const ErrorHandler = require('./ErrorHandler.js');
-const CommentSearchProcessor = require('./CommentFinder.js');
-const RedditClientImport = require('./RedditClient.js');
+require('./reddit_comment_reader/DatabaseFetch.js')();
+require('./reddit_comment_reader/CommonTools.js')();
+require('./reddit_comment_reader/DiscordSender.js')();
+const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
+const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
+const RedditClientImport = require('./reddit_comment_reader/RedditClient.js');
 
 const pg = require('pg');
 

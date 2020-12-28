@@ -36,3 +36,23 @@ INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessa
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan))', 'hello', false, 138, 'DISCORD');
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze))', 'hello', false, 139, 'DISCORD');
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(denton|dentan))', 'hello', false, 140, 'DISCORD');
+
+CREATE TABLE public."ErrorTable" (
+    id integer NOT NULL,
+    errordescription character varying(255),
+    errortrace character varying(5000),
+    additionalinfo character varying(1000),
+    createdon timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+);
+CREATE SEQUENCE public.errortable_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE ONLY public."ErrorTable" ALTER COLUMN id SET DEFAULT nextval('public.errortable_id_seq'::regclass);
+
+
+
+
