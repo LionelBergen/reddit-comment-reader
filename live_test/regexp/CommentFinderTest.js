@@ -2,8 +2,8 @@ const EXPECTED_NUMBER_OF_ROWS = 17;
 const NO_REPLY = null;
 const commentCacheSize = 2000;
 
-const CommentSearchProcessor = require('../../CommentFinder.js');
-require('../../DatabaseFetch.js')();
+const CommentSearchProcessor = require('../../reddit_comment_reader/CommentFinder.js');
+require('../../reddit_comment_reader/DatabaseFetch.js')();
 require('dotenv').config();
 
 

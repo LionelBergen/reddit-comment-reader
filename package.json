@@ -4,9 +4,10 @@
   "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node reddit_comment_reader/app.js",
     "test": "mocha",
-	"livetest_regexp": "node livetest/regexp/CommentFinderTest.js",
+	"livetest_regexp": "node live_test/regexp/CommentFinderTest.js",
+	"livetest_discord": "node live_test/discord/DiscordSenderLiveTest.js",
     "eslint": "eslint --ignore-path .gitignore .",
     "lint_auto_fix": "eslint --fix --ignore-path .gitignore ."
   },
