@@ -2,8 +2,8 @@ const EXPECTED_NUMBER_OF_ROWS = 17;
 const NO_REPLY = null;
 const commentCacheSize = 2000;
 
-const pg = require('pg');
 const CommentSearchProcessor = require('../../CommentFinder.js');
+require('../../DatabaseFetch.js')();
 require('dotenv').config();
 
 
@@ -11,10 +11,10 @@ if (!process.env.DATABASE_URL_TEST) {
   throw 'Please set process.env.DATABASE_URL_TEST! e.g SET DATABASE_URL_TEST=postgres://.....';
 }
 
-GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
+GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL_TEST, function(commentSearchObjects) {
   const CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   console.log('Connection to database finished, running tests...');
-  testComments(commentPredicateObjects, CommentFinder);
+  testComments(commentSearchObjects, CommentFinder);
 });
 
 function testComments(commentPredicateObjects, commentFinder)

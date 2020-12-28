@@ -2,30 +2,30 @@ module.exports = function() {
   this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
 };
 
-function getCommentSearchObjectsFromDatabase(pg, url, callbackFunction)
+const { Pool, Client } = require('pg');
+
+function getCommentSearchObjectsFromDatabase(databaseConnectionString, callbackFunction)
 {
   let commentSearchPredicates = [];
-  pg.connect(url, function(err, client, done) {
-    if(err) {
-      return console.error('Client error.', err);
+  
+  const client = new Client(databaseConnectionString);
+  client.connect();
+  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
+    let results = result.rows;
+
+    for (let i=0; i<results.length; i++)
+    {
+      let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
+      commentSearchPredicates.push(commentSearchObject);
+      console.log(commentSearchObject);
     }
+    
+    callbackFunction(commentSearchPredicates);
 
-    client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-      let results = result.rows;
-
-      for (let i=0; i<results.length; i++)
-      {
-        let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
-        commentSearchPredicates.push(commentSearchObject);
-        console.log(commentSearchObject);
-      }
-			
-      callbackFunction(commentSearchPredicates);
-
-      if(err) {
-        return console.error('Query error.', err);
-      }
-    });
+    if(err) {
+      return console.error('Query error.', err);
+    }
+    client.end();
   });
 	
   return commentSearchPredicates;
