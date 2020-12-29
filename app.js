@@ -1,12 +1,13 @@
 // Local files
-require('./reddit_comment_reader/DatabaseFetch.js')();
+require('./reddit_comment_reader/DatabaseUtil.js')();
 require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
 const RedditClientImport = require('./reddit_comment_reader/RedditClient.js');
 
-const pg = require('pg');
+const faye = require('faye');
+require('dotenv').config();
 
 const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
 const secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord = 10;
@@ -20,7 +21,6 @@ let lastMessageSentAt = new Date().getTime();
 
 const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
 
-const faye = require('faye');
 const client = new faye.Client(clientConnection);
 
 let CommentFinder;
@@ -28,32 +28,32 @@ let CommentFinder;
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
 
-// process.env.DISCORD_TOKEN
-DiscordInit();
-
-// read from .env
-require('dotenv').config();
-
-console.log('is local?: ' + isLocal());
-console.log('connecting to: ' + clientConnection);
-console.log('Database URL: ' + process.env.DATABASE_URL);
-
+// TODO: Allow for multiple discord/other clients.
 if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
+} else if (!process.env.DISCORD_TOKEN) {
+  throw 'please set process.env.DISCORD_TOKEN!';
 }
 
-let redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATABASE_URL));
+const redditClient = new RedditClientImport(new ErrorHandler(process.env.DATABASE_URL));
+
+/*
+console.log('is local?: ' + isLocal());
+console.log('connecting to: ' + clientConnection);
+console.log('Database URL: ' + process.env.DATABASE_URL);*/
 
 // Execute 
-GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
+GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(console.error);
+
+function start(commentSearchObjects) {
   CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   console.log('starting...');
-  start();
-});
-
-function start()
-{
+  DiscordInitNewClient(process.env.DISCORD_TOKEN);
   client.publish('/messages', {message: 'starting up.'});
+};
+
+function hhhhhh()
+{
 	
   setInterval(function() {
     redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {

@@ -1,3 +1,4 @@
+// TODO: turn this into it's own module...
 const https = require('https');
 
 const SUBREDDIT_URL = "https://www.reddit.com/r/";

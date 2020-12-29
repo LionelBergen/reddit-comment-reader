@@ -1,4 +1,5 @@
 require('./DatabaseUtil.js')();
+
 class ErrorHandler
 {
   constructor(databaseConnectionUrl)

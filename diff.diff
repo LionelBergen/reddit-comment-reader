@@ -1,0 +1,227 @@
+diff --git a/app.js b/app.js
+index 9bd5bb3..179baf1 100644
+--- a/app.js
++++ b/app.js
+@@ -1,12 +1,13 @@
+ // Local files
+-require('./reddit_comment_reader/DatabaseFetch.js')();
++require('./reddit_comment_reader/DatabaseUtil.js')();
+ require('./reddit_comment_reader/CommonTools.js')();
+ require('./reddit_comment_reader/DiscordSender.js')();
+ const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
+ const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
+ const RedditClientImport = require('./reddit_comment_reader/RedditClient.js');
+ 
+-const pg = require('pg');
++const faye = require('faye');
++require('dotenv').config();
+ 
+ const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
+ const secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord = 10;
+@@ -20,7 +21,6 @@ let lastMessageSentAt = new Date().getTime();
+ 
+ const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
+ 
+-const faye = require('faye');
+ const client = new faye.Client(clientConnection);
+ 
+ let CommentFinder;
+@@ -28,32 +28,32 @@ let CommentFinder;
+ let commentHistory = GetUniqueArray(3000);
+ let subredditModsList = GetUniqueArray(3000);
+ 
+-// process.env.DISCORD_TOKEN
+-DiscordInit();
+-
+-// read from .env
+-require('dotenv').config();
+-
+-console.log('is local?: ' + isLocal());
+-console.log('connecting to: ' + clientConnection);
+-console.log('Database URL: ' + process.env.DATABASE_URL);
+-
++// TODO: Allow for multiple discord/other clients.
+ if (!process.env.DATABASE_URL) {
+   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
++} else if (!process.env.DISCORD_TOKEN) {
++  throw 'please set process.env.DISCORD_TOKEN!';
+ }
+ 
+-let redditClient = new RedditClientImport(new ErrorHandler(pg, process.env.DATABASE_URL));
++const redditClient = new RedditClientImport(new ErrorHandler(process.env.DATABASE_URL));
++
++/*
++console.log('is local?: ' + isLocal());
++console.log('connecting to: ' + clientConnection);
++console.log('Database URL: ' + process.env.DATABASE_URL);*/
+ 
+ // Execute 
+-GetCommentSearchObjectsFromDatabase(pg, process.env.DATABASE_URL, function(commentSearchObjects) {
++GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(console.error);
++
++function start(commentSearchObjects) {
+   CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
+   console.log('starting...');
+-  start();
+-});
++  DiscordInitNewClient(process.env.DISCORD_TOKEN);
++  client.publish('/messages', {message: 'starting up.'});
++};
+ 
+-function start()
++function hhhhhh()
+ {
+-  client.publish('/messages', {message: 'starting up.'});
+ 	
+   setInterval(function() {
+     redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
+diff --git a/live_test/regexp/CommentFinderTest.js b/live_test/regexp/CommentFinderTest.js
+index d0cc593..48e1ba4 100644
+--- a/live_test/regexp/CommentFinderTest.js
++++ b/live_test/regexp/CommentFinderTest.js
+@@ -1,18 +1,17 @@
+-const EXPECTED_NUMBER_OF_ROWS = 17;
+-const NO_REPLY = null;
+-const commentCacheSize = 2000;
+-
+ const CommentSearchProcessor = require('../../reddit_comment_reader/CommentFinder.js');
+ require('../../reddit_comment_reader/DatabaseFetch.js')();
+ require('dotenv').config();
+ 
++const EXPECTED_NUMBER_OF_ROWS = 17;
++const NO_REPLY = null;
++const COMMENT_CACHE_SIZE = 2000;
+ 
+ if (!process.env.DATABASE_URL_TEST) {
+   throw 'Please set process.env.DATABASE_URL_TEST! e.g SET DATABASE_URL_TEST=postgres://.....';
+ }
+ 
+ GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL_TEST, function(commentSearchObjects) {
+-  const CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
++  const CommentFinder = new CommentSearchProcessor(commentSearchObjects, COMMENT_CACHE_SIZE);
+   console.log('Connection to database finished, running tests...');
+   testComments(commentSearchObjects, CommentFinder);
+ });
+diff --git a/package.json b/package.json
+index 33a8a52..9d7c98d 100644
+--- a/package.json
++++ b/package.json
+@@ -4,7 +4,7 @@
+   "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
+   "main": "app.js",
+   "scripts": {
+-    "start": "node reddit_comment_reader/app.js",
++    "start": "node app.js",
+     "test": "mocha",
+ 	"livetest_regexp": "node live_test/regexp/CommentFinderTest.js",
+ 	"livetest_discord": "node live_test/discord/DiscordSenderLiveTest.js",
+diff --git a/reddit_comment_reader/CommonTools.js b/reddit_comment_reader/CommonTools.js
+index 432a5b4..560bf1b 100644
+--- a/reddit_comment_reader/CommonTools.js
++++ b/reddit_comment_reader/CommonTools.js
+@@ -1,4 +1,3 @@
+-
+ module.exports = function() {
+   this.GetArrayWithLimitedLength = getArrayWithLimitedLength;
+   this.GetUniqueArray = getUniqueArray;
+diff --git a/reddit_comment_reader/DatabaseUtil.js b/reddit_comment_reader/DatabaseUtil.js
+index 98e6f27..408e692 100644
+--- a/reddit_comment_reader/DatabaseUtil.js
++++ b/reddit_comment_reader/DatabaseUtil.js
+@@ -1,9 +1,10 @@
++const { Pool, Client } = require('pg');
++
+ module.exports = function() {
+   this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
+   this.WriteErrorToDatabase = writeErrorToDatabase;
+ };
+ 
+-const { Pool, Client } = require('pg');
+ 
+ function writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo) {
+   const client = createPgClient(databaseConnectionString);
+@@ -20,31 +21,31 @@ function writeErrorToDatabase(databaseConnectionString, errorDescription, errorT
+   });
+ }
+ 
+-function getCommentSearchObjectsFromDatabase(databaseConnectionString, callbackFunction)
++function getCommentSearchObjectsFromDatabase(databaseConnectionString)
+ {
+-  let commentSearchPredicates = [];
+-  
+-  const client = createPgClient(databaseConnectionString);
+-  
+-  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
+-    let results = result.rows;
+-
+-    for (let i=0; i<results.length; i++)
+-    {
+-      let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
+-      commentSearchPredicates.push(commentSearchObject);
+-      console.log(commentSearchObject);
+-    }
++  return new Promise(function(resolve, reject) {
++    let commentSearchPredicates = [];
++    
++    const client = createPgClient(databaseConnectionString);
+     
+-    callbackFunction(commentSearchPredicates);
++    client.query('SELECT * FROM "RegexpComment"', function(err, result) {
++      if (err) {
++        reject(err);
++      }
++      
++      let results = result.rows;
+ 
+-    if(err) {
+-      return console.error('Query error.', err);
+-    }
+-    client.end();
++      for (let i=0; i<results.length; i++)
++      {
++        let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
++        commentSearchPredicates.push(commentSearchObject);
++        console.log(commentSearchObject);
++      }
++
++      client.end();
++      resolve(commentSearchPredicates);
++    });
+   });
+-	
+-  return commentSearchPredicates;
+ }
+ 
+ function createPgClient(databaseConnectionString) {
+diff --git a/reddit_comment_reader/DiscordSender.js b/reddit_comment_reader/DiscordSender.js
+index 53a5455..19a6d15 100644
+--- a/reddit_comment_reader/DiscordSender.js
++++ b/reddit_comment_reader/DiscordSender.js
+@@ -1,8 +1,6 @@
+ const Discord = require('discord.js');
+ const client = new Discord.Client();
+ 
+-const REDDIT_CHANNEL_NAME = 'reddit';
+-
+ function initNewDiscordClient(discordToken)
+ {
+   client.on('ready', () => {
+diff --git a/reddit_comment_reader/ErrorHandler.js b/reddit_comment_reader/ErrorHandler.js
+index 7753838..9860d7e 100644
+--- a/reddit_comment_reader/ErrorHandler.js
++++ b/reddit_comment_reader/ErrorHandler.js
+@@ -1,4 +1,5 @@
+ require('./DatabaseUtil.js')();
++
+ class ErrorHandler
+ {
+   constructor(databaseConnectionUrl)
+diff --git a/reddit_comment_reader/RedditClient.js b/reddit_comment_reader/RedditClient.js
+index ac06860..9d8df97 100644
+--- a/reddit_comment_reader/RedditClient.js
++++ b/reddit_comment_reader/RedditClient.js
+@@ -1,3 +1,4 @@
++// TODO: turn this into it's own module...
+ const https = require('https');
+ 
+ const SUBREDDIT_URL = "https://www.reddit.com/r/";

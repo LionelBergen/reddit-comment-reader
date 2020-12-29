@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const REDDIT_CHANNEL_NAME = 'reddit';
-
 function initNewDiscordClient(discordToken)
 {
   client.on('ready', () => {

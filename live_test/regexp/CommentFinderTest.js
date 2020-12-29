@@ -1,18 +1,17 @@
-const EXPECTED_NUMBER_OF_ROWS = 17;
-const NO_REPLY = null;
-const commentCacheSize = 2000;
-
 const CommentSearchProcessor = require('../../reddit_comment_reader/CommentFinder.js');
 require('../../reddit_comment_reader/DatabaseFetch.js')();
 require('dotenv').config();
 
+const EXPECTED_NUMBER_OF_ROWS = 17;
+const NO_REPLY = null;
+const COMMENT_CACHE_SIZE = 2000;
 
 if (!process.env.DATABASE_URL_TEST) {
   throw 'Please set process.env.DATABASE_URL_TEST! e.g SET DATABASE_URL_TEST=postgres://.....';
 }
 
 GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL_TEST, function(commentSearchObjects) {
-  const CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
+  const CommentFinder = new CommentSearchProcessor(commentSearchObjects, COMMENT_CACHE_SIZE);
   console.log('Connection to database finished, running tests...');
   testComments(commentSearchObjects, CommentFinder);
 });

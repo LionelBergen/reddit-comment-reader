@@ -1,9 +1,10 @@
+const { Pool, Client } = require('pg');
+
 module.exports = function() {
   this.GetCommentSearchObjectsFromDatabase = getCommentSearchObjectsFromDatabase;
   this.WriteErrorToDatabase = writeErrorToDatabase;
 };
 
-const { Pool, Client } = require('pg');
 
 function writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo) {
   const client = createPgClient(databaseConnectionString);
@@ -20,31 +21,31 @@ function writeErrorToDatabase(databaseConnectionString, errorDescription, errorT
   });
 }
 
-function getCommentSearchObjectsFromDatabase(databaseConnectionString, callbackFunction)
+function getCommentSearchObjectsFromDatabase(databaseConnectionString)
 {
-  let commentSearchPredicates = [];
-  
-  const client = createPgClient(databaseConnectionString);
-  
-  client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-    let results = result.rows;
-
-    for (let i=0; i<results.length; i++)
-    {
-      let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
-      commentSearchPredicates.push(commentSearchObject);
-      console.log(commentSearchObject);
-    }
+  return new Promise(function(resolve, reject) {
+    let commentSearchPredicates = [];
     
-    callbackFunction(commentSearchPredicates);
+    const client = createPgClient(databaseConnectionString);
+    
+    client.query('SELECT * FROM "RegexpComment"', function(err, result) {
+      if (err) {
+        reject(err);
+      }
+      
+      let results = result.rows;
 
-    if(err) {
-      return console.error('Query error.', err);
-    }
-    client.end();
+      for (let i=0; i<results.length; i++)
+      {
+        let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
+        commentSearchPredicates.push(commentSearchObject);
+        console.log(commentSearchObject);
+      }
+
+      client.end();
+      resolve(commentSearchPredicates);
+    });
   });
-	
-  return commentSearchPredicates;
 }
 
 function createPgClient(databaseConnectionString) {

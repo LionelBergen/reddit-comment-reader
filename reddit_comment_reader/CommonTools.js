@@ -1,4 +1,3 @@
-
 module.exports = function() {
   this.GetArrayWithLimitedLength = getArrayWithLimitedLength;
   this.GetUniqueArray = getUniqueArray;
