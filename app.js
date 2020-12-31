@@ -4,7 +4,7 @@ require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
-const MessagingClients = require('./reddit_comment_reader/MessagingClients.js');
+const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 
 const faye = require('faye');
 require('dotenv').config();

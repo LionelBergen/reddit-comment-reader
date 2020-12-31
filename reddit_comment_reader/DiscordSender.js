@@ -4,7 +4,7 @@ const client = new Discord.Client();
 function initNewDiscordClient(discordToken)
 {
   client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}`);
+    console.log(`Client ready, user.tag is: ${client.user.tag}`);
   });
   
   return client.login(discordToken).then(function(e) {
