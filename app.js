@@ -96,6 +96,7 @@ function processComment(comment, commentObject)
   // So we don't spam a subreddit with the same message
   let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
   let thisSubredditModList = {id: comment.subreddit};
+  const messageClient = ClientHandler.getClientByTagName(commentObject.ClientHandler);
 	
   // If we already have a moderator list for the comment, check if we should skip this comment
   if (subredditModsList.includes(thisSubredditModList))

@@ -9,9 +9,9 @@ describe('Messaging Clients Class', () => {
   });
   
   it('classes with properties', () => {
-    const messagingClientGeneric = new MessagingClients.MessagingClient('generic client', [1, 2]);
-    const messagingClientFaye = new MessagingClients.FayeMessagingClient('Faye client', [1, 2], '');
-    const messagingClientDiscord = new MessagingClients.DiscordMessagingClient('Discord client', [1, 2], '');
+    const messagingClientGeneric = new MessagingClients.MessagingClient('generic client', [1, 2], '', false);
+    const messagingClientFaye = new MessagingClients.FayeMessagingClient('Faye client', [1, 2], '', true);
+    const messagingClientDiscord = new MessagingClients.DiscordMessagingClient('Discord client', [1, 2], '', false);
     
     assert.equal(2, messagingClientGeneric.blacklistedSubreddits.length);
     assert.equal(2, messagingClientFaye.blacklistedSubreddits.length);
@@ -20,5 +20,9 @@ describe('Messaging Clients Class', () => {
     assert.equal('generic client', messagingClientGeneric.clientTagName);
     assert.equal('Faye client', messagingClientFaye.clientTagName);
     assert.equal('Discord client', messagingClientDiscord.clientTagName);
+    
+    assert.equal(false, messagingClientGeneric.shouldIgnoreModeratorComments);
+    assert.equal(true, messagingClientFaye.shouldIgnoreModeratorComments);
+    assert.equal(false, messagingClientDiscord.shouldIgnoreModeratorComments);
   });
 });

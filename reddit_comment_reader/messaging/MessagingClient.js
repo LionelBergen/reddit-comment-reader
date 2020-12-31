@@ -4,17 +4,18 @@ const faye = require('faye');
  *
 */
 class MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits) {
+  constructor(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
+    this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
   }
   
   initialize() {}
 }
 
 class FayeMessagingClient extends MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits, receivingMessagesURL) {
-    super(clientTagName, blacklistedSubreddits);
+  constructor(clientTagName, blacklistedSubreddits, receivingMessagesURL, shouldIgnoreModeratorComments) {
+    super(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments);
     this.receivingMessagesURL = receivingMessagesURL;
   }
   
@@ -25,8 +26,8 @@ class FayeMessagingClient extends MessagingClient {
 }
 
 class DiscordMessagingClient extends MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits, discordToken) {
-    super(clientTagName, blacklistedSubreddits);
+  constructor(clientTagName, blacklistedSubreddits, discordToken, shouldIgnoreModeratorComments) {
+    super(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments);
     this.discordToken = discordToken;
   }
   
