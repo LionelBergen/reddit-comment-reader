@@ -5,6 +5,10 @@ class MessagingClient {
 }
 
 class FayeMessagingClient extends MessagingClient {
+  constructor(receivingMessagesURL) {
+    super();
+    this.receivingMessagesURL = receivingMessagesURL;
+  }
   
 }
 
