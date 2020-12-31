@@ -34,6 +34,8 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
 } else if (!process.env.DISCORD_TOKEN) {
   throw 'please set process.env.DISCORD_TOKEN!';
+} else if (!process.env.AGREE_WITH_YOU_URL) {
+  throw 'Please set Reddit client URL.';
 }
 
 const clients = [
