@@ -38,9 +38,10 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set Reddit client URL.';
 }
 
+// Important: The client names (first arg), are referenced from the Database. (public.RegexpComment.Handle)
 ClientHandler.addClients(
-  new MessagingClients.FayeMessagingClient(dissallowedSubreddits, process.env.AGREE_WITH_YOU_URL),
-  new MessagingClients.DiscordMessagingClient([], process.env.DISCORD_TOKEN)
+  new MessagingClients.FayeMessagingClient('Agree-with-you', dissallowedSubreddits, process.env.AGREE_WITH_YOU_URL),
+  new MessagingClients.DiscordMessagingClient('DISCORD', [], process.env.DISCORD_TOKEN)
 );
 
 /*
