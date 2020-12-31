@@ -9,8 +9,16 @@ describe('Messaging Clients Class', () => {
   });
   
   it('classes with properties', () => {
-    assert.notEqual([1, 2], new MessagingClients.MessagingClient([1, 2]).blacklistedSubreddits);
-    assert.notEqual([1, 2], new MessagingClients.FayeMessagingClient([1, 2]).blacklistedSubreddits);
-    assert.notEqual([1, 2], new MessagingClients.DiscordMessagingClient([1, 2]).blacklistedSubreddits);
+    const messagingClientGeneric = new MessagingClients.MessagingClient('generic client', [1, 2]);
+    const messagingClientFaye = new MessagingClients.FayeMessagingClient('Faye client', [1, 2], '');
+    const messagingClientDiscord = new MessagingClients.DiscordMessagingClient('Discord client', [1, 2], '');
+    
+    assert.equal(2, messagingClientGeneric.blacklistedSubreddits.length);
+    assert.equal(2, messagingClientFaye.blacklistedSubreddits.length);
+    assert.equal(2, messagingClientDiscord.blacklistedSubreddits.length);
+    
+    assert.equal('generic client', messagingClientGeneric.clientTagName);
+    assert.equal('Faye client', messagingClientFaye.clientTagName);
+    assert.equal('Discord client', messagingClientDiscord.clientTagName);
   });
 });

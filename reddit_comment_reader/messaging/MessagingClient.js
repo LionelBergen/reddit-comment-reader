@@ -4,7 +4,8 @@ const faye = require('faye');
  *
 */
 class MessagingClient {
-  constructor(blacklistedSubreddits) {
+  constructor(clientTagName, blacklistedSubreddits) {
+    this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
   }
   
@@ -12,8 +13,8 @@ class MessagingClient {
 }
 
 class FayeMessagingClient extends MessagingClient {
-  constructor(blacklistedSubreddits, receivingMessagesURL) {
-    super(blacklistedSubreddits);
+  constructor(clientTagName, blacklistedSubreddits, receivingMessagesURL) {
+    super(clientTagName, blacklistedSubreddits);
     this.receivingMessagesURL = receivingMessagesURL;
   }
   
@@ -24,8 +25,8 @@ class FayeMessagingClient extends MessagingClient {
 }
 
 class DiscordMessagingClient extends MessagingClient {
-  constructor(blacklistedSubreddits, discordToken) {
-    super(blacklistedSubreddits);
+  constructor(clientTagName, blacklistedSubreddits, discordToken) {
+    super(clientTagName, blacklistedSubreddits);
     this.discordToken = discordToken;
   }
   

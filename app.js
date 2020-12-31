@@ -96,6 +96,7 @@ function processComment(comment, commentObject)
   let timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
   let thisSubredditModList = {id: comment.subreddit};
 	
+  // If we already have a moderator list for the comment, check if we should skip this comment
   if (subredditModsList.includes(thisSubredditModList))
   {
     if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
@@ -104,6 +105,7 @@ function processComment(comment, commentObject)
       return;
     }
   }
+  // Otherwise, populate the moderator list and re-run this function
   else
   {
     RedditClient.getSubredditModList(thisSubredditModList.id).then(function(modList) {
