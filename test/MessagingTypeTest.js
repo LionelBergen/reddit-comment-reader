@@ -7,4 +7,10 @@ describe('Messaging Clients Class', () => {
     assert.notEqual(undefined, new MessagingClients.FayeMessagingClient());
     assert.notEqual(undefined, new MessagingClients.DiscordMessagingClient());
   });
+  
+  it('classes with properties', () => {
+    assert.notEqual([1, 2], new MessagingClients.MessagingClient([1, 2]).blacklistedSubreddits);
+    assert.notEqual([1, 2], new MessagingClients.FayeMessagingClient([1, 2]).blacklistedSubreddits);
+    assert.notEqual([1, 2], new MessagingClients.DiscordMessagingClient([1, 2]).blacklistedSubreddits);
+  });
 });

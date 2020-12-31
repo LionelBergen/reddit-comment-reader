@@ -6,7 +6,6 @@ const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
 const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 
-const faye = require('faye');
 require('dotenv').config();
 const RedditClient = require('reddit-simple-client');
 
@@ -39,7 +38,8 @@ if (!process.env.DATABASE_URL) {
 }
 
 const clients = [
-  new MessagingClients.FayeMessagingClient()
+  new MessagingClients.FayeMessagingClient(dissallowedSubreddits, process.env.AGREE_WITH_YOU_URL),
+  new MessagingClients.DiscordMessagingClient([], process.env.DISCORD_TOKEN)
 ];
 
 /*
@@ -47,46 +47,19 @@ console.log('is local?: ' + isLocal());
 console.log('connecting to: ' + clientConnection);
 console.log('Database URL: ' + process.env.DATABASE_URL);*/
 
-// Execute 
+// Read data from database, then start the application 
 GetCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(console.error);
 
 function start(commentSearchObjects) {
   CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
-  console.log('starting...');
-  DiscordInitNewClient(process.env.DISCORD_TOKEN);
-};
-
-function hhhhhh()
-{
-	
+  
+  console.log('initializing clients...');
+  clients.forEach(function(client) {
+    client.initialize();
+  });
+  
   setInterval(function() {
-    redditClient.getCommentsFromSubreddit(RedditClientImport.MAX_NUM_POSTS, 'all', 'comments', function(comments) {
-      if (comments) 
-      {
-        comments.forEach(
-          comment => {
-            const foundMessage = CommentFinder.searchComment(comment);
-
-            if (foundMessage)
-            {
-              // filter by disallowed subreddits
-              if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
-              {
-                console.log('Ignoring comment, disallowed subreddit found for comment: ');
-                console.log(comment);
-              }
-              else
-              {
-                processComment(comment, foundMessage);
-              }
-            }
-          });
-      }
-      else
-      {
-        console.log('comments was undefined, skipping.');
-      }
-    });
+    RedditClient.getLatestCommentsFromReddit(RedditClient.MAX_NUM_POSTS).then(readAndProcessCommentsList);
 		
     // Send a message every so often so Heroku or whatever doesn't auto-stop
     if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
@@ -96,6 +69,33 @@ function hhhhhh()
       lastMessageSentAt = new Date().getTime();
     }
   }, intervalToWaitInMillisecondsBetweenReadingComments);
+};
+
+function readAndProcessCommentsList(comments) {
+    if (comments) 
+    {
+      comments.forEach(comment => {
+          const foundMessage = CommentFinder.searchComment(comment);
+
+          if (foundMessage)
+          {
+            // filter by disallowed subreddits
+            if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
+            {
+              console.log('Ignoring comment, disallowed subreddit found for comment: ');
+              console.log(comment);
+            }
+            else
+            {
+              processComment(comment, foundMessage);
+            }
+          }
+        });
+    }
+    else
+    {
+      console.log('comments was undefined, skipping.');
+    }
 }
 
 function processComment(comment, commentObject)
@@ -114,7 +114,7 @@ function processComment(comment, commentObject)
   }
   else
   {
-    redditClient.getSubredditModList(thisSubredditModList.id, function(modList) { 
+    RedditClient.getSubredditModList(thisSubredditModList.id).then(function(modList) {
       thisSubredditModList.modList = modList;
 		    subredditModsList.push(thisSubredditModList);
       console.log('pushed: ' + thisSubredditModList.id);
