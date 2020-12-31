@@ -4,6 +4,7 @@ require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
+const MessagingClients = require('./reddit_comment_reader/MessagingClients.js');
 
 const faye = require('faye');
 require('dotenv').config();
@@ -19,21 +20,25 @@ const userIgnoreList = ['agree-with-you'];
 
 let lastMessageSentAt = new Date().getTime();
 
-const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
-
-const client = new faye.Client(clientConnection);
+// TODO: remove these comments. Just keeping it here for reference
+// const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
+// new faye.Client(clientConnection);
+// client.publish('/messages', {message: 'starting up.'});
 
 let CommentFinder;
 
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
 
-// TODO: Allow for multiple discord/other clients.
 if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
 } else if (!process.env.DISCORD_TOKEN) {
   throw 'please set process.env.DISCORD_TOKEN!';
 }
+
+const clients = [
+  new MessagingClients.FayeMessagingClient()
+];
 
 /*
 console.log('is local?: ' + isLocal());
@@ -47,7 +52,6 @@ function start(commentSearchObjects) {
   CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   console.log('starting...');
   DiscordInitNewClient(process.env.DISCORD_TOKEN);
-  client.publish('/messages', {message: 'starting up.'});
 };
 
 function hhhhhh()
@@ -162,13 +166,4 @@ function publishComment(comment, commentObject)
   } else {
     throw 'unrecognized handler: ' + commentObject.ClientHandler ;
   }
-}
-
-/**
- * Checks if this program is currently running locally
- * We do this by checking if 'heroku' property is found in 'process.env._'
-*/
-function isLocal()
-{
-  return !(process.env._ && process.env._.indexOf("heroku"));
 }
