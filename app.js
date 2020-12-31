@@ -4,10 +4,10 @@ require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
-const RedditClientImport = require('./reddit_comment_reader/RedditClient.js');
 
 const faye = require('faye');
 require('dotenv').config();
+const RedditClient = require('reddit-simple-client');
 
 const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
 const secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord = 10;
@@ -34,8 +34,6 @@ if (!process.env.DATABASE_URL) {
 } else if (!process.env.DISCORD_TOKEN) {
   throw 'please set process.env.DISCORD_TOKEN!';
 }
-
-const redditClient = new RedditClientImport(new ErrorHandler(process.env.DATABASE_URL));
 
 /*
 console.log('is local?: ' + isLocal());
