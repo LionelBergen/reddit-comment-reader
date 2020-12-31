@@ -4,6 +4,7 @@ require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
+const ClientHandler = require('./reddit_comment_reader/ClientHandler.js');
 const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 
 require('dotenv').config();
@@ -37,10 +38,10 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set Reddit client URL.';
 }
 
-const clients = [
+ClientHandler.addClients(
   new MessagingClients.FayeMessagingClient(dissallowedSubreddits, process.env.AGREE_WITH_YOU_URL),
   new MessagingClients.DiscordMessagingClient([], process.env.DISCORD_TOKEN)
-];
+);
 
 /*
 console.log('is local?: ' + isLocal());
@@ -72,30 +73,21 @@ function start(commentSearchObjects) {
 };
 
 function readAndProcessCommentsList(comments) {
-    if (comments) 
-    {
-      comments.forEach(comment => {
-          const foundMessage = CommentFinder.searchComment(comment);
+  if (comments) 
+  {
+    comments.forEach(comment => {
+      const foundMessage = CommentFinder.searchComment(comment);
 
-          if (foundMessage)
-          {
-            // filter by disallowed subreddits
-            if (dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
-            {
-              console.log('Ignoring comment, disallowed subreddit found for comment: ');
-              console.log(comment);
-            }
-            else
-            {
-              processComment(comment, foundMessage);
-            }
-          }
-        });
-    }
-    else
-    {
-      console.log('comments was undefined, skipping.');
-    }
+      if (foundMessage)
+      {
+        processComment(comment, foundMessage);
+      }
+    });
+  }
+  else
+  {
+    console.log('comments was undefined, skipping.');
+  }
 }
 
 function processComment(comment, commentObject)
