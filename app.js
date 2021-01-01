@@ -127,7 +127,7 @@ function processComment(comment, commentObject)
   }
   
     // filter by disallowed subreddits
-  if (messageClient.dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
+  if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase()))
   {
     console.log('Ignoring comment, disallowed subreddit found for comment: ');
     console.log(comment);
