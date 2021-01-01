@@ -4,7 +4,7 @@ require('./reddit_comment_reader/CommonTools.js')();
 require('./reddit_comment_reader/DiscordSender.js')();
 const ErrorHandler = require('./reddit_comment_reader/ErrorHandler.js');
 const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
-const ClientHandler = require('./reddit_comment_reader/ClientHandler.js');
+const ClientHandler = require('./reddit_comment_reader/messaging/ClientHandler.js');
 const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 
 require('dotenv').config();
@@ -56,9 +56,7 @@ function start(commentSearchObjects) {
   CommentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   
   console.log('initializing clients...');
-  clients.forEach(function(client) {
-    client.initialize();
-  });
+  ClientHandler.initializeClients();
   
   setInterval(function() {
     RedditClient.getLatestCommentsFromReddit(RedditClient.MAX_NUM_POSTS).then(readAndProcessCommentsList);

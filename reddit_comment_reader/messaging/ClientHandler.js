@@ -7,6 +7,12 @@ class ClientHandler {
     this.clients.push(...clients);
   }
   
+  initializeClients() {
+    this.clients.forEach(function(client) {
+      client.initialize();
+    });
+  }
+  
   getClientByTagName(clientName) {
     return this.clients.find(client => client.clientTagName == clientName);
   }
