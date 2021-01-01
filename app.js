@@ -91,7 +91,6 @@ function readAndProcessCommentsList(comments) {
   }
 }
 
-// TODO: remember to re-add dissallowedsubreddits logic...
 function processComment(comment, commentObject)
 {
   // So we don't spam a subreddit with the same message
@@ -126,6 +125,14 @@ function processComment(comment, commentObject)
   if (userIgnoreList.includes(comment.author))
   {
     console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
+    return;
+  }
+  
+    // filter by disallowed subreddits
+  if (messageClient.dissallowedSubreddits.includes(comment.subreddit.toLowerCase()))
+  {
+    console.log('Ignoring comment, disallowed subreddit found for comment: ');
+    console.log(comment);
     return;
   }
 	
