@@ -133,7 +133,7 @@ function processComment(comment, commentObject)
 	
   if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
   {
-    publishComment(comment, commentObject);
+    publishComment(comment, commentObject, messageClient);
     commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
   }
   else
@@ -142,7 +142,7 @@ function processComment(comment, commentObject)
 		
     if (GetSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit)
     {
-      publishComment(comment, commentObject);
+      publishComment(comment, commentObject, messageClient);
       commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
     }
     else 
@@ -154,17 +154,7 @@ function processComment(comment, commentObject)
   }
 }
 
-function publishComment(comment, commentObject)
+function publishComment(comment, commentObject, messagingClient)
 {
-  if (commentObject.ClientHandler == "Agree-with-you") {
-    console.log('posting comment to agree-with-you');
-    client.publish('/messages', {comment: comment, reply: commentObject.ReplyMessage});
-    lastMessageSentAt = new Date().getTime();
-    console.log(comment);
-    console.log('reply: ' + commentObject);
-  } else if (commentObject.ClientHandler == "DISCORD") {
-    SendDiscordMessage(comment);
-  } else {
-    throw 'unrecognized handler: ' + commentObject.ClientHandler ;
-  }
+  messagingClient.sendMessage({redditComment:comment, redditReply: commentObject.ReplyMessage});
 }

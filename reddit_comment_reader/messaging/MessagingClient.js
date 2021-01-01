@@ -15,14 +15,19 @@ class MessagingClient {
 }
 
 class FayeMessagingClient extends MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0} = {}) {
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0, fayeMessagesUrl = '/messages'} = {}) {
     super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit});
     this.receivingMessagesURL = receivingMessagesURL;
+    this.fayeMessagesUrl = fayeMessagesUrl;
   }
   
   initialize() {
-    const client = new faye.Client(this.receivingMessagesURL);
-    client.publish('/messages', {message: 'starting up.'});
+    this.client = new faye.Client(this.receivingMessagesURL);
+    this.client.publish(this.fayeMessagesUrl, {message: 'starting up.'});
+  }
+  
+  sendMessage({fayeMessagesUrl = this.fayeMessagesUrl, redditComment = undefined, redditReply = undefined} = {}) {
+    this.client.publish(this.fayeMessagesUrl, {comment: redditComment, reply: redditReply});
   }
 }
 
@@ -34,6 +39,10 @@ class DiscordMessagingClient extends MessagingClient {
   
   initialize() {
     DiscordInitNewClient(this.discordToken);
+  }
+  
+  sendMessage({redditComment = undefined} = {}) {
+    SendDiscordMessage(redditComment);
   }
 }
 
