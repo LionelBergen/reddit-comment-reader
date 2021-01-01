@@ -38,8 +38,10 @@ if (!process.env.DATABASE_URL) {
 
 // Important: The clientTagName's, are referenced from the Database. (public.RegexpComment.Handle)
 ClientHandler.addClients(
-  new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, secondsTimeToWaitBetweenPostingSameCommentToASubreddit}),
-  new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN, secondsTimeToWaitBetweenPostingSameCommentToASubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord})
+  new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, 
+    timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubreddit}),
+  new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN, 
+    timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord})
 );
 
 /*
@@ -138,8 +140,7 @@ function processComment(comment, commentObject)
   {
     const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
 		
-    let waitAmount = commentObject.ClientHandler != "DISCORD" ? secondsTimeToWaitBetweenPostingSameCommentToASubreddit : secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord;
-    if (GetSecondsSinceUTCTimestamp(existingComment.created) > waitAmount)
+    if (GetSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit)
     {
       publishComment(comment, commentObject);
       commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
