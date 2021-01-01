@@ -4,7 +4,7 @@ const faye = require('faye');
  *
 */
 class MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments) {
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments=false} = {}) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
     this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
@@ -14,8 +14,8 @@ class MessagingClient {
 }
 
 class FayeMessagingClient extends MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits, receivingMessagesURL, shouldIgnoreModeratorComments) {
-    super(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments);
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true} = {}) {
+    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments});
     this.receivingMessagesURL = receivingMessagesURL;
   }
   
@@ -26,8 +26,8 @@ class FayeMessagingClient extends MessagingClient {
 }
 
 class DiscordMessagingClient extends MessagingClient {
-  constructor(clientTagName, blacklistedSubreddits, discordToken, shouldIgnoreModeratorComments) {
-    super(clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments);
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false} = {}) {
+    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments});
     this.discordToken = discordToken;
   }
   

@@ -14,9 +14,9 @@ describe('Client Handler addClients', () => {
 
 describe('Client Handler getClientByTagName', () => {
   it('should find client by name', () => {
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient('test1'));
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient('test2'));
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient('test3'), new MessagingClients.FayeMessagingClient('test4'));
+    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({clientTagName:'test1'}));
+    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({clientTagName:'test2'}));
+    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({clientTagName:'test3'}), new MessagingClients.FayeMessagingClient({clientTagName:'test4'}));
     
     assert.equal('test3', ClientHandler.getClientByTagName('test3').clientTagName);
     assert.equal('test2', ClientHandler.getClientByTagName('test2').clientTagName);

@@ -9,9 +9,9 @@ describe('Messaging Clients Class', () => {
   });
   
   it('classes with properties', () => {
-    const messagingClientGeneric = new MessagingClients.MessagingClient('generic client', [1, 2], '', false);
-    const messagingClientFaye = new MessagingClients.FayeMessagingClient('Faye client', [1, 2], '', true);
-    const messagingClientDiscord = new MessagingClients.DiscordMessagingClient('Discord client', [1, 2], '', false);
+    const messagingClientGeneric = new MessagingClients.MessagingClient({clientTagName:'generic client', blacklistedSubreddits:[1, 2], shouldIgnoreModeratorComments:false});
+    const messagingClientFaye = new MessagingClients.FayeMessagingClient({clientTagName:'Faye client', blacklistedSubreddits:[1, 2], receivingMessagesURL:'', shouldIgnoreModeratorComments:true});
+    const messagingClientDiscord = new MessagingClients.DiscordMessagingClient({clientTagName:'Discord client', blacklistedSubreddits:[1, 2], discordToken:'', shouldIgnoreModeratorComments:false});
     
     assert.equal(2, messagingClientGeneric.blacklistedSubreddits.length);
     assert.equal(2, messagingClientFaye.blacklistedSubreddits.length);
