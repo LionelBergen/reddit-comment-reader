@@ -22,8 +22,6 @@ let lastMessageSentAt = new Date().getTime();
 
 // TODO: remove these comments. Just keeping it here for reference
 // const clientConnection = isLocal() ? 'http://localhost:8000/' : 'http://reddit-agree-with-you.herokuapp.com/';
-// new faye.Client(clientConnection);
-// client.publish('/messages', {message: 'starting up.'});
 
 let CommentFinder;
 
@@ -38,10 +36,10 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set Reddit client URL.';
 }
 
-// Important: The client names (first arg), are referenced from the Database. (public.RegexpComment.Handle)
+// Important: The clientTagName's, are referenced from the Database. (public.RegexpComment.Handle)
 ClientHandler.addClients(
-  new MessagingClients.FayeMessagingClient('Agree-with-you', dissallowedSubreddits, process.env.AGREE_WITH_YOU_URL),
-  new MessagingClients.DiscordMessagingClient('DISCORD', [], process.env.DISCORD_TOKEN)
+  new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, secondsTimeToWaitBetweenPostingSameCommentToASubreddit}),
+  new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN, secondsTimeToWaitBetweenPostingSameCommentToASubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord})
 );
 
 /*
@@ -91,6 +89,7 @@ function readAndProcessCommentsList(comments) {
   }
 }
 
+// TODO: remember to re-add dissallowedsubreddits logic...
 function processComment(comment, commentObject)
 {
   // So we don't spam a subreddit with the same message
@@ -98,25 +97,28 @@ function processComment(comment, commentObject)
   let thisSubredditModList = {id: comment.subreddit};
   const messageClient = ClientHandler.getClientByTagName(commentObject.ClientHandler);
 	
-  // If we already have a moderator list for the comment, check if we should skip this comment
-  if (subredditModsList.includes(thisSubredditModList))
+  if (!messageClient.shouldIgnoreModeratorComments) 
   {
-    if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
+    // If we already have a moderator list for the comment, check if we should skip this comment
+    if (subredditModsList.includes(thisSubredditModList))
     {
-      console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
-      return;
+      if (commentObject.ClientHandler != "DISCORD" && subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
+      {
+        console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
+        return;
+      }
     }
-  }
-  // Otherwise, populate the moderator list and re-run this function
-  else
-  {
-    RedditClient.getSubredditModList(thisSubredditModList.id).then(function(modList) {
-      thisSubredditModList.modList = modList;
-		    subredditModsList.push(thisSubredditModList);
-      console.log('pushed: ' + thisSubredditModList.id);
-      processComment(comment, commentObject);
-      return;
-    });
+    // Otherwise, populate the moderator list and re-run this function
+    else
+    {
+      RedditClient.getSubredditModList(thisSubredditModList.id).then(function(modList) {
+        thisSubredditModList.modList = modList;
+          subredditModsList.push(thisSubredditModList);
+        console.log('pushed: ' + thisSubredditModList.id);
+        processComment(comment, commentObject);
+        return;
+      });
+    }
   }
 	
   if (userIgnoreList.includes(comment.author))

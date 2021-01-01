@@ -4,18 +4,19 @@ const faye = require('faye');
  *
 */
 class MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments=false} = {}) {
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0} = {}) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
     this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
+    this.timeBetweenSamePostInSubreddit = timeBetweenSamePostInSubreddit;
   }
   
   initialize() {}
 }
 
 class FayeMessagingClient extends MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true} = {}) {
-    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments});
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0} = {}) {
+    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit});
     this.receivingMessagesURL = receivingMessagesURL;
   }
   
@@ -26,8 +27,8 @@ class FayeMessagingClient extends MessagingClient {
 }
 
 class DiscordMessagingClient extends MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false} = {}) {
-    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments});
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0} = {}) {
+    super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit});
     this.discordToken = discordToken;
   }
   
