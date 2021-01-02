@@ -11,6 +11,10 @@ class MessagingClient {
     this.timeBetweenSamePostInSubreddit = timeBetweenSamePostInSubreddit;
   }
   
+  sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
+    
+  }
+  
   initialize() {}
 }
 
