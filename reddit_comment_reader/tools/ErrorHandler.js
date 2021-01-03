@@ -1,18 +1,17 @@
-require('./DatabaseUtil.js')();
-
 class ErrorHandler
 {
-  constructor(databaseConnectionUrl)
+  constructor(databaseConnectionUrl, databaseUtil)
   {
     this.databaseConnectionUrl = databaseConnectionUrl;
+    this.databaseUtil = databaseUtil;
   }
   
   handleError(errorDescription, errorTrace, additionalInfo)
   {
     const tableValues = [errorDescription, errorTrace, additionalInfo];
-    console.log('ERROR: ' + tableValues);
+    console.error('ERROR: ' + tableValues);
     
-    WriteErrorToDatabase(this.databaseConnectionUrl, errorDescription, errorTrace, additionalInfo);
+    this.databaseUtil.WriteErrorToDatabase(this.databaseConnectionUrl, errorDescription, errorTrace, additionalInfo);
   }
 }
 
