@@ -73,9 +73,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     }
   }
   
-  return new Promise((resolve, reject) => {
-    console.log('PROCESSING COMMENT...');
-    
+  return new Promise((resolve, reject) => { 
     if (userIgnoreList.includes(comment.author))
     {
       console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
@@ -89,9 +87,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       console.log(comment);
       resolve(0);
     }
-    
-    console.log('continue...');
-    
+
     if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit))
     {
       publishComment(comment, commentObject, messageClient);
