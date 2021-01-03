@@ -1,4 +1,4 @@
-const ClientHandler = require('../reddit_comment_reader/messaging/ClientHandler.js');
+const ClientHandler = require('../reddit_comment_reader/messaging/ClientHandler.js').createNewClient();
 const MessagingClients = require('../reddit_comment_reader/messaging/MessagingClient.js');
 const assert = require('assert');
 
