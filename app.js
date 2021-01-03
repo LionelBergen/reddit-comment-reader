@@ -1,8 +1,8 @@
 // Local files
-require('./reddit_comment_reader/DiscordSender.js')();
+require('./reddit_comment_reader/tools/DiscordSender.js')();
 const DatabaseUtil = require('./reddit_comment_reader/tools/DatabaseUtil.js');
 const ErrorHandler = require('./reddit_comment_reader/tools/ErrorHandler.js');
-const CommentSearchProcessor = require('./reddit_comment_reader/CommentFinder.js');
+const CommentSearchProcessor = require('./reddit_comment_reader/tools/CommentFinder.js');
 const ClientHandler = require('./reddit_comment_reader/messaging/ClientHandler.js');
 const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 const RedditCommentProcessor = require('./reddit_comment_reader/RedditCommentProcessor.js');

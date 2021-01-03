@@ -3,7 +3,7 @@ const RedditCommentProcessor = require('../reddit_comment_reader/RedditCommentPr
 const ClientHandler = require('../reddit_comment_reader/messaging/ClientHandler.js');
 const DatabaseUtil = require('../reddit_comment_reader/tools/DatabaseUtil.js');
 const MessagingClients = require('../reddit_comment_reader/messaging/MessagingClient.js');
-const CommentSearchProcessor = require('../reddit_comment_reader/CommentFinder.js');
+const CommentSearchProcessor = require('../reddit_comment_reader/tools/CommentFinder.js');
 
 require('dotenv').config();
 const sinon = require('sinon');

@@ -1,4 +1,4 @@
-require('../reddit_comment_reader/CommonTools.js')();
+require('../reddit_comment_reader/tools/CommonTools.js')();
 const assert = require('assert');
 
 describe('GetUniqueArray', () => {
