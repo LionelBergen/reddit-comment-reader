@@ -36,7 +36,9 @@ before(() => {
   });
 });
 
-describe('Reddit Comment Processor Test', () => {
+describe('Reddit Comment Processor Test', function() {
+  this.timeout(20000);
+  
   it('class is not null/undefined', () => {
     assert.notEqual(undefined, RedditCommentProcessor);
     assert.notEqual(null, RedditCommentProcessor);
@@ -47,7 +49,9 @@ describe('Reddit Comment Processor Test', () => {
     // Create test comments
     const testCommentList = [
       {subreddit: 'learnProgramming', body: 'then everyone clapped', id: 1},
-      {subreddit: 'learnProgramming', body: 'Denton Alcohol Delivery', id: 2}
+      {subreddit: 'learnProgramming', body: 'Denton Alcohol Delivery', id: 2},
+      {subreddit: 'learnProgramming', body: 'None sense comment', id: 3},
+      {subreddit: 'learnProgramming', body: 'should be ignored', id: 4}
     ];
     
     RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);

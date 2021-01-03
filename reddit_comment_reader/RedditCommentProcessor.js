@@ -22,21 +22,25 @@ class RedditCommentProcessor {
   processCommentsList(comments) {
     return new Promise((resolve, reject) => {
       let numberOfCommentsProcessed = 0;
-      let numberOfCommentsTotal = 0;
+      let numberOfCommentsRead = 0;
       
       // Don't use foreach here, because we're dealing with async
       for (let i=0; i<comments.length; i++) {
         const foundMessage = commentFinderr.searchComment(comments[i]);
         if (foundMessage)
         {
+          console.log('running function');
           processComment(comments[i], foundMessage, redditClientt).then(function(data) {
-            numberOfCommentsTotal++;
+            console.log('finished function');
+            numberOfCommentsRead++;
             numberOfCommentsProcessed += data;
             
-            if (numberOfCommentsTotal == comments.length) {
+            if (numberOfCommentsRead == comments.length) {
               resolve(numberOfCommentsProcessed);
             }
           });
+        } else {
+          numberOfCommentsRead++;
         }
       }
     });
