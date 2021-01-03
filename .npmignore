@@ -1,0 +1,9 @@
+test/
+database/
+live_test/
+.eslintrc.json
+.env
+example.env
+.slugignore
+Reddit-reader-run-local-notes.txt
+README.md

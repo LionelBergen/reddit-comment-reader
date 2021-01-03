@@ -1,3 +1,9 @@
 .gitignore
+.npmignore
+.env
+example.env
 Reddit-reader-run-local-notes.txt
 README.md
+database/
+live_test/
+test/
