@@ -66,7 +66,8 @@ describe('Reddit Comment Processor Test', () => {
     });
     
     
-    await RedditCommentProcessor.processCommentsList(testCommentList);
-    assert.equal(2, numberOfClientStubCalls)
+    const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
+    assert.equal(2, numberOfCommentsProcessed);
+    assert.equal(2, numberOfClientStubCalls);
   });
 });
