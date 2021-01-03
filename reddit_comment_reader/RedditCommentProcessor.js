@@ -13,20 +13,19 @@ class RedditCommentProcessor {
     clientHandlerr = clientHandler;
   }
   
-  processCommentsList(comments) {
-    comments.forEach(comment => {
-      const foundMessage = commentFinderr.searchComment(comment);
-
+  async processCommentsList(comments) {
+    // Don't use foreach here, because we're dealing with async
+    for (let i=0; i<comments.length; i++) {
+      const foundMessage = commentFinderr.searchComment(comments[i]);
       if (foundMessage)
       {
-        console.log('FOUND');
-        processComment(comment, foundMessage, redditClientt);
+        await processComment(comments[i], foundMessage, redditClientt);
       }
-    });
+    }
   }
 }
 
-function processComment(comment, commentObject, redditClient)
+async function processComment(comment, commentObject, redditClient)
 {
   // So we don't spam a subreddit with the same message
   const timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
@@ -47,15 +46,16 @@ function processComment(comment, commentObject, redditClient)
     // Otherwise, populate the moderator list and re-run this function
     else
     {
-      redditClient.getSubredditModList(thisSubredditModList.id).then(function(modList) {
-        thisSubredditModList.modList = modList;
-          subredditModsList.push(thisSubredditModList);
-        console.log('pushed: ' + thisSubredditModList.id);
-        processComment(comment, commentObject, redditClient);
-        return;
-      });
+      thisSubredditModList.modList = await redditClient.getSubredditModList(thisSubredditModList.id);
+      subredditModsList.push(thisSubredditModList);
+      console.log('pushed: ' + thisSubredditModList.id);
+      await processComment(comment, commentObject, redditClient);
+      
+      return;
     }
+    console.log('was it?: ' + subredditModsList.includes(thisSubredditModList));
   }
+  console.log('PROCESSING COMMENT...');
 	
   if (userIgnoreList.includes(comment.author))
   {
