@@ -49,7 +49,7 @@ async function processComment(comment, commentObject, redditClient)
       thisSubredditModList.modList = await redditClient.getSubredditModList(thisSubredditModList.id);
       subredditModsList.push(thisSubredditModList);
       console.log('pushed: ' + thisSubredditModList.id);
-      await processComment(comment, commentObject, redditClient);
+      processComment(comment, commentObject, redditClient);
       
       return;
     }
