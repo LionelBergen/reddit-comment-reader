@@ -53,7 +53,6 @@ describe('Reddit Comment Processor Test', function() {
       {subreddit: 'learnProgramming', body: 'None sense comment', id: 3},
       {subreddit: 'learnProgramming', body: 'should be ignored', id: 4}
     ];
-    
     RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);
     
     const sendMessageAgreeClientStub = sandbox.stub(agreeWithYouClient, 'sendMessage');

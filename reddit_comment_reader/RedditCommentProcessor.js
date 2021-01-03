@@ -1,16 +1,12 @@
-let commentFinderr;
-let redditClientt;
-let clientHandlerr;
-
 const userIgnoreList = ['agree-with-you'];
 let commentHistory = GetUniqueArray(3000);
 let subredditModsList = GetUniqueArray(3000);
 
 class RedditCommentProcessor {
   init(commentFinder, redditClient, clientHandler) {
-    commentFinderr = commentFinder;
-    redditClientt = redditClient;
-    clientHandlerr = clientHandler;
+    this.commentFinder = commentFinder;
+    this.redditClient = redditClient;
+    this.clientHandler = clientHandler;
   }
   
   /**
@@ -26,12 +22,10 @@ class RedditCommentProcessor {
       
       // Don't use foreach here, because we're dealing with async
       for (let i=0; i<comments.length; i++) {
-        const foundMessage = commentFinderr.searchComment(comments[i]);
+        const foundMessage = this.commentFinder.searchComment(comments[i]);
         if (foundMessage)
         {
-          console.log('running function');
-          processComment(comments[i], foundMessage, redditClientt).then(function(data) {
-            console.log('finished function');
+          processComment(comments[i], foundMessage, this.redditClient, this.clientHandler).then(function(data) {
             numberOfCommentsRead++;
             numberOfCommentsProcessed += data;
             
@@ -50,11 +44,11 @@ class RedditCommentProcessor {
 /**
  * Returns A promise containing the number of processed comments (0-1)
 */
-async function processComment(comment, commentObject, redditClient)
+async function processComment(comment, commentObject, redditClient, clientHandler)
 {
   // So we don't spam a subreddit with the same message
   const timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
-  const messageClient = clientHandlerr.getClientByTagName(commentObject.ClientHandler);
+  const messageClient = clientHandler.getClientByTagName(commentObject.ClientHandler);
   let thisSubredditModList = {id: comment.subreddit};
   
   if (!messageClient.shouldIgnoreModeratorComments) 
@@ -75,7 +69,7 @@ async function processComment(comment, commentObject, redditClient)
       subredditModsList.push(thisSubredditModList);
       console.log('pushed: ' + thisSubredditModList.id);
 
-      return processComment(comment, commentObject, redditClient);
+      return processComment(comment, commentObject, redditClient, clientHandler);
     }
   }
   
