@@ -34,8 +34,8 @@ class DatabaseUtil {
         {
           let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
           commentSearchPredicates.push(commentSearchObject);
-          console.debug('comment search object:');
-          console.debug(commentSearchObject);
+          // console.debug('comment search object:');
+          // console.debug(commentSearchObject);
         }
 
         client.end();
@@ -64,8 +64,8 @@ function createCommentSearchObjectFromDatabaseObject(dbResult)
 	
   // Support reddit line break
   replyMessageText = replyMessageText.replace(/\\n/g, '  \r\n');
-  console.debug('reply message text:');
-  console.debug(replyMessageText);
+  // console.debug('reply message text:');
+  // console.debug(replyMessageText);
 	
   let subredditMatchExpression = new RegExp(subredditExpressionText, 'i');
   let commentMatchExpression = new RegExp(commentExpressionText, 'i');
