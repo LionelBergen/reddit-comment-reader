@@ -29,9 +29,9 @@ if (!process.env.DATABASE_URL) {
 
 // Important: The clientTagName's, are referenced from the Database. (public.RegexpComment.Handle)
 const agreeWithYouClient = new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, 
-    timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubreddit});
+  timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubreddit});
 const discordClient = new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN, 
-    timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord});
+  timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord});
 ClientHandler.addClients(
   agreeWithYouClient,
   discordClient
@@ -61,4 +61,4 @@ function start(commentSearchObjects) {
       lastMessageSentAt = new Date().getTime();
     }*/
   }, intervalToWaitInMillisecondsBetweenReadingComments);
-};
+}

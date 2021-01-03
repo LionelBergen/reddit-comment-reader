@@ -80,7 +80,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       resolve(0);
     }
     
-      // filter by disallowed subreddits
+    // filter by disallowed subreddits
     if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase()))
     {
       console.log('Ignoring comment, disallowed subreddit found for comment: ');

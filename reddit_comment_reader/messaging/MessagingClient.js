@@ -54,4 +54,4 @@ module.exports = {
   MessagingClient : MessagingClient,
   FayeMessagingClient : FayeMessagingClient,
   DiscordMessagingClient : DiscordMessagingClient
-}
+};
