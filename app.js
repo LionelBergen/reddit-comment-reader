@@ -37,7 +37,7 @@ const discordClientDenton = new MessagingClients.DiscordMessagingClient({clientT
   timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord});
 ClientHandler.addClients(
   agreeWithYouClient,
-  discordClient,
+  discordClientPersonal,
   discordClientDenton
 );
 
