@@ -1,18 +1,25 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const clients = [];
 
 class DiscordSender {
   initNewDiscordClient(discordToken) {
-    client.on('ready', () => {
-      console.log(`Client ready, user.tag is: ${client.user.tag}`);
-    });
-    
-    return client.login(discordToken).then(function() {
-      console.log(`Logged in as ${client.user.tag}`);
+    return new Promise((resolve, reject) => {
+      const client = new Discord.Client();
+
+      client.on('ready', () => {
+        console.log(`Client ready, user.tag is: ${client.user.tag}`);
+        clients.push({discordClient: client, tag: client.user.tag});
+      });
+      
+      client.login(discordToken).then(function() {
+        console.log(`Logged in as ${client.user.tag}`);
+        resolve(client.user.tag);
+      });
     });
   }
   
-  sendDiscordMessage(channelName, redditComment) {
+  sendDiscordMessage(botUserTag, channelName, redditComment) {
+    const client = findClientByTagName(botUserTag);
     const channelToCommunicateWith = findChannelByName(client.channels, channelName);
     
     if (!channelToCommunicateWith) {
@@ -24,9 +31,13 @@ class DiscordSender {
     }
   }
 
-  logoutOfDiscord(discordToken) {
-    return client.destroy(discordToken);
+  logoutOfDiscord(usertag) {
+    return findClientByTagName(usertag).destroy();
   }
+}
+
+function findClientByTagName(usertag) {
+  return clients.find(e => e.tag == usertag).discordClient;
 }
 
 function findChannelByName(listOfChannels, channelName) {
