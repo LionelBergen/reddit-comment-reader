@@ -1,4 +1,4 @@
-require('../../reddit_comment_reader/DiscordSender.js')();
+require('../../reddit_comment_reader/tools/DiscordSender.js')();
 require('dotenv').config();
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN_TEST;
