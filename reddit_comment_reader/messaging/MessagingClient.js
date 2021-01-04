@@ -1,4 +1,5 @@
 const faye = require('faye');
+require('../tools/CommonTools.js')();
 
 /**
  *
@@ -9,13 +10,14 @@ class MessagingClient {
     this.blacklistedSubreddits = blacklistedSubreddits;
     this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
     this.timeBetweenSamePostInSubreddit = timeBetweenSamePostInSubreddit;
-  }
-  
-  sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
-    
+    this.lastMessageSentAt;
   }
   
   initialize() {}
+  
+  sendMessage() { 
+    this.lastMessageSentAt = new Date().getTime();
+  }
 }
 
 class FayeMessagingClient extends MessagingClient {
@@ -26,12 +28,23 @@ class FayeMessagingClient extends MessagingClient {
   }
   
   initialize() {
+    super.initialize();
     this.client = new faye.Client(this.receivingMessagesURL);
     this.client.publish(this.fayeMessagesUrl, {message: 'starting up.'});
   }
   
   sendMessage({fayeMessagesUrl = this.fayeMessagesUrl, redditComment = undefined, redditReply = undefined} = {}) {
+    super.sendMessage();
     this.client.publish(this.fayeMessagesUrl, {comment: redditComment, reply: redditReply});
+  }
+  
+  sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
+    if (GetSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage)
+    {
+      console.log('sending active message');
+      this.client.publish(this.fayeMessagesUrl, {active: '1'});
+      this.lastMessageSentAt = new Date().getTime();
+    }
   }
 }
 
@@ -42,10 +55,12 @@ class DiscordMessagingClient extends MessagingClient {
   }
   
   initialize() {
+    super.initialize();
     DiscordInitNewClient(this.discordToken);
   }
   
   sendMessage({redditComment = undefined} = {}) {
+    super.sendMessage();
     SendDiscordMessage(redditComment);
   }
 }

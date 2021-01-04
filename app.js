@@ -55,15 +55,8 @@ function start(commentSearchObjects) {
       .catch(err => {
         errorHandler.handleError(err, err.stack, err.toString());
       });
-		
+  
     // Send a message every so often so Heroku or whatever doesn't auto-stop
-    // TODO !IMPORTANT:
-    /*
-    if (GetSecondsSinceTimeInSeconds(lastMessageSentAt) > intervalToWaitBeforeSendingIdleMessage)
-    {
-      console.log('sending active message');
-      client.publish('/messages', {active: '1'});
-      lastMessageSentAt = new Date().getTime();
-    }*/
+    agreeWithYouClient.sendIdleMessageWhenInactive(intervalToWaitBeforeSendingIdleMessage);
   }, intervalToWaitInMillisecondsBetweenReadingComments);
 }
