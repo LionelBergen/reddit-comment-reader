@@ -1,9 +1,10 @@
+const DatabaseUtil = require('../../reddit_comment_Reader/tools/DatabaseUtil.js');
+
 class ErrorHandler
 {
-  constructor(databaseConnectionUrl, databaseUtil)
+  constructor(databaseConnectionUrl)
   {
     this.databaseConnectionUrl = databaseConnectionUrl;
-    this.databaseUtil = databaseUtil;
   }
   
   handleError(errorDescription, errorTrace, additionalInfo)
@@ -11,7 +12,7 @@ class ErrorHandler
     const tableValues = [errorDescription, errorTrace, additionalInfo];
     console.error('ERROR: ' + tableValues);
     
-    this.databaseUtil.WriteErrorToDatabase(this.databaseConnectionUrl, errorDescription, errorTrace, additionalInfo);
+    DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, errorDescription, errorTrace, additionalInfo);
   }
 }
 
