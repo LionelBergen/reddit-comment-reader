@@ -27,6 +27,8 @@ if (!process.env.DATABASE_URL) {
   throw 'Please set Reddit client URL.';
 }
 
+const errorHandler = new ErrorHandler(process.env.DATABASE_URL);
+
 // Important: The clientTagName's, are referenced from the Database. (public.RegexpComment.Handle)
 const agreeWithYouClient = new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, 
   timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubreddit});
@@ -48,8 +50,11 @@ function start(commentSearchObjects) {
   RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);
   
   setInterval(function() {
-    // TODO: use error handler on reject
-    RedditClient.getLatestCommentsFromReddit(RedditClient.MAX_NUM_POSTS).then(data => RedditCommentProcessor.processCommentsList(data));
+    RedditClient.getLatestCommentsFromReddit(RedditClient.MAX_NUM_POSTS)
+      .then(data => RedditCommentProcessor.processCommentsList(data))
+      .catch(err => {
+        errorHandler.handleError(err, err.stack, err.toString());
+      });
 		
     // Send a message every so often so Heroku or whatever doesn't auto-stop
     // TODO !IMPORTANT:
