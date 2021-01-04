@@ -31,7 +31,7 @@ class RedditCommentProcessor {
             numberOfCommentsProcessed += data;
             
             if (numberOfCommentsRead == comments.length) {
-              resolve(numberOfCommentsProcessed);
+              return resolve(numberOfCommentsProcessed);
             }
           });
         } else {
@@ -56,7 +56,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     if (subredditModsList.includes(thisSubredditModList)) {
       if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author)) {
         console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
-        Promise.resolve(0);
+        return Promise.resolve(0);
       }
     // Otherwise, populate the moderator list and re-run this function
     } else {
@@ -71,32 +71,32 @@ async function processComment(comment, commentObject, redditClient, clientHandle
   return new Promise((resolve) => { 
     if (userIgnoreList.includes(comment.author)) {
       console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
-      resolve(0);
+      return resolve(0);
     }
     
     // filter by disallowed subreddits
     if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase())) {
       console.log('Ignoring comment, disallowed subreddit found for comment: ');
       console.log(comment);
-      resolve(0);
+      return resolve(0);
     }
 
     if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit)) {
       publishComment(comment, commentObject, messageClient);
       commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-      resolve(1);
+      return resolve(1);
     } else {
       const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
       
       if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit) {
         publishComment(comment, commentObject, messageClient);
         commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-        resolve(1);
+        return resolve(1);
       } else {
         console.log('skipping comment, we\'ve already posted to this subreddit recently!');
         console.log(comment);
         console.log(commentHistory);
-        resolve(0);
+        return resolve(0);
       }
     }
   });

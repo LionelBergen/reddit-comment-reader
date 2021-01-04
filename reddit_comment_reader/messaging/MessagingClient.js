@@ -14,7 +14,7 @@ class MessagingClient {
     this.lastMessageSentAt;
   }
   
-  initialize() {}
+  async initialize() {}
   
   sendMessage() { 
     this.lastMessageSentAt = new Date().getTime();
@@ -28,8 +28,8 @@ class FayeMessagingClient extends MessagingClient {
     this.fayeMessagesUrl = fayeMessagesUrl;
   }
   
-  initialize() {
-    super.initialize();
+  async initialize() {
+    await super.initialize();
     this.client = new faye.Client(this.receivingMessagesURL);
     this.client.publish(this.fayeMessagesUrl, {message: 'starting up.'});
   }
@@ -49,19 +49,20 @@ class FayeMessagingClient extends MessagingClient {
 }
 
 class DiscordMessagingClient extends MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0} = {}) {
+  constructor({clientTagName = undefined, channelName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0} = {}) {
     super({clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit});
     this.discordToken = discordToken;
+    this.channelName = channelName;
   }
   
-  initialize() {
-    super.initialize();
-    DiscordSender.initNewDiscordClient(this.discordToken);
+  async initialize() {
+    await super.initialize();
+    this.discordTagName = await DiscordSender.initNewDiscordClient(this.discordToken);
   }
   
   sendMessage({redditComment = undefined} = {}) {
     super.sendMessage();
-    DiscordSender.sendDiscordMessage(redditComment);
+    DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, redditComment);
   }
 }
 

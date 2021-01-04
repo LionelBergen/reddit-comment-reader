@@ -37,7 +37,12 @@ class DiscordSender {
 }
 
 function findClientByTagName(usertag) {
-  return clients.find(e => e.tag == usertag).discordClient;
+  const clientMatchingTag = clients.find(e => e.tag == usertag);
+  if (!clientMatchingTag) {
+    throw 'Cannot find client matching tag: ' + usertag;
+  }
+  
+  return clientMatchingTag.discordClient;
 }
 
 function findChannelByName(listOfChannels, channelName) {

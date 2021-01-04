@@ -32,8 +32,10 @@ const errorHandler = new ErrorHandler(process.env.DATABASE_URL);
 const agreeWithYouClient = new MessagingClients.FayeMessagingClient({clientTagName:'Agree-with-you', blacklistedSubreddits:dissallowedSubreddits, receivingMessagesURL:process.env.AGREE_WITH_YOU_URL, 
   timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubreddit});
 const discordClientPersonal = new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD_PERSONAL', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN_PERSONAL, 
+  channelName: 'reddit-bot-test',
   timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord});
 const discordClientDenton = new MessagingClients.DiscordMessagingClient({clientTagName:'DISCORD', blacklistedSubreddits:[], discordToken:process.env.DISCORD_TOKEN_DENTON, 
+  channelName: 'reddit',
   timeBetweenSamePostInSubreddit:secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord});
 ClientHandler.addClients(
   agreeWithYouClient,
