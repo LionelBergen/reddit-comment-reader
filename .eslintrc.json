@@ -17,6 +17,7 @@
 		"linebreak-style": ["error", "unix"],
 		"semi": ["error", "always"],
 		"no-undef": 1,
-		"curly": ["error", "all"]
+		"curly": ["error", "all"],
+		"brace-style": ["error", "1tbs"]
 	}
 }

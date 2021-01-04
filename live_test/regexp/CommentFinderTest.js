@@ -16,10 +16,8 @@ DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL_TEST).
   testComments(commentSearchObjects, CommentFinder);
 });
 
-function testComments(commentPredicateObjects, commentFinder)
-{
-  if (commentPredicateObjects.length != EXPECTED_NUMBER_OF_ROWS)
-  {
+function testComments(commentPredicateObjects, commentFinder) {
+  if (commentPredicateObjects.length != EXPECTED_NUMBER_OF_ROWS) {
     throw "Expected rows: " + EXPECTED_NUMBER_OF_ROWS + " but was: " + commentPredicateObjects.length;
   }
 	
@@ -48,8 +46,7 @@ function testComments(commentPredicateObjects, commentFinder)
  * Tests that replies to other users don't trigger our regularExpression.
  * E.G: /u/noU
 */
-function testUsernameFilter(processor)
-{
+function testUsernameFilter(processor) {
   let testComment = createTestComment('/u/nou', 'fdfdfdfdf');
   test(processor, testComment, NO_REPLY, 1000);
   
@@ -73,8 +70,7 @@ function testUsernameFilter(processor)
   test(processor, testComment, expectedReply, 1006);
 }
 
-function testEveryoneClapped(processor)
-{
+function testEveryoneClapped(processor) {
   let expectedReply = 'Can confirm this is true. I was also applauding.';
 	
   let testComment = createTestComment('then everyone clapped', 'fdfdfdfdf');
@@ -93,8 +89,7 @@ function testEveryoneClapped(processor)
   test(processor, testComment, expectedReply, 704);
 }
 
-function testDAD(processor)
-{
+function testDAD(processor) {
   let expectedReply = 'hello';
 	
   let testComment = createTestComment('Denton Alcohol Delivery', 'fdfdfdfdf');
@@ -119,8 +114,7 @@ function testDAD(processor)
   test(processor, testComment, expectedReply, 5506);
 }
 
-function testPokemonBulbasaur(processor)
-{
+function testPokemonBulbasaur(processor) {
   let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Charmander, one for my Squirtle, and one for my second Charmander.';
   let testComment = createTestComment('bulbasauR', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 600);
@@ -146,8 +140,7 @@ function testPokemonBulbasaur(processor)
   test(processor, testComment, NO_REPLY, 609);
 }
 
-function testPokemonCharmander(processor)
-{
+function testPokemonCharmander(processor) {
   let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Squirtle, one for my Bulbasaur, and one for my second Squirtle.';
   let testComment = createTestComment('chARMANDER', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 600);
@@ -173,8 +166,7 @@ function testPokemonCharmander(processor)
   test(processor, testComment, NO_REPLY, 609);
 }
 
-function testPokemonSquirtle(processor)
-{
+function testPokemonSquirtle(processor) {
   let expectedReply = 'Whenever I play Pokemon I need 3 save spots, one for my Bulbasaur, one for my Charmander, and one for my second Bulbasaur.';
   let testComment = createTestComment('Squirtle', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 600);
@@ -200,8 +192,7 @@ function testPokemonSquirtle(processor)
   test(processor, testComment, NO_REPLY, 609);
 }
 
-function testILoveYou(processor)
-{
+function testILoveYou(processor) {
   let expectedReply = 'I love you both';
   let testComment = createTestComment('I love you', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 500);
@@ -222,8 +213,7 @@ function testILoveYou(processor)
   test(processor, testComment, expectedReply, 505);
 }
 
-function testNotPossible(processor)
-{
+function testNotPossible(processor) {
   let expectedReply = 'I agree, this does not seem possible.';
   let testComment = createTestComment('this isn\'t possible', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 400);
@@ -238,8 +228,7 @@ function testNotPossible(processor)
   test(processor, testComment, expectedReply, 403);
 }
 
-function testSeemsPossible(processor)
-{
+function testSeemsPossible(processor) {
   let expectedReply = 'I agree, this does seem possible.';
   let testComment = createTestComment('That seems possible', 'fdfdfdfdf');
   test(processor, testComment, expectedReply, 300);
@@ -263,8 +252,7 @@ function testSeemsPossible(processor)
   test(processor, testComment, expectedReply, 306);
 }
 
-function testTheyDidTheMath(processor)
-{
+function testTheyDidTheMath(processor) {
   let testComment = createTestComment('/r/theydidthemath', 'fdfdfdfdf');
   test(processor, testComment, '/r/theydidthemonstermath', 1);
 	
@@ -285,8 +273,7 @@ function testTheyDidTheMath(processor)
   test(processor, testComment, NO_REPLY, 5);
 }
 
-function testNoU(processor)
-{
+function testNoU(processor) {
   let testComment = createTestComment('No you', 'fdfdfdfdf');
   test(processor, testComment, 'No you both', 6);
 	
@@ -313,8 +300,7 @@ function testNoU(processor)
   test(processor, testComment, NO_REPLY, 14);
 }
 
-function testThatSeemsPossible(processor)
-{
+function testThatSeemsPossible(processor) {
   let testComment = createTestComment('That seems possible', 'fdfdfdfdf');
   test(processor, testComment, 'I agree, this does seem possible.', 15);
   testComment = createTestComment('ya thAt seems possible', 'fdfdfdfdf');
@@ -348,8 +334,7 @@ function testThatSeemsPossible(processor)
   test(processor, testComment, NO_REPLY, 29);
 }
 
-function testThisDefinition(processor)
-{
+function testThisDefinition(processor) {
   let expectedResponseText = ">this\r\n" + 
 			">[th is]  \r\n" + 
 			">1.  \r\n" + 
@@ -408,8 +393,7 @@ function testThisDefinition(processor)
   test(processor, testComment, expectedResponseText, 116);
 }
 
-function testThatDefinition(processor)
-{
+function testThatDefinition(processor) {
   let expectedResponseText = ">that\r\n" + 
 			">[th at; unstressed th uh t]  \r\n" + 
 			">1.  \r\n" + 
@@ -468,32 +452,24 @@ function testThatDefinition(processor)
   test(processor, testComment, expectedResponseText, 1160);
 }
 
-function test(processor, comment, expectedResult, index)
-{
+function test(processor, comment, expectedResult, index) {
   let actualResult = processor.searchComment(comment);
 	
-  if (expectedResult && !actualResult)
-  {
+  if (expectedResult && !actualResult) {
     throw "FAILURE. returned null when expected a result. test failed: " + index;
-  }
-  else if (!expectedResult && actualResult)
-  {
+  } else if (!expectedResult && actualResult) {
     throw "FAILURE Returned a result when expected null. test failed: " + index;
-  }
-  else
-  {
+  } else {
     // Actual result has spaces before line breaks.
     expectedResult = expectedResult == null ? null : expectedResult.replace(/(?:\r\n|\r|\n)/g, '  ');
     actualResult = actualResult == null ? null : actualResult.ReplyMessage.replace(/(?:\r\n|\r|\n)/g, '');
 		
-    if (expectedResult != actualResult)
-    {
+    if (expectedResult != actualResult) {
       throw "FAILURE expected: \r\n" + expectedResult + "\r\n but was: \r\n" + actualResult + " \r\nindex: " + index;
     }
   }
 }
 
-function createTestComment(comment, subreddit)
-{
+function createTestComment(comment, subreddit) {
   return {body: comment, subreddit: subreddit, id: 'gfdgdfgdfg' + Math.random() };
 }

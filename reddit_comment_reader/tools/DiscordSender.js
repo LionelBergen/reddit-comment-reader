@@ -2,8 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 class DiscordSender {
-  initNewDiscordClient(discordToken)
-  {
+  initNewDiscordClient(discordToken) {
     client.on('ready', () => {
       console.log(`Client ready, user.tag is: ${client.user.tag}`);
     });
@@ -30,8 +29,7 @@ class DiscordSender {
   }
 }
 
-function findChannelByName(listOfChannels, channelName)
-{
+function findChannelByName(listOfChannels, channelName) {
   return listOfChannels.find(channel => channel.name == channelName);
 }
 

@@ -40,8 +40,7 @@ class FayeMessagingClient extends MessagingClient {
   }
   
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
-    if (Util.getSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage)
-    {
+    if (Util.getSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage) {
       console.log('sending active message');
       this.client.publish(this.fayeMessagesUrl, {active: '1'});
       this.lastMessageSentAt = new Date().getTime();

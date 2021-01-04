@@ -16,8 +16,7 @@ class DatabaseUtil {
     });
   }
   
-  getCommentSearchObjectsFromDatabase(databaseConnectionString)
-  {
+  getCommentSearchObjectsFromDatabase(databaseConnectionString) {
     return new Promise(function(resolve, reject) {
       let commentSearchPredicates = [];
       
@@ -30,8 +29,7 @@ class DatabaseUtil {
         
         let results = result.rows;
 
-        for (let i=0; i<results.length; i++)
-        {
+        for (let i=0; i<results.length; i++) {
           let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
           commentSearchPredicates.push(commentSearchObject);
           // console.debug('comment search object:');
@@ -52,8 +50,7 @@ function createPgClient(databaseConnectionString) {
   return client;
 }
 
-function createCommentSearchObjectFromDatabaseObject(dbResult)
-{
+function createCommentSearchObjectFromDatabaseObject(dbResult) {
   let commentExpressionText = dbResult.CommentMatch;
   let subredditExpressionText = dbResult.SubredditMatch;
 	

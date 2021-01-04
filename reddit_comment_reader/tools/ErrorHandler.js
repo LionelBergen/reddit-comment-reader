@@ -1,14 +1,11 @@
 const DatabaseUtil = require('../../reddit_comment_Reader/tools/DatabaseUtil.js');
 
-class ErrorHandler
-{
-  constructor(databaseConnectionUrl)
-  {
+class ErrorHandler {
+  constructor(databaseConnectionUrl) {
     this.databaseConnectionUrl = databaseConnectionUrl;
   }
   
-  handleError(errorDescription, errorTrace, additionalInfo)
-  {
+  handleError(errorDescription, errorTrace, additionalInfo) {
     const tableValues = [errorDescription, errorTrace, additionalInfo];
     console.error('ERROR: ' + tableValues);
     
