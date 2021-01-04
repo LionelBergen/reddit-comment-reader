@@ -59,7 +59,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author))
       {
         console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
-        resolve(0);
+        Promise.resolve(0);
       }
     }
     // Otherwise, populate the moderator list and re-run this function

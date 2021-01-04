@@ -35,7 +35,7 @@ class FayeMessagingClient extends MessagingClient {
   
   sendMessage({fayeMessagesUrl = this.fayeMessagesUrl, redditComment = undefined, redditReply = undefined} = {}) {
     super.sendMessage();
-    this.client.publish(this.fayeMessagesUrl, {comment: redditComment, reply: redditReply});
+    this.client.publish(fayeMessagesUrl, {comment: redditComment, reply: redditReply});
   }
   
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {

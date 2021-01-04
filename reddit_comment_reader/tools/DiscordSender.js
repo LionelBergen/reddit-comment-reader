@@ -8,7 +8,7 @@ function initNewDiscordClient(discordToken)
   });
   
   return client.login(discordToken).then(function(e) {
-	  console.log(`Logged in as ${client.user.tag}`);
+    console.log(`Logged in as ${client.user.tag}`);
   });
 }
 
@@ -22,7 +22,7 @@ function sendDiscordMessage(channelName, redditComment) {
   if (!channelToCommunicateWith) {
     throw 'ChannelToComminicateWith is null!!';
   } else if (!redditComment || !redditComment.body || !redditComment.permalink) {
-	  throw 'Comment not well formed!';
+    throw 'Comment not well formed!';
   } else {
     channelToCommunicateWith.send(`Comment: ${redditComment.body}\r\nlink: https://reddit.com${redditComment.permalink}`);
   }

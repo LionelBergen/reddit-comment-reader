@@ -1,4 +1,4 @@
-const { Pool, Client } = require('pg');
+const { Client } = require('pg');
 
 class DatabaseUtil {
   writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo) {
@@ -60,7 +60,7 @@ function createCommentSearchObjectFromDatabaseObject(dbResult)
   // Always use case insensetive. Strip the case insensetive flag if it exists (JS doesnt support it)
   commentExpressionText = commentExpressionText.replace('(?i)', '');
   subredditExpressionText = subredditExpressionText.replace('(?i)', '');
-  replyMessageText = dbResult.ReplyMessage;
+  let replyMessageText = dbResult.ReplyMessage;
 	
   // Support reddit line break
   replyMessageText = replyMessageText.replace(/\\n/g, '  \r\n');

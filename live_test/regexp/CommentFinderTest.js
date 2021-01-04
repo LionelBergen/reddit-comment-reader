@@ -50,7 +50,7 @@ function testComments(commentPredicateObjects, commentFinder)
 */
 function testUsernameFilter(processor)
 {
-  testComment = createTestComment('/u/nou', 'fdfdfdfdf');
+  let testComment = createTestComment('/u/nou', 'fdfdfdfdf');
   test(processor, testComment, NO_REPLY, 1000);
   
   testComment = createTestComment('/u/nouser', 'fdfdfdfdf');
