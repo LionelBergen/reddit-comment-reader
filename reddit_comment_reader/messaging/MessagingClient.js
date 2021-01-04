@@ -1,5 +1,6 @@
 const faye = require('faye');
-require('../tools/CommonTools.js')();
+const DiscordSender = require('../tools/DiscordSender.js');
+const Util = require('../tools/CommonTools.js');
 
 /**
  *
@@ -39,7 +40,7 @@ class FayeMessagingClient extends MessagingClient {
   }
   
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
-    if (GetSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage)
+    if (Util.getSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage)
     {
       console.log('sending active message');
       this.client.publish(this.fayeMessagesUrl, {active: '1'});
@@ -56,12 +57,12 @@ class DiscordMessagingClient extends MessagingClient {
   
   initialize() {
     super.initialize();
-    DiscordInitNewClient(this.discordToken);
+    DiscordSender.initNewDiscordClient(this.discordToken);
   }
   
   sendMessage({redditComment = undefined} = {}) {
     super.sendMessage();
-    SendDiscordMessage(redditComment);
+    DiscordSender.sendDiscordMessage(redditComment);
   }
 }
 

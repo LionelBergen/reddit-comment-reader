@@ -1,6 +1,8 @@
+const Util = require('../reddit_comment_reader/tools/CommonTools.js');
+
 const userIgnoreList = ['agree-with-you'];
-let commentHistory = GetUniqueArray(3000);
-let subredditModsList = GetUniqueArray(3000);
+let commentHistory = Util.getUniqueArray(3000);
+let subredditModsList = Util.getUniqueArray(3000);
 
 class RedditCommentProcessor {
   init(commentFinder, redditClient, clientHandler) {
@@ -16,7 +18,7 @@ class RedditCommentProcessor {
    * @return A promise containing number of comments processed
   */
   processCommentsList(comments) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let numberOfCommentsProcessed = 0;
       let numberOfCommentsRead = 0;
       
@@ -73,7 +75,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     }
   }
   
-  return new Promise((resolve, reject) => { 
+  return new Promise((resolve) => { 
     if (userIgnoreList.includes(comment.author))
     {
       console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
@@ -98,7 +100,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     {
       const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
       
-      if (GetSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit)
+      if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit)
       {
         publishComment(comment, commentObject, messageClient);
         commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);

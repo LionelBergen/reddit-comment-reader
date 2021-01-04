@@ -1,11 +1,11 @@
-require('./CommonTools.js')();
+const Util = require('./CommonTools.js');
 
 class CommentSearchProcessor
 {
   constructor(commentPredicateObjects, numberOfRowsInCache)
   {
     this.CommentPredicateObjects = commentPredicateObjects;
-    this.commentHistory = GetArrayWithLimitedLength(numberOfRowsInCache, false);
+    this.commentHistory = Util.getArrayWithLimitedLength(numberOfRowsInCache, false);
   }
 	
   searchComment(comment)
