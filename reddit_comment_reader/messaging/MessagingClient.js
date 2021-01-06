@@ -37,6 +37,7 @@ class FayeMessagingClient extends MessagingClient {
   sendMessage({fayeMessagesUrl = this.fayeMessagesUrl, redditComment = undefined, redditReply = undefined} = {}) {
     super.sendMessage();
     this.client.publish(fayeMessagesUrl, {comment: redditComment, reply: redditReply});
+    return Promise.resolve(1);
   }
   
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
@@ -62,7 +63,11 @@ class DiscordMessagingClient extends MessagingClient {
   
   sendMessage({redditComment = undefined} = {}) {
     super.sendMessage();
-    DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: ${redditComment.url}`);
+    // Discord does not allow messages over 2000.
+    if (redditComment.body.length > 1900) {
+      redditComment.body = redditComment.body.substring(0, 1900) + "...";
+    }
+    return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: ${redditComment.url}`);
   }
 }
 

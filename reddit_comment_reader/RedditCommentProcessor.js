@@ -18,26 +18,46 @@ class RedditCommentProcessor {
    * @return A promise containing number of comments processed
   */
   processCommentsList(comments) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       let numberOfCommentsProcessed = 0;
       let numberOfCommentsRead = 0;
+      let errors = [];
       
       // Don't use foreach here, because we're dealing with async
       for (let i=0; i<comments.length; i++) {
         const foundMessage = this.commentFinder.searchComment(comments[i]);
         if (foundMessage) {
-          processComment(comments[i], foundMessage, this.redditClient, this.clientHandler).then(function(data) {
+          try {
+            processComment(comments[i], foundMessage, this.redditClient, this.clientHandler).then(function(data) {
+              numberOfCommentsRead++;
+              numberOfCommentsProcessed += data;
+              
+              if (numberOfCommentsRead == comments.length) {
+                return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
+              }
+            }).catch(function(error) {
+              numberOfCommentsRead++;
+              // If there's an error with a comment, we still want to continue with the rest of the comments
+              console.error('error with comment: ');
+              console.error(comments[i]);
+              errors.push(error);
+              if (numberOfCommentsRead == comments.length) {
+                return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
+              }
+            });
+          } catch(error) {
             numberOfCommentsRead++;
-            numberOfCommentsProcessed += data;
-            
+            console.error('error with comment: ');
+            console.error(comment[i]);
+            errors.push(error);
             if (numberOfCommentsRead == comments.length) {
-              return resolve(numberOfCommentsProcessed);
+              return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
             }
-          });
+          }
         } else {
           numberOfCommentsRead++;
           if (numberOfCommentsRead == comments.length) {
-            return resolve(numberOfCommentsProcessed);
+            return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
           }
         }
       }
@@ -71,7 +91,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     }
   }
   
-  return new Promise((resolve) => { 
+  return new Promise((resolve, reject) => {
     if (userIgnoreList.includes(comment.author)) {
       console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
       return resolve(0);
@@ -85,16 +105,18 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     }
 
     if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit)) {
-      publishComment(comment, commentObject, messageClient);
-      commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-      return resolve(1);
+      publishComment(comment, commentObject, messageClient).then(function() {
+        commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+        return resolve(1);
+      }).catch(reject);
     } else {
       const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
       
       if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit) {
-        publishComment(comment, commentObject, messageClient);
-        commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-        return resolve(1);
+        publishComment(comment, commentObject, messageClient).then(function() {
+          commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+          return resolve(1);
+        }).catch(reject);
       } else {
         console.log('skipping comment, we\'ve already posted to this subreddit recently!');
         console.log(comment);
@@ -106,7 +128,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
 }
 
 function publishComment(comment, commentObject, messagingClient) {
-  messagingClient.sendMessage({redditComment:comment, redditReply: commentObject.ReplyMessage});
+  return messagingClient.sendMessage({redditComment:comment, redditReply: commentObject.ReplyMessage});
 }
 
 module.exports = new RedditCommentProcessor();

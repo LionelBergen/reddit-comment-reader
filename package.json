@@ -20,7 +20,7 @@
     "https": "^1.0.0",
     "pg": "^6.4.2",
     "reddit-simple-client": "^1.0.2",
-    "discord-multi-bot": "^1.0.0"
+    "discord-multi-bot": "^1.0.2"
   },
   "devDependencies": {
     "eslint": "^7.10.0",

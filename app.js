@@ -56,11 +56,19 @@ function start(commentSearchObjects) {
   setInterval(function() {
     RedditClient.getLatestCommentsFromReddit(RedditClient.MAX_NUM_POSTS)
       .then(data => RedditCommentProcessor.processCommentsList(data))
-      .catch(err => {
-        errorHandler.handleError(err, err.stack, err.toString());
-      });
+      .catch(handleError);
   
     // Send a message every so often so Heroku or whatever doesn't auto-stop
     agreeWithYouClient.sendIdleMessageWhenInactive(intervalToWaitBeforeSendingIdleMessage);
   }, intervalToWaitInMillisecondsBetweenReadingComments);
+}
+
+function handleError(err) {
+  if (Array.isArray(err)) {
+    for (let i=0; i<err.length; i++) {
+      errorHandler.handleError(err[i], err[i].stack, err[i].toString());
+    }
+  } else {
+    errorHandler.handleError(err, err.stack, err.toString());
+  }
 }
