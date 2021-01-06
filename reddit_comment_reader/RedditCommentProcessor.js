@@ -36,6 +36,9 @@ class RedditCommentProcessor {
           });
         } else {
           numberOfCommentsRead++;
+          if (numberOfCommentsRead == comments.length) {
+            return resolve(numberOfCommentsProcessed);
+          }
         }
       }
     });
