@@ -1,6 +1,6 @@
 const faye = require('faye');
-const DiscordSender = require('../tools/DiscordSender.js');
 const Util = require('../tools/CommonTools.js');
+const DiscordSender = require('discord-multi-bot');
 
 /**
  *
@@ -62,7 +62,7 @@ class DiscordMessagingClient extends MessagingClient {
   
   sendMessage({redditComment = undefined} = {}) {
     super.sendMessage();
-    DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, redditComment);
+    DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: ${redditComment.url}`);
   }
 }
 
