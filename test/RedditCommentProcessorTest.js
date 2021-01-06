@@ -36,6 +36,11 @@ before(() => {
   });
 });
 
+afterEach(() => {
+  sandbox.resetBehavior();
+  sandbox.restore();
+});
+
 describe('Reddit Comment Processor Test', function() {
   this.timeout(20000);
   
@@ -72,5 +77,27 @@ describe('Reddit Comment Processor Test', function() {
     const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
     assert.equal(2, numberOfCommentsProcessed);
     assert.equal(2, numberOfClientStubCalls);
+  });
+  
+  it('should not process any comments', async function() {
+    // None of these comments should trigger anything
+    const testCommentList = [
+      {subreddit: 'learnProgramming', body: 'nothing burger', id: 1}
+    ];
+    RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);
+
+    const sendMessageAgreeClientStub = sandbox.stub(agreeWithYouClient, 'sendMessage');
+    const sendMessageDiscordClientStub = sandbox.stub(discordClient, 'sendMessage');
+    
+    sendMessageAgreeClientStub.onCall(0).callsFake(function(returnObject) {
+      fail("should not have been called");
+    });
+    
+    sendMessageDiscordClientStub.onCall(0).callsFake(function(returnObject) {
+      fail("should not have been called");
+    });
+
+    const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
+    assert.equal(0, numberOfCommentsProcessed);
   });
 });
