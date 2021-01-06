@@ -100,4 +100,27 @@ describe('Reddit Comment Processor Test', function() {
     const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
     assert.equal(0, numberOfCommentsProcessed);
   });
+  
+  it('Reddit Comment, ignore Agree-with-you comments', async function() {
+    let numberOfClientStubCalls = 0;
+    // Create test comments
+    const testCommentList = [
+      {subreddit: 'learnProgramming', body: 'spaghetti', id: 1, author: 'agree-with-you'}
+    ];
+    RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);
+
+    const sendMessageAgreeClientStub = sandbox.stub(agreeWithYouClient, 'sendMessage');
+    const sendMessageDiscordClientStub = sandbox.stub(discordClient, 'sendMessage');
+    
+    sendMessageAgreeClientStub.onCall(0).callsFake(function(returnObject) {
+      fail("should not have been called");
+    });
+    
+    sendMessageDiscordClientStub.onCall(0).callsFake(function(returnObject) {
+      fail("should not have been called");
+    });
+    
+    const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
+    assert.equal(0, numberOfCommentsProcessed);
+  });
 });
