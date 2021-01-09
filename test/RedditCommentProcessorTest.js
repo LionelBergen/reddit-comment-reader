@@ -66,11 +66,13 @@ describe('Reddit Comment Processor Test', function() {
     sendMessageAgreeClientStub.onCall(0).callsFake(function(returnObject) {
       assert.equal('then everyone clapped', returnObject.redditComment.body);
       numberOfClientStubCalls++;
+      return Promise.resolve();
     });
     
     sendMessageDiscordClientStub.onCall(0).callsFake(function(returnObject) {
       assert.equal('Denton Alcohol Delivery', returnObject.redditComment.body);
       numberOfClientStubCalls++;
+      return Promise.resolve();
     });
     
     
