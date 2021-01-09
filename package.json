@@ -15,17 +15,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "discord-multi-bot": "^1.0.3",
     "dotenv": "^8.2.0",
-    "faye": "^1.2.4",
+    "faye": "^1.4.0",
     "https": "^1.0.0",
     "pg": "^6.4.2",
-    "reddit-simple-client": "^1.0.4",
-    "discord-multi-bot": "^1.0.2"
+    "reddit-simple-client": "^1.0.4"
   },
   "devDependencies": {
-    "eslint": "^7.10.0",
+    "eslint": "^7.17.0",
     "eslint-config-strongloop": "^2.1.0",
     "mocha": "^8.2.1",
-    "sinon": "^9.2.2"
+    "sinon": "^9.2.3"
   }
 }
