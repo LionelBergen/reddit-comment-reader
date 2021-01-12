@@ -7,6 +7,9 @@ class ErrorHandler {
   }
   
   handleError(error) {
+    // Write network status to DB error table
+    
+    
     if (typeof error == RedditCommentError) {
       DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error.toString(), error.redditComment);
     } else {

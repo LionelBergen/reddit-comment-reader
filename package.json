@@ -21,6 +21,7 @@
     "faye": "^1.4.0",
     "https": "^1.0.0",
     "pg": "^6.4.2",
+    "ping": "^0.4.0",
     "reddit-simple-client": "^1.0.6",
     "winston": "^3.3.3"
   },
