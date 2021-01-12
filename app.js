@@ -5,13 +5,16 @@ const CommentSearchProcessor = require('./reddit_comment_reader/tools/CommentFin
 const ClientHandler = require('./reddit_comment_reader/messaging/ClientHandler.js');
 const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
 const RedditCommentProcessor = require('./reddit_comment_reader/RedditCommentProcessor.js');
+const LogManager = require('./reddit_comment_reader/tools/Logger.js');
 
 require('dotenv').config();
 const RedditClient = require('reddit-simple-client');
 
+const Logger = LogManager.createInstance('app.js');
+
 const secondsTimeToWaitBetweenPostingSameCommentToASubreddit = 60 * 30;
 const secondsTimeToWaitBetweenPostingSameCommentToASubredditForDiscord = 10;
-const intervalToWaitInMillisecondsBetweenReadingComments = 1100;
+const intervalToWaitInMillisecondsBetweenReadingComments = 1090;
 const intervalToWaitBeforeSendingIdleMessage = 30;
 const commentCacheSize = 2000;
 const dissallowedSubreddits = ['suicidewatch', 'depression' ];
@@ -44,12 +47,12 @@ ClientHandler.addClients(
 );
 
 // Read data from database, then start the application 
-DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(console.error);
+DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(Logger.error);
 
 function start(commentSearchObjects) {
   const commentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   
-  console.log('initializing clients...');
+  Logger.info('initializing clients...');
   ClientHandler.initializeClients();
   RedditCommentProcessor.init(commentFinder, RedditClient, ClientHandler);
   
@@ -66,9 +69,9 @@ function start(commentSearchObjects) {
 function handleError(err) {
   if (Array.isArray(err)) {
     for (let i=0; i<err.length; i++) {
-      errorHandler.handleError(err[i], err[i].stack, err[i].toString());
+      errorHandler.handleError(err[i]);
     }
   } else {
-    errorHandler.handleError(err, err.stack, err.toString());
+    errorHandler.handleError(err);
   }
 }

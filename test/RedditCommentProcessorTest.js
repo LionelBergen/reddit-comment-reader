@@ -91,12 +91,12 @@ describe('Reddit Comment Processor Test', function() {
     const sendMessageAgreeClientStub = sandbox.stub(agreeWithYouClient, 'sendMessage');
     const sendMessageDiscordClientStub = sandbox.stub(discordClient, 'sendMessage');
     
-    sendMessageAgreeClientStub.onCall(0).callsFake(function(returnObject) {
-      fail("should not have been called");
+    sendMessageAgreeClientStub.onCall(0).callsFake(function() {
+      assert.fail("should not have been called");
     });
     
-    sendMessageDiscordClientStub.onCall(0).callsFake(function(returnObject) {
-      fail("should not have been called");
+    sendMessageDiscordClientStub.onCall(0).callsFake(function() {
+      assert.fail("should not have been called");
     });
 
     const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
@@ -104,7 +104,6 @@ describe('Reddit Comment Processor Test', function() {
   });
   
   it('Reddit Comment, ignore Agree-with-you comments', async function() {
-    let numberOfClientStubCalls = 0;
     // Create test comments
     const testCommentList = [
       {subreddit: 'learnProgramming', body: 'spaghetti', id: 1, author: 'agree-with-you'}
@@ -114,15 +113,18 @@ describe('Reddit Comment Processor Test', function() {
     const sendMessageAgreeClientStub = sandbox.stub(agreeWithYouClient, 'sendMessage');
     const sendMessageDiscordClientStub = sandbox.stub(discordClient, 'sendMessage');
     
-    sendMessageAgreeClientStub.onCall(0).callsFake(function(returnObject) {
-      fail("should not have been called");
+    sendMessageAgreeClientStub.onCall(0).callsFake(function() {
+      assert.fail("should not have been called");
     });
     
-    sendMessageDiscordClientStub.onCall(0).callsFake(function(returnObject) {
-      fail("should not have been called");
+    sendMessageDiscordClientStub.onCall(0).callsFake(function() {
+      assert.fail("should not have been called");
     });
     
     const numberOfCommentsProcessed = await RedditCommentProcessor.processCommentsList(testCommentList);
     assert.equal(0, numberOfCommentsProcessed);
   });
 });
+
+// TODO: !IMPORTANT Add tests for failures, such as Agree-with-you failing, then continuing to process comments.
+//  Test for failure with Discord, failure with Faye. Ensure others are not affected.

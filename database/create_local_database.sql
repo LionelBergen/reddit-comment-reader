@@ -42,6 +42,7 @@ CREATE TABLE public."ErrorTable" (
     errordescription character varying(255),
     errortrace character varying(5000),
     additionalinfo character varying(1000),
+    redditCommentInfo character varying(1000),
     createdon timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 CREATE SEQUENCE public.errortable_id_seq

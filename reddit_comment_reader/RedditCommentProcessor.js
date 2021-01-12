@@ -1,4 +1,8 @@
 const Util = require('../reddit_comment_reader/tools/CommonTools.js');
+const RedditCommentError = require('../reddit_comment_reader/tools/RedditCommentError.js');
+const LogManager = require('../reddit_comment_reader/tools/Logger.js');
+
+const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
 const userIgnoreList = ['agree-with-you'];
 let commentHistory = Util.getUniqueArray(3000);
@@ -38,18 +42,15 @@ class RedditCommentProcessor {
             }).catch(function(error) {
               numberOfCommentsRead++;
               // If there's an error with a comment, we still want to continue with the rest of the comments
-              console.error('error with comment: ');
-              console.error(comments[i]);
-              errors.push(error);
+              handleError(comments[i], error, errors);
               if (numberOfCommentsRead == comments.length) {
                 return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
               }
             });
           } catch(error) {
             numberOfCommentsRead++;
-            console.error('error with comment: ');
-            console.error(comment[i]);
-            errors.push(error);
+            // If there's an error with a comment, we still want to continue with the rest of the comments
+            handleError(comments[i], error, errors);
             if (numberOfCommentsRead == comments.length) {
               return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
             }
@@ -74,18 +75,18 @@ async function processComment(comment, commentObject, redditClient, clientHandle
   const messageClient = clientHandler.getClientByTagName(commentObject.ClientHandler);
   let thisSubredditModList = {id: comment.subreddit};
   
-  if (!messageClient.shouldIgnoreModeratorComments) {
+  if (messageClient.shouldIgnoreModeratorComments) {
     // If we already have a moderator list for the comment, check if we should skip this comment
     if (subredditModsList.includes(thisSubredditModList)) {
       if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author)) {
-        console.log('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
+        Logger.info('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
         return Promise.resolve(0);
       }
     // Otherwise, populate the moderator list and re-run this function
     } else {
       thisSubredditModList.modList = await redditClient.getSubredditModList(thisSubredditModList.id);
       subredditModsList.push(thisSubredditModList);
-      console.log('pushed: ' + thisSubredditModList.id);
+      Logger.info('pushed: ' + thisSubredditModList.id);
 
       return processComment(comment, commentObject, redditClient, clientHandler);
     }
@@ -93,14 +94,14 @@ async function processComment(comment, commentObject, redditClient, clientHandle
   
   return new Promise((resolve, reject) => {
     if (userIgnoreList.includes(comment.author)) {
-      console.log('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
+      Logger.info('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
       return resolve(0);
     }
     
     // filter by disallowed subreddits
     if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase())) {
-      console.log('Ignoring comment, disallowed subreddit found for comment: ');
-      console.log(comment);
+      Logger.info('Ignoring comment, disallowed subreddit found for comment: ');
+      Logger.info(comment);
       return resolve(0);
     }
 
@@ -119,8 +120,6 @@ async function processComment(comment, commentObject, redditClient, clientHandle
         }).catch(reject);
       } else {
         console.log('skipping comment, we\'ve already posted to this subreddit recently!');
-        console.log(comment);
-        console.log(commentHistory);
         return resolve(0);
       }
     }
@@ -129,6 +128,16 @@ async function processComment(comment, commentObject, redditClient, clientHandle
 
 function publishComment(comment, commentObject, messagingClient) {
   return messagingClient.sendMessage({redditComment:comment, redditReply: commentObject.ReplyMessage});
+}
+
+// TODO: this method
+function handleError(comment, error, errors) {
+  Logger.error('error with comment: ');
+  Logger.error(comment);
+  Logger.error(error);
+  errors.push(new RedditCommentError(comment, error));
+  Logger.error('added new RedditCommentError:');
+  Logger.error(new RedditCommentError(comment, error));
 }
 
 module.exports = new RedditCommentProcessor();

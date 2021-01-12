@@ -1,15 +1,17 @@
-const DatabaseUtil = require('../../reddit_comment_Reader/tools/DatabaseUtil.js');
+const DatabaseUtil = require('./DatabaseUtil.js');
+const RedditCommentError = require('./RedditCommentError.js');
 
 class ErrorHandler {
   constructor(databaseConnectionUrl) {
     this.databaseConnectionUrl = databaseConnectionUrl;
   }
   
-  handleError(errorDescription, errorTrace, additionalInfo) {
-    const tableValues = [errorDescription, errorTrace, additionalInfo];
-    console.error('ERROR: ' + tableValues);
-    
-    DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, errorDescription, errorTrace, additionalInfo);
+  handleError(error) {
+    if (typeof error == RedditCommentError) {
+      DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error.toString(), error.redditComment);
+    } else {
+      DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error, error.stack, error.toString(), undefined);
+    }
   }
 }
 

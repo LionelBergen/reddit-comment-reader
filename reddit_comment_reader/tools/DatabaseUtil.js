@@ -1,10 +1,10 @@
 const { Client } = require('pg');
 
 class DatabaseUtil {
-  writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo) {
+  writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo, redditCommentInfo) {
     const client = createPgClient(databaseConnectionString);
-    const queryText = 'INSERT INTO "ErrorTable"(ErrorDescription, ErrorTrace, AdditionalInfo) VALUES($1, $2, $3)';
-    const tableValues = [errorDescription, errorTrace, additionalInfo];
+    const queryText = 'INSERT INTO "ErrorTable"(ErrorDescription, ErrorTrace, AdditionalInfo, RedditCommentInfo) VALUES($1, $2, $3, $4)';
+    const tableValues = [errorDescription, errorTrace, additionalInfo, redditCommentInfo];
     
     client.query(queryText, tableValues, (err, res) => {
       if (err) {
@@ -32,8 +32,6 @@ class DatabaseUtil {
         for (let i=0; i<results.length; i++) {
           let commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
           commentSearchPredicates.push(commentSearchObject);
-          // console.debug('comment search object:');
-          // console.debug(commentSearchObject);
         }
 
         client.end();
@@ -61,8 +59,6 @@ function createCommentSearchObjectFromDatabaseObject(dbResult) {
 	
   // Support reddit line break
   replyMessageText = replyMessageText.replace(/\\n/g, '  \r\n');
-  // console.debug('reply message text:');
-  // console.debug(replyMessageText);
 	
   let subredditMatchExpression = new RegExp(subredditExpressionText, 'i');
   let commentMatchExpression = new RegExp(commentExpressionText, 'i');

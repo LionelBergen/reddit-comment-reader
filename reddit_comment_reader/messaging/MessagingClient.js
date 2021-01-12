@@ -1,12 +1,15 @@
 const faye = require('faye');
 const Util = require('../tools/CommonTools.js');
+const LogManager = require('../tools/Logger.js');
 const DiscordSender = require('discord-multi-bot');
+
+const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
 /**
  *
 */
 class MessagingClient {
-  constructor({clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0} = {}) {
+  constructor({clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0} = {}) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
     this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
@@ -42,7 +45,7 @@ class FayeMessagingClient extends MessagingClient {
   
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
     if (Util.getSecondsSinceTimeInSeconds(this.lastMessageSentAt) > secondsOfIdleToTriggerMessage) {
-      console.log('sending active message');
+      Logger.info('sending active message');
       this.client.publish(this.fayeMessagesUrl, {active: '1'});
       this.lastMessageSentAt = new Date().getTime();
     }
@@ -67,7 +70,7 @@ class DiscordMessagingClient extends MessagingClient {
     if (redditComment.body.length > 1900) {
       redditComment.body = redditComment.body.substring(0, 1900) + "...";
     }
-    return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: ${redditComment.url}`);
+    return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: https://www.reddit.com${redditComment.permalink}`);
   }
 }
 

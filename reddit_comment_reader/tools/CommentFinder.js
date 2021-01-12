@@ -1,4 +1,7 @@
 const Util = require('./CommonTools.js');
+const LogManager = require('./Logger.js');
+
+const Logger = LogManager.createInstance('CommentFinder.js');
 
 class CommentSearchProcessor {
   constructor(commentPredicateObjects, numberOfRowsInCache) {
@@ -15,6 +18,7 @@ class CommentSearchProcessor {
 				
         if (commentSearchObjMatchesComment(comment, commentPredicateObj)) {
           foundPredicate = commentPredicateObj;
+          Logger.debug('found: ' + foundPredicate + ' for comment: ' + comment);
           break;
         }
       }
