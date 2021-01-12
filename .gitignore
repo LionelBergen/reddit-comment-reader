@@ -1,5 +1,6 @@
 Reddit-reader-run-local-notes.txt
 reddit-comment-reader.log
 reddit-comment-reader-errors.log
+reddit-comment-reader-errors
 .env
 /node_modules
