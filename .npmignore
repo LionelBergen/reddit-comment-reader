@@ -7,3 +7,6 @@ example.env
 .slugignore
 Reddit-reader-run-local-notes.txt
 README.md
+reddit-comment-reader-errors.log
+reddit-comment-reader-errors
+reddit-comment-reader.log
