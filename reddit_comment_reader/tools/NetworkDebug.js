@@ -13,7 +13,7 @@ class NetworkDebugger {
             resolve(responses);
           }
         }).catch(reject);
-      };
+      }
     });
   }
 }
