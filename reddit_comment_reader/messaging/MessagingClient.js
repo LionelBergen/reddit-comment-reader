@@ -66,11 +66,15 @@ class DiscordMessagingClient extends MessagingClient {
   
   sendMessage({redditComment = undefined} = {}) {
     super.sendMessage();
+    let messageToSendToDiscord = `comment: ${redditComment.body}\r\nlink: https://www.reddit.com${redditComment.permalink}`;
     // Discord does not allow messages over 2000.
-    if (redditComment.body.length > 1900) {
-      redditComment.body = redditComment.body.substring(0, 1900) + "...";
+    if (messageToSendToDiscord.length >= 2000) {
+      let numberOfCharactersToTrim = (messageToSendToDiscord.length - 2000) + 1;
+      let trimmedBody = redditComment.body.substring(0, redditComment.body.length - numberOfCharactersToTrim);
+      messageToSendToDiscord = `comment: ${trimmedBody}\r\nlink: https://www.reddit.com${redditComment.permalink}`;
+      Logger.debug('Comment trimmed to new size of: ' + messageToSendToDiscord.length);
     }
-    return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, `comment: ${redditComment.body}\r\nlink: https://www.reddit.com${redditComment.permalink}`);
+    return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, messageToSendToDiscord);
   }
 }
 

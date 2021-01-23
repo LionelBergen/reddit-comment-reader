@@ -136,8 +136,6 @@ function handleError(comment, error, errors) {
   Logger.error(comment);
   Logger.error(error);
   errors.push(new RedditCommentError(comment, error));
-  Logger.error('added new RedditCommentError:');
-  Logger.error(new RedditCommentError(comment, error));
 }
 
 module.exports = new RedditCommentProcessor();

@@ -39,10 +39,10 @@ INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessa
 
 CREATE TABLE public."ErrorTable" (
     id integer NOT NULL,
-    errordescription character varying(255),
-    errortrace character varying(5000),
-    additionalinfo character varying(1000),
-    redditCommentInfo character varying(1000),
+    errordescription character varying(10000),
+    errortrace character varying(10000),
+    additionalinfo character varying(10000),
+    redditCommentInfo character varying(15000),
     createdon timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 CREATE SEQUENCE public.errortable_id_seq
