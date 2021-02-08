@@ -11,9 +11,8 @@ class ErrorHandler {
   }
   
   handleError(error) {
+    Logger.error(error);
     if (typeof error === 'object') {
-      Logger.error('++++++++++++++++++++++++++');
-      Logger.error(error.error);
       DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error, error.redditComment);
     } else {
       const databaseConnectionUrl = this.databaseConnectionUrl;
