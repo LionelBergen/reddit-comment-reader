@@ -3,8 +3,8 @@ const LogManager = require('./Logger.js');
 const Logger = LogManager.createInstance('DatabaseUtil.js');
 
 class DatabaseUtil {
-  writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo, redditCommentInfo) {
-    const client = createPgClient(databaseConnectionString);
+  async writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo, redditCommentInfo) {
+    const client = await createPgClient(databaseConnectionString);
     const queryText = 'INSERT INTO "ErrorTable"(ErrorDescription, ErrorTrace, AdditionalInfo, RedditCommentInfo) VALUES($1, $2, $3, $4)';
     const tableValues = [errorDescription, errorTrace, additionalInfo, redditCommentInfo];
     
@@ -18,12 +18,12 @@ class DatabaseUtil {
     });
   }
   
-  getCommentSearchObjectsFromDatabase(databaseConnectionString) {
+  async getCommentSearchObjectsFromDatabase(databaseConnectionString) {
     Logger.info('trying to get comment objects from database: ' + databaseConnectionString);
     return new Promise(function(resolve, reject) {
       let commentSearchPredicates = [];
       
-      const client = createPgClient(databaseConnectionString);
+      const client = await createPgClient(databaseConnectionString);
       Logger.info('created PG Client');
       
       client.query('SELECT * FROM "RegexpComment"', function(err, result) {
@@ -48,9 +48,9 @@ class DatabaseUtil {
   }
 }
 
-function createPgClient(databaseConnectionString) {
+async function createPgClient(databaseConnectionString) {
   const client = new Client(databaseConnectionString);
-  client.connect();
+  await client.connect();
   
   return client;
 }
