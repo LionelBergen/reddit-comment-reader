@@ -39,28 +39,25 @@ class LogLocal {
 
 class LogHeroku {
   createInstance(logLabel) {
-    return createLogger({
-      format: combine(
-        label({ label: logLabel }),
-        timestamp(),
-        myFormat
-      ),
-      transports: [
-        new transports.Console({
-          timestamp: TS_FORMAT,
-          colorize: true,
-          level: 'info'
-        }),
-        new transports.Console({
-          filename: ERROR_LOG_FILE,
-          level: 'error'
-        }),
-        new transports.Console({
-          filename: LOG_FILE,
-          level: 'debug'
-        })
-      ]
-    });
+    return new ConsoleLogger(logLabel);
+  }
+}
+
+class ConsoleLogger {
+  constructor(label) {
+    this.label = label;
+  }
+
+  debug(message) {
+    console.log(this.label + ": " + message);
+  }
+
+  info(message) {
+    console.log(this.label + ": " + message);
+  }
+
+  error(message) {
+    console.log(this.label + ": " + message);
   }
 }
 
