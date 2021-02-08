@@ -52,6 +52,7 @@ ClientHandler.addClients(
 DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(Logger.error);
 
 function start(commentSearchObjects) {
+  Logger.info('starting application...');
   const commentFinder = new CommentSearchProcessor(commentSearchObjects, commentCacheSize);
   
   Logger.info('initializing clients...');

@@ -1,4 +1,6 @@
 const { Client } = require('pg');
+const LogManager = require('./Logger.js');
+const Logger = LogManager.createInstance('DatabaseUtil.js');
 
 class DatabaseUtil {
   writeErrorToDatabase(databaseConnectionString, errorDescription, errorTrace, additionalInfo, redditCommentInfo) {
@@ -17,6 +19,7 @@ class DatabaseUtil {
   }
   
   getCommentSearchObjectsFromDatabase(databaseConnectionString) {
+    Logger.info('trying to get comment objects from database: ' + databaseConnectionString);
     return new Promise(function(resolve, reject) {
       let commentSearchPredicates = [];
       
@@ -24,7 +27,9 @@ class DatabaseUtil {
       
       client.query('SELECT * FROM "RegexpComment"', function(err, result) {
         if (err) {
-          reject(err);
+          Logger.error('error getting data from database');
+          Logger.error(err);
+          return reject(err);
         }
         
         let results = result.rows;
