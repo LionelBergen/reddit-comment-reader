@@ -10,7 +10,7 @@ const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${quickFormat.printf('%-20s', label)}] ${quickFormat.printf('%5s', level)}: ${message}`;
 });
 
-class Log {
+class LogLocal {
   createInstance(logLabel) {
     return createLogger({
       format: combine(
@@ -37,5 +37,32 @@ class Log {
   }
 }
 
+class LogHeroku {
+  createInstance(logLabel) {
+    return createLogger({
+      format: combine(
+        label({ label: logLabel }),
+        timestamp(),
+        myFormat
+      ),
+      transports: [
+        new transports.Console({
+          timestamp: TS_FORMAT,
+          colorize: true,
+          level: 'info'
+        }),
+        new transports.Console({
+          filename: ERROR_LOG_FILE,
+          level: 'error'
+        }),
+        new transports.Console({
+          filename: LOG_FILE,
+          level: 'debug'
+        })
+      ]
+    });
+  }
+}
+
 // We only need 1 instance of this class
-module.exports = new Log();
+module.exports = (process.env._ && process.env._.indexOf("heroku")) ? new LogHeroku : new LogLocal();
