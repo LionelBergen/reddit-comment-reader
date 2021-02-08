@@ -27,6 +27,8 @@ class DatabaseUtil {
       Logger.info('created PG Client');
       
       client.query('SELECT * FROM "RegexpComment"', function(err, result) {
+        Logger.info('got results from client query...');
+        Logger.info(result);
         if (err) {
           Logger.error('error getting data from database');
           Logger.error(err);
