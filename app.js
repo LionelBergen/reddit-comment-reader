@@ -19,6 +19,7 @@ const intervalToWaitBeforeSendingIdleMessage = 30;
 const commentCacheSize = 2000;
 const dissallowedSubreddits = ['suicidewatch', 'depression' ];
 
+Logger.info('checking environment variables...');
 if (!process.env.DATABASE_URL) {
   throw 'Please set process.env.DATABASE_URL! e.g SET DATABASE_URL=postgres://.....';
 } else if (!process.env.DISCORD_TOKEN_PERSONAL) {
@@ -28,6 +29,7 @@ if (!process.env.DATABASE_URL) {
 } else if (!process.env.AGREE_WITH_YOU_URL) {
   throw 'Please set Reddit client URL.';
 }
+Logger.info('passed environment checks');
 
 const errorHandler = new ErrorHandler(process.env.DATABASE_URL); 
 
