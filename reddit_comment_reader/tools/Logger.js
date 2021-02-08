@@ -65,4 +65,4 @@ class LogHeroku {
 }
 
 // We only need 1 instance of this class
-module.exports = (process.env._ && process.env._.indexOf("heroku")) ? new LogHeroku : new LogLocal();
+module.exports = (process.env._ && process.env._.indexOf("heroku")) ? new LogHeroku() : new LogLocal();
