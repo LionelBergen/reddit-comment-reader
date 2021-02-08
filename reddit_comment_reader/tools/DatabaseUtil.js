@@ -24,6 +24,7 @@ class DatabaseUtil {
       let commentSearchPredicates = [];
       
       const client = createPgClient(databaseConnectionString);
+      Logger.info('created PG Client');
       
       client.query('SELECT * FROM "RegexpComment"', function(err, result) {
         if (err) {
@@ -40,6 +41,7 @@ class DatabaseUtil {
         }
 
         client.end();
+        Logger.info('got comment search predicates from database: ' + commentSearchPredicates);
         resolve(commentSearchPredicates);
       });
     });
