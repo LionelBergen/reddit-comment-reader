@@ -18,9 +18,9 @@ class DatabaseUtil {
     });
   }
   
-  async getCommentSearchObjectsFromDatabase(databaseConnectionString) {
+  getCommentSearchObjectsFromDatabase(databaseConnectionString) {
     Logger.info('trying to get comment objects from database: ' + databaseConnectionString);
-    return new Promise(function(resolve, reject) {
+    return new Promise(async function(resolve, reject) {
       let commentSearchPredicates = [];
       
       const client = await createPgClient(databaseConnectionString);
