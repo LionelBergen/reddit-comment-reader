@@ -51,7 +51,7 @@ class DatabaseUtil {
 }
 
 async function createPgClient(databaseConnectionString) {
-  const client = new Client(databaseConnectionString);
+  const client = new Client({connectionString: databaseConnectionString, ssl: { rejectUnauthorized: false }});
   await client.connect();
   
   return client;
