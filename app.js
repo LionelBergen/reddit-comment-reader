@@ -49,7 +49,8 @@ ClientHandler.addClients(
 );
 
 // Read data from database, then start the application 
-DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL).then(start).catch(Logger.error);
+// https://help.heroku.com/DR0TTWWD/seeing-fatal-no-pg_hba-conf-entry-errors-in-postgres
+DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL + "?sslmode=require").then(start).catch(Logger.error);
 
 function start(commentSearchObjects) {
   Logger.info('starting application...');
