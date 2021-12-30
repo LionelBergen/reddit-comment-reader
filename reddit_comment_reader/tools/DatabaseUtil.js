@@ -18,12 +18,16 @@ class DatabaseUtil {
     });
   }
   
-  getCommentSearchObjectsFromDatabase(databaseConnectionString) {
+  getCommentSearchObjectsFromDatabase(databaseConnectionString, useSSL) {
+    if (useSSL && !databaseConnectionString.includes("?sslmode=require")) {
+      databaseConnectionString += "?sslmode=require";
+    }
+    
     Logger.info('trying to get comment objects from database: ' + databaseConnectionString);
     return new Promise(async function(resolve, reject) {
       let commentSearchPredicates = [];
       
-      const client = await createPgClient(databaseConnectionString);
+      const client = await createPgClient(databaseConnectionString, useSSL);
       Logger.info('created PG Client');
       
       client.query('SELECT * FROM "RegexpComment"', function(err, result) {
@@ -50,8 +54,8 @@ class DatabaseUtil {
   }
 }
 
-async function createPgClient(databaseConnectionString) {
-  const client = new Client({connectionString: databaseConnectionString, ssl: { rejectUnauthorized: false }});
+async function createPgClient(databaseConnectionString, useSSL) {
+  const client = new Client({connectionString: databaseConnectionString, ssl: (useSSL ? { rejectUnauthorized: false } : false)});
   await client.connect();
   
   return client;

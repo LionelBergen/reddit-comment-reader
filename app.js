@@ -50,7 +50,7 @@ ClientHandler.addClients(
 
 // Read data from database, then start the application 
 // https://help.heroku.com/DR0TTWWD/seeing-fatal-no-pg_hba-conf-entry-errors-in-postgres
-DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL + "?sslmode=require").then(start).catch(Logger.error);
+DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL, isLocal()).then(start).catch(Logger.error);
 
 function start(commentSearchObjects) {
   Logger.info('starting application...');
@@ -78,4 +78,9 @@ function handleError(err) {
   } else {
     errorHandler.handleError(err);
   }
+}
+
+// Manually set a heroku variable to be able to check if we're running local or not
+function isLocal() {
+  return process.env.ON_HEROKU ? true : false;
 }
