@@ -1,6 +1,6 @@
-const Util = require('../reddit_comment_reader/tools/CommonTools.js');
-const RedditCommentError = require('../reddit_comment_reader/tools/RedditCommentError.js');
-const LogManager = require('../reddit_comment_reader/tools/Logger.js');
+const Util = require('./tools/common-tools.js');
+const RedditCommentError = require('./tools/reddit-comment-error.js');
+const LogManager = require('./tools/logger.js');
 
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 

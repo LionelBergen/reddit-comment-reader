@@ -1,5 +1,5 @@
-const Util = require('./CommonTools.js');
-const LogManager = require('./Logger.js');
+const Util = require('./common-tools.js');
+const LogManager = require('./logger.js');
 
 const Logger = LogManager.createInstance('CommentFinder.js');
 

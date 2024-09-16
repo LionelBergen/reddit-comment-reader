@@ -1,8 +1,8 @@
 const DatabaseUtil = require('./DatabaseUtil.js');
-const RedditCommentError = require('./RedditCommentError.js');
-const NetworkDebugger = require('./NetworkDebug.js');
+const RedditCommentError = require('./reddit-comment-error.js');
+const NetworkDebugger = require('./network-debug.js');
 
-const LogManager = require('../tools/Logger.js');
+const LogManager = require('./logger.js');
 const Logger = LogManager.createInstance('ErrorHandler.js');
 
 class ErrorHandler {

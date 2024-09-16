@@ -1,9 +1,9 @@
 const RedditClient = require('reddit-simple-client');
-const RedditCommentProcessor = require('../reddit_comment_reader/RedditCommentProcessor.js');
-const ClientHandler = require('../reddit_comment_reader/messaging/ClientHandler.js');
-const DatabaseUtil = require('../reddit_comment_reader/tools/DatabaseUtil.js');
-const MessagingClients = require('../reddit_comment_reader/messaging/MessagingClient.js');
-const CommentSearchProcessor = require('../reddit_comment_reader/tools/CommentFinder.js');
+const RedditCommentProcessor = require('../reddit-comment-reader/RedditCommentProcessor.js');
+const ClientHandler = require('../reddit-comment-reader/messaging/client-handler.js');
+const DatabaseUtil = require('../reddit-comment-reader/tools/database-util.js');
+const MessagingClients = require('../reddit-comment-reader/messaging/messaging-client.js');
+const CommentSearchProcessor = require('../reddit-comment-reader/tools/comment-finder.js');
 
 require('dotenv').config();
 const sinon = require('sinon');

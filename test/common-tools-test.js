@@ -1,4 +1,4 @@
-const Util = require('../reddit_comment_reader/tools/CommonTools.js');
+const Util = require('../reddit-comment-reader/tools/common-tools.js');
 const assert = require('assert');
 
 describe('GetUniqueArray', () => {

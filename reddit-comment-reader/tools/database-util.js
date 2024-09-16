@@ -1,5 +1,5 @@
 const { Client } = require('pg');
-const LogManager = require('./Logger.js');
+const LogManager = require('./logger.js');
 const Logger = LogManager.createInstance('DatabaseUtil.js');
 
 class DatabaseUtil {
@@ -49,6 +49,42 @@ class DatabaseUtil {
         client.end();
         Logger.info('got comment search predicates from database: ' + commentSearchPredicates);
         resolve(commentSearchPredicates);
+      });
+    });
+  }
+  
+  getDiscordClientsFromDatabase(databaseConnectionString, useSSL) {
+    if (useSSL && !databaseConnectionString.includes("?sslmode=require")) {
+      databaseConnectionString += "?sslmode=require";
+    }
+    
+    Logger.info('trying to get discord clients from database: ' + databaseConnectionString);
+    return new Promise(async function(resolve, reject) {
+      let discordClients = [];
+      
+      const client = await createPgClient(databaseConnectionString, useSSL);
+      Logger.info('created PG Client');
+      
+      client.query('SELECT * FROM "RegexpCommentHandle" WHERE type="Discord"', function(err, result) {
+        Logger.info('got results from client query...');
+        Logger.info(result);
+        if (err) {
+          Logger.error('error getting data from database');
+          Logger.error(err);
+          return reject(err);
+        }
+        
+        let results = result.rows;
+
+        for (let i=0; i<results.length; i++) {
+          // TODO: continue here
+          //let discordClient = createCommentSearchObjectFromDatabaseObject(results[i]);
+          //discordClients.push(discordClient);
+        }
+
+        client.end();
+        Logger.info('got discord clients from database: ' + discordClients);
+        resolve(discordClients);
       });
     });
   }

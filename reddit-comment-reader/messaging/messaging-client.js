@@ -1,6 +1,6 @@
 const faye = require('faye');
-const Util = require('../tools/CommonTools.js');
-const LogManager = require('../tools/Logger.js');
+const Util = require('../tools/common-tools.js');
+const LogManager = require('../tools/logger.js');
 const DiscordSender = require('discord-multi-bot');
 
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
