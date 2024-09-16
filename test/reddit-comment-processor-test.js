@@ -1,7 +1,7 @@
 const RedditClient = require('reddit-simple-client');
 const RedditCommentProcessor = require('../reddit-comment-reader/RedditCommentProcessor.js');
 const ClientHandler = require('../reddit-comment-reader/messaging/client-handler.js');
-const DatabaseUtil = require('../reddit-comment-reader/tools/database-util.js');
+const DatabaseUtil = require('../reddit-comment-reader/tools/database/database-util.js');
 const MessagingClients = require('../reddit-comment-reader/messaging/messaging-client.js');
 const CommentSearchProcessor = require('../reddit-comment-reader/tools/comment-finder.js');
 

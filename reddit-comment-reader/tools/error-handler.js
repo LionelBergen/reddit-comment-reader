@@ -1,4 +1,4 @@
-import DatabaseUtil from './database-util.js';
+import DatabaseUtil from './database/database-util.js';
 import NetworkDebugger from './network-debug.js';
 
 import LogManager from './logger.js';
@@ -9,16 +9,18 @@ class ErrorHandler {
     this.databaseConnectionUrl = databaseConnectionUrl;
   }
 
-  handleError(error) {
+  async handleError(error) {
     Logger.error(error);
     if (typeof error === 'object') {
-      DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error, error.redditComment);
+      await DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error, error.redditComment);
     } else {
       const databaseConnectionUrl = this.databaseConnectionUrl;
       // get network connectivity status
-      NetworkDebugger.getHostPingStatus().then(function(connectionStatus) {
-        DatabaseUtil.writeErrorToDatabase(databaseConnectionUrl, error, error.stack, connectionStatus.toString(), undefined);
-      });
+      const connectionStatus = await NetworkDebugger.getHostPingStatus();
+      const connectionStatusAsString = connectionStatus.map((connectStatus) => {
+        return connectStatus.inputHost + ' is alive?: ' + connectStatus.alive;
+      }).join(",");
+      await DatabaseUtil.writeErrorToDatabase(databaseConnectionUrl, error, error.stack, connectionStatusAsString, undefined);
     }
   }
 }

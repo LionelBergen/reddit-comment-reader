@@ -1,6 +1,5 @@
-import pg from 'pg'
-import LogManager from './logger.js';
-const { Client } = pg
+import { CreatePgClient, Query } from './database-client-manager.js';
+import LogManager from '../logger.js';
 const Logger = LogManager.createInstance('database-util.js');
 
 class DatabaseUtil {
@@ -11,20 +10,12 @@ class DatabaseUtil {
     additionalInfo,
     redditCommentInfo
   ) {
-    const client = await createPgClient(databaseConnectionString);
+    const client = await CreatePgClient(databaseConnectionString);
     const queryText = 'INSERT INTO "ErrorTable"(ErrorDescription, ErrorTrace, AdditionalInfo, RedditCommentInfo)'
       + ' VALUES($1, $2, $3, $4)';
     const tableValues = [errorDescription, errorTrace, additionalInfo, redditCommentInfo];
 
-    client.query(queryText, tableValues, (err, res) => {
-      if (err) {
-        Logger.error(err.stack);
-      } else {
-        Logger.error(res.rows[0]);
-      }
-
-      client.end();
-    });
+    return Query(client, queryText, tableValues);
   }
 
   async getCommentSearchObjectsFromDatabase(databaseConnectionString, useSSL) {
@@ -97,16 +88,6 @@ class DatabaseUtil {
       });
     });
   }
-}
-
-async function createPgClient(databaseConnectionString, useSSL) {
-  const client = new Client({
-    connectionString: databaseConnectionString,
-    ssl: (useSSL ? { rejectUnauthorized: false } : false)
-  });
-  await client.connect();
-
-  return client;
 }
 
 function createCommentSearchObjectFromDatabaseObject(dbResult) {

@@ -1,9 +1,16 @@
 import ErrorHandler from '../../reddit-comment-reader/tools/error-handler.js';
-import DatabaseUtil from '../../reddit-comment-reader/tools/database-util.js';
+import DatabaseUtil from '../../reddit-comment-reader/tools/database/database-util.js';
 import 'dotenv/config';
 
-DatabaseUtil.writeErrorToDatabase(process.env.DATABASE_URL_TEST, 'a', 'b', 'c');
+try {
+  const result = await DatabaseUtil.writeErrorToDatabase(process.env.DATABASE_URL_TEST, 'a', 'b', 'c');
+  console.log('Got result:');
+  console.log(result);
+} catch(e) {
+  console.error('error...');
+  console.error(e);
+}
 
 const errorHandler = new ErrorHandler(process.env.DATABASE_URL_TEST);
 
-errorHandler.handleError('fromerrorHandler', '1', '2');
+await errorHandler.handleError('fromerrorHandler', '1', '2');
