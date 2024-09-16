@@ -1,5 +1,5 @@
-import pg from 'pg'
-const { Client } = pg
+import pg from 'pg';
+const { Client } = pg;
 
 export async function CreatePgClient(databaseConnectionString, useSSL) {
   const client = new Client({
@@ -21,8 +21,9 @@ export async function Query(client, queryText, tableValues) {
         resolve(res);
         // Logger.error(res.rows[0]);
       }
-    
+
       client.end();
     }));
   });
-};
+}
+

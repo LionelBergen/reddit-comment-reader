@@ -24,33 +24,24 @@ class DatabaseUtil {
     }
 
     Logger.info('trying to get comment objects from database: ' + databaseConnectionString);
-    const client = await createPgClient(databaseConnectionString, useSSL);
-    return new Promise(function(resolve, reject) {
-      const commentSearchPredicates = [];
+    const client = await CreatePgClient(databaseConnectionString, useSSL);
+    Logger.info('created PG Client');
+    const commentSearchPredicates = [];
 
-      Logger.info('created PG Client');
+    try {
+      const results = await Query(client, 'SELECT * FROM "RegexpComment').rows;
+      for (let i=0; i<results.length; i++) {
+        const commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
+        commentSearchPredicates.push(commentSearchObject);
+      }
 
-      client.query('SELECT * FROM "RegexpComment"', function(err, result) {
-        Logger.info('got results from client query...');
-        Logger.info(result);
-        if (err) {
-          Logger.error('error getting data from database');
-          Logger.error(err);
-          return reject(err);
-        }
-
-        const results = result.rows;
-
-        for (let i=0; i<results.length; i++) {
-          const commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
-          commentSearchPredicates.push(commentSearchObject);
-        }
-
-        client.end();
-        Logger.info('got comment search predicates from database: ' + commentSearchPredicates);
-        resolve(commentSearchPredicates);
-      });
-    });
+      Logger.info('got comment search predicates from database: ' + commentSearchPredicates);
+      return commentSearchPredicates;
+    } catch(err) {
+      Logger.error('error getting data from database');
+      Logger.error(err);
+      throw err;
+    }
   }
 
   async getDiscordClientsFromDatabase(databaseConnectionString, useSSL) {
@@ -59,7 +50,7 @@ class DatabaseUtil {
     }
 
     Logger.info('trying to get discord clients from database: ' + databaseConnectionString);
-    const client = await createPgClient(databaseConnectionString, useSSL);
+    const client = await CreatePgClient(databaseConnectionString, useSSL);
     return new Promise(function(resolve, reject) {
       const discordClients = [];
 

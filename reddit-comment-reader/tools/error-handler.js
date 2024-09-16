@@ -12,7 +12,12 @@ class ErrorHandler {
   async handleError(error) {
     Logger.error(error);
     if (typeof error === 'object') {
-      await DatabaseUtil.writeErrorToDatabase(this.databaseConnectionUrl, error.error, error.error.stack, error.error, error.redditComment);
+      await DatabaseUtil.writeErrorToDatabase(
+        this.databaseConnectionUrl,
+        error.error,
+        error.error.stack,
+        error.error,
+        error.redditComment);
     } else {
       const databaseConnectionUrl = this.databaseConnectionUrl;
       // get network connectivity status
@@ -20,7 +25,13 @@ class ErrorHandler {
       const connectionStatusAsString = connectionStatus.map((connectStatus) => {
         return connectStatus.inputHost + ' is alive?: ' + connectStatus.alive;
       }).join(",");
-      await DatabaseUtil.writeErrorToDatabase(databaseConnectionUrl, error, error.stack, connectionStatusAsString, undefined);
+      await DatabaseUtil.writeErrorToDatabase(
+        databaseConnectionUrl,
+        error,
+        error.stack,
+        connectionStatusAsString,
+        undefined
+      );
     }
   }
 }
