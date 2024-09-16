@@ -5,8 +5,8 @@ const LogManager = require('./tools/logger.js');
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
 const userIgnoreList = ['agree-with-you'];
-let commentHistory = Util.getUniqueArray(3000);
-let subredditModsList = Util.getUniqueArray(3000);
+const commentHistory = Util.getUniqueArray(3000);
+const subredditModsList = Util.getUniqueArray(3000);
 
 class RedditCommentProcessor {
   init(commentFinder, redditClient, clientHandler) {
@@ -14,7 +14,7 @@ class RedditCommentProcessor {
     this.redditClient = redditClient;
     this.clientHandler = clientHandler;
   }
-  
+
   /**
    * Processes the comments passed
    *
@@ -25,8 +25,8 @@ class RedditCommentProcessor {
     return new Promise((resolve, reject) => {
       let numberOfCommentsProcessed = 0;
       let numberOfCommentsRead = 0;
-      let errors = [];
-      
+      const errors = [];
+
       // Don't use foreach here, because we're dealing with async
       for (let i=0; i<comments.length; i++) {
         const foundMessage = this.commentFinder.searchComment(comments[i]);
@@ -35,7 +35,7 @@ class RedditCommentProcessor {
             processComment(comments[i], foundMessage, this.redditClient, this.clientHandler).then(function(data) {
               numberOfCommentsRead++;
               numberOfCommentsProcessed += data;
-              
+
               if (numberOfCommentsRead == comments.length) {
                 return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
               }
@@ -71,10 +71,10 @@ class RedditCommentProcessor {
 */
 async function processComment(comment, commentObject, redditClient, clientHandler) {
   // So we don't spam a subreddit with the same message
-  const timeThisReplyWasLastSubmittedOnThisSubreddit = {id: (comment.subreddit +  ':' + commentObject.ReplyMessage), created: comment.created };
+  const timeThisReplyWasLastSubmittedOnThisSubreddit = { id: (comment.subreddit + ':' + commentObject.ReplyMessage), created: comment.created };
   const messageClient = clientHandler.getClientByTagName(commentObject.ClientHandler);
-  let thisSubredditModList = {id: comment.subreddit};
-  
+  const thisSubredditModList = { id: comment.subreddit };
+
   if (messageClient.shouldIgnoreModeratorComments) {
     // If we already have a moderator list for the comment, check if we should skip this comment
     if (subredditModsList.includes(thisSubredditModList)) {
@@ -91,13 +91,13 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       return processComment(comment, commentObject, redditClient, clientHandler);
     }
   }
-  
+
   return new Promise((resolve, reject) => {
     if (userIgnoreList.includes(comment.author)) {
       Logger.info('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
       return resolve(0);
     }
-    
+
     // filter by disallowed subreddits
     if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase())) {
       Logger.info('Ignoring comment, disallowed subreddit found for comment: ');
@@ -112,7 +112,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       }).catch(reject);
     } else {
       const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
-      
+
       if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit) {
         publishComment(comment, commentObject, messageClient).then(function() {
           commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
@@ -127,7 +127,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
 }
 
 function publishComment(comment, commentObject, messagingClient) {
-  return messagingClient.sendMessage({redditComment:comment, redditReply: commentObject.ReplyMessage});
+  return messagingClient.sendMessage({ redditComment: comment, redditReply: commentObject.ReplyMessage });
 }
 
 // TODO: this method

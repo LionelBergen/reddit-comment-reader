@@ -1,15 +1,14 @@
-const DatabaseUtil = require('./DatabaseUtil.js');
-const RedditCommentError = require('./reddit-comment-error.js');
-const NetworkDebugger = require('./network-debug.js');
+import DatabaseUtil from './database-util.js';
+import NetworkDebugger from './network-debug.js';
 
-const LogManager = require('./logger.js');
-const Logger = LogManager.createInstance('ErrorHandler.js');
+import LogManager from './logger.js';
+const Logger = LogManager.createInstance('error-handler.js');
 
 class ErrorHandler {
   constructor(databaseConnectionUrl) {
     this.databaseConnectionUrl = databaseConnectionUrl;
   }
-  
+
   handleError(error) {
     Logger.error(error);
     if (typeof error === 'object') {
@@ -24,4 +23,4 @@ class ErrorHandler {
   }
 }
 
-module.exports = ErrorHandler;
+export default ErrorHandler;

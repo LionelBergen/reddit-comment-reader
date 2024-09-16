@@ -7,7 +7,11 @@ const DISCORD_TOKEN = process.env.DISCORD_TOKEN_TEST;
 async function testDiscordSendMessage() {
   const tagName = await DiscordSender.initNewDiscordClient(DISCORD_TOKEN);
 
-  DiscordSender.sendDiscordMessage(tagName, 'reddit-bot-test', {'body': 'test comment', 'permalink': 'test permalink'});
+  DiscordSender.sendDiscordMessage(
+    tagName, 
+    'reddit-bot-test',
+     { 'body': 'test comment', 'permalink': 'test permalink' }
+  );
   await DiscordSender.logoutOfDiscord(tagName);
 }
 

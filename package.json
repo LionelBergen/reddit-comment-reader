@@ -1,14 +1,15 @@
 {
   "name": "reddit-reader",
   "version": "2.0.0-beta.1",
+  "type": "module",
   "description": "Continuously Reads live comments from all of reddit and sends the info for comments matching a regexp from a list",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "mocha",
-    "livetest_regexp": "node live_test/regexp/CommentFinderTest.js",
-    "livetest_discord": "node live_test/discord/DiscordSenderLiveTest.js",
-    "livetest_general": "node live_test/general/DatabaseUtilTest.js",
+    "livetest_regexp": "node live-test/regexp/CommentFinderTest.js",
+    "livetest_discord": "node live-test/discord/DiscordSenderLiveTest.js",
+    "livetest_general": "node live-test/general/database-util-test.js",
     "eslint": "eslint --ignore-path .gitignore .",
     "lint_auto_fix": "eslint --fix --ignore-path .gitignore ."
   },

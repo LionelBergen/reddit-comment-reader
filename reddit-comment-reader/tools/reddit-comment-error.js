@@ -3,7 +3,7 @@ class RedditCommentError {
     this.redditComment = redditComment;
     this.error = error;
   }
-  
+
   toString() {
     return "reddit Comment: " + this.redditComment + " error: " + this.error;
   }

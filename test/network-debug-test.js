@@ -13,7 +13,7 @@ afterEach(() => {
 describe('Network Debug Live test', () => {
   it('basic live ping test', async () => {
     const results = await NetworkDebugger.getHostPingStatus();
-    
+
     console.log(results);
     assert.equal(2, results.length);
     assert.ok(results.find(e => e.host == 'google.com'));
@@ -30,13 +30,13 @@ describe('Network Debug Mock Test', () => {
       numberOfClientStubCalls++;
       return Promise.resolve();
     });
-    
+
     pingMockStub.onCall(1).callsFake(function(host) {
       numberOfClientStubCalls++;
       assert.equal('reddit.com', host);
       return Promise.reject('test message');
     });
-    
+
     try {
       const results = await NetworkDebugger.getHostPingStatus();
       assert.fail('expected reject');

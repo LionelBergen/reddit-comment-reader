@@ -1,6 +1,6 @@
-const ErrorHandler = require('../../reddit_comment_Reader/tools/ErrorHandler.js');
-const DatabaseUtil = require('../../reddit_comment_Reader/tools/DatabaseUtil.js');
-require('dotenv').config();
+import ErrorHandler from '../../reddit-comment-reader/tools/error-handler.js';
+import DatabaseUtil from '../../reddit-comment-reader/tools/database-util.js';
+import 'dotenv/config';
 
 DatabaseUtil.writeErrorToDatabase(process.env.DATABASE_URL_TEST, 'a', 'b', 'c');
 
