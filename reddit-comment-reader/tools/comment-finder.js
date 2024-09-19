@@ -1,5 +1,5 @@
-const Util = require('./common-tools.js');
-const LogManager = require('./logger.js');
+import Util from './common-tools.js';
+import LogManager from './logger.js';
 
 const Logger = LogManager.createInstance('CommentFinder.js');
 
@@ -52,4 +52,4 @@ function commentSearchObjMatchesComment(comment, searcher) {
   return false;
 }
 
-module.exports = CommentSearchProcessor;
+export default CommentSearchProcessor;

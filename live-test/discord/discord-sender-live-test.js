@@ -1,5 +1,5 @@
-const DiscordSender = require('../../reddit_comment_reader/tools/DiscordSender.js');
-require('dotenv').config();
+import DiscordSender from '../../reddit_comment_reader/tools/DiscordSender.js';
+import 'dotenv/config';
 
 const DISCORD_TOKEN = process.env.DISCORD_TOKEN_TEST;
 

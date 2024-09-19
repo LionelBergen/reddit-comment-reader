@@ -1,14 +1,13 @@
-// Local files
-import { DatabaseUtil } from './reddit_comment_reader/tools/DatabaseUtil.js';
-const ErrorHandler = require('./reddit_comment_reader/tools/ErrorHandler.js');
-const CommentSearchProcessor = require('./reddit_comment_reader/tools/CommentFinder.js');
-const ClientHandler = require('./reddit_comment_reader/messaging/ClientHandler.js');
-const MessagingClients = require('./reddit_comment_reader/messaging/MessagingClient.js');
-const RedditCommentProcessor = require('./reddit_comment_reader/RedditCommentProcessor.js');
-const LogManager = require('./reddit_comment_reader/tools/Logger.js');
+import DatabaseUtil from './reddit-comment-reader/tools/database/database-util.js';
+import ErrorHandler from './reddit-comment-reader/tools/error-handler.js';
+import CommentSearchProcessor from './reddit-comment-reader/tools/comment-finder.js';
+import ClientHandler from './reddit-comment-reader/messaging/client-handler.js';
+import { FayeMessagingClient } from './reddit-comment-reader/messaging/messaging-client.js';
+import RedditCommentProcessor from './reddit-comment-reader/reddit-comment-processor.js';
+import LogManager from './reddit-comment-reader/tools/logger.js';
 
-require('dotenv').config();
-const rClient = require('./reddit_comment_reader/RedditClient.js');
+import rClient from './reddit_comment_reader/RedditClient.js';
+import 'dotenv/config';
 
 const Logger = LogManager.createInstance('app.js');
 
@@ -35,7 +34,7 @@ Logger.info('passed environment checks');
 const errorHandler = new ErrorHandler(process.env.DATABASE_URL);
 
 // Important: The clientTagName's, are referenced from the Database. (public.RegexpComment.Handle)
-const agreeWithYouClient = new MessagingClients.FayeMessagingClient({
+const agreeWithYouClient = new FayeMessagingClient({
   clientTagName: 'Agree-with-you',
   blacklistedSubreddits: dissallowedSubreddits,
   receivingMessagesURL: process.env.AGREE_WITH_YOU_URL,

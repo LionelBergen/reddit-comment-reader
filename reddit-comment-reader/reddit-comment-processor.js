@@ -1,6 +1,6 @@
-const Util = require('./tools/common-tools.js');
-const RedditCommentError = require('./tools/reddit-comment-error.js');
-const LogManager = require('./tools/logger.js');
+import Util from './tools/common-tools.js';
+import RedditCommentError from './tools/reddit-comment-error.js';
+import LogManager from './tools/logger.js';
 
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
@@ -71,7 +71,8 @@ class RedditCommentProcessor {
 */
 async function processComment(comment, commentObject, redditClient, clientHandler) {
   // So we don't spam a subreddit with the same message
-  const timeThisReplyWasLastSubmittedOnThisSubreddit = { id: (comment.subreddit + ':' + commentObject.ReplyMessage), created: comment.created };
+  const timeThisReplyWasLastSubmittedOnThisSubreddit =
+    { id: (comment.subreddit + ':' + commentObject.ReplyMessage), created: comment.created };
   const messageClient = clientHandler.getClientByTagName(commentObject.ClientHandler);
   const thisSubredditModList = { id: comment.subreddit };
 
@@ -119,7 +120,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
           return resolve(1);
         }).catch(reject);
       } else {
-        console.log('skipping comment, we\'ve already posted to this subreddit recently!');
+        Logger.info('skipping comment, we\'ve already posted to this subreddit recently!');
         return resolve(0);
       }
     }
@@ -138,4 +139,4 @@ function handleError(comment, error, errors) {
   errors.push(new RedditCommentError(comment, error));
 }
 
-module.exports = new RedditCommentProcessor();
+export default new RedditCommentProcessor();

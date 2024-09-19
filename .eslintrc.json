@@ -1,3 +1,13 @@
 {
-	"extends": ["eslinter"]
+	"extends": ["eslinter"],
+	"overrides": [
+    {
+      "files": [
+        "reddit-comment-reader/tools/logger.js"
+      ],
+			"rules": {
+				"no-console": "off" 
+			}
+	  }
+	]
 }

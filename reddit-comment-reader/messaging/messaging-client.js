@@ -1,14 +1,14 @@
-const faye = require('faye');
-const Util = require('../tools/common-tools.js');
-const LogManager = require('../tools/logger.js');
-const DiscordSender = require('discord-multi-bot');
+import faye from 'faye';
+import Util from '../tools/common-tools.js';
+import LogManager from '../tools/logger.js';
+import DiscordSender from 'discord-multi-bot';
 
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
 /**
  *
 */
-class MessagingClient {
+export class MessagingClient {
   constructor({ clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0 } = {}) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
@@ -24,7 +24,7 @@ class MessagingClient {
   }
 }
 
-class FayeMessagingClient extends MessagingClient {
+export class FayeMessagingClient extends MessagingClient {
   constructor({ clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0, fayeMessagesUrl = '/messages' } = {}) {
     super({ clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit });
     this.receivingMessagesURL = receivingMessagesURL;
@@ -52,7 +52,7 @@ class FayeMessagingClient extends MessagingClient {
   }
 }
 
-class DiscordMessagingClient extends MessagingClient {
+export class DiscordMessagingClient extends MessagingClient {
   constructor({ clientTagName = undefined, channelName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0 } = {}) {
     super({ clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit });
     this.discordToken = discordToken;
@@ -78,9 +78,3 @@ class DiscordMessagingClient extends MessagingClient {
     return DiscordSender.sendDiscordMessage(this.discordTagName, this.channelName, messageToSendToDiscord);
   }
 }
-
-module.exports = {
-  MessagingClient: MessagingClient,
-  FayeMessagingClient: FayeMessagingClient,
-  DiscordMessagingClient: DiscordMessagingClient
-};

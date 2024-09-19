@@ -5,7 +5,7 @@ const MAX_NUM_POSTS = 100;
 const https = require('https');
 
 if (!process.env.REDDIT_APP_ID || !process.env.REDDIT_APP_SECRET) {
-  // throw 'REDDIT_APP_ID && REDDIT_APP_SECRET environment variables must be set!';
+  throw 'REDDIT_APP_ID && REDDIT_APP_SECRET environment variables must be set!';
 }
 
 const reddit = new RedditApi({
@@ -145,15 +145,6 @@ function getValidNumberOfPosts(numberOfPosts)
   }
 	
   return numberOfPosts;
-}
-
-function getCommentsFromURL(url)
-{
-  return new Promise(function(resolve, reject) {
-    getDataFromUrl(url).then(getCommentObjectFromRawURLData).then(resolve).catch(function(error) {  
-      reject('error thrown for url: ' + url + ' error: ' + error);
-    });
-  });
 }
 
 class RedditClient

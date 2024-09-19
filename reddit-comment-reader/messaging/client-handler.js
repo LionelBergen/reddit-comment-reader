@@ -25,4 +25,4 @@ class ClientHandler {
   }
 }
 
-module.exports = new ClientHandler();
+export default new ClientHandler();
