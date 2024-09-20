@@ -14,7 +14,7 @@ const Logger = CreateSimpleLogger('database-util-test');
     const errorHandler = new ErrorHandler(process.env.DATABASE_URL_TEST);
     await errorHandler.handleError('fromerrorHandler', '1', '2');
   } catch(e) {
-    console.error('error...');
-    console.error(e);
+    Logger.error('error...');
+    Logger.error(e);
   }
 })();

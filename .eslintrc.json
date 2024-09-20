@@ -8,6 +8,14 @@
 			"rules": {
 				"no-console": "off" 
 			}
-	  }
+	  },
+		{
+			"files": [
+				"live-test/**/*"
+			],
+			"rules": {
+				"max-len": "off"
+			}
+		}
 	]
 }

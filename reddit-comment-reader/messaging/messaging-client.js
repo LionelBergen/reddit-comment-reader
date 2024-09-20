@@ -9,7 +9,12 @@ const Logger = LogManager.createInstance('RedditCommentProcessor.js');
  *
 */
 export class MessagingClient {
-  constructor({ clientTagName = undefined, blacklistedSubreddits = [], shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0 } = {}) {
+  constructor({
+    clientTagName = undefined,
+    blacklistedSubreddits = [],
+    shouldIgnoreModeratorComments = true,
+    timeBetweenSamePostInSubreddit = 0
+  } = {}) {
     this.clientTagName = clientTagName;
     this.blacklistedSubreddits = blacklistedSubreddits;
     this.shouldIgnoreModeratorComments = shouldIgnoreModeratorComments;
@@ -25,7 +30,14 @@ export class MessagingClient {
 }
 
 export class FayeMessagingClient extends MessagingClient {
-  constructor({ clientTagName = undefined, blacklistedSubreddits = [], receivingMessagesURL = undefined, shouldIgnoreModeratorComments = true, timeBetweenSamePostInSubreddit = 0, fayeMessagesUrl = '/messages' } = {}) {
+  constructor({
+    clientTagName = undefined,
+    blacklistedSubreddits = [],
+    receivingMessagesURL = undefined,
+    shouldIgnoreModeratorComments = true,
+    timeBetweenSamePostInSubreddit = 0,
+    fayeMessagesUrl = '/messages'
+  } = {}) {
     super({ clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit });
     this.receivingMessagesURL = receivingMessagesURL;
     this.fayeMessagesUrl = fayeMessagesUrl;
@@ -53,7 +65,14 @@ export class FayeMessagingClient extends MessagingClient {
 }
 
 export class DiscordMessagingClient extends MessagingClient {
-  constructor({ clientTagName = undefined, channelName = undefined, blacklistedSubreddits = [], discordToken = undefined, shouldIgnoreModeratorComments = false, timeBetweenSamePostInSubreddit = 0 } = {}) {
+  constructor({
+    clientTagName = undefined,
+    channelName = undefined,
+    blacklistedSubreddits = [],
+    discordToken = undefined,
+    shouldIgnoreModeratorComments = false,
+    timeBetweenSamePostInSubreddit = 0
+  } = {}) {
     super({ clientTagName, blacklistedSubreddits, shouldIgnoreModeratorComments, timeBetweenSamePostInSubreddit });
     this.discordToken = discordToken;
     this.channelName = channelName;
@@ -66,7 +85,8 @@ export class DiscordMessagingClient extends MessagingClient {
 
   sendMessage({ redditComment = undefined } = {}) {
     super.sendMessage();
-    let messageToSendToDiscord = `comment: ${redditComment.body}\r\nlink: https://www.reddit.com${redditComment.permalink}`;
+    let messageToSendToDiscord = `comment: ${redditComment.body}\r\n`
+      + `link: https://www.reddit.com${redditComment.permalink}`;
     // Discord does not allow messages over 2000.
     if (messageToSendToDiscord.length >= 2000) {
       const numberOfCharactersToTrim = (messageToSendToDiscord.length - 2000) + 1;

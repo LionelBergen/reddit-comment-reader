@@ -82,6 +82,6 @@ class SimpleConsoleLogger {
 // We only need 1 instance of this class
 export default (process.env._ && process.env._.indexOf("heroku")) ? new LogHeroku() : new LogLocal();
 
-export function CreateSimpleLogger(testName) { 
+export function CreateSimpleLogger(testName) {
   return new SimpleConsoleLogger(testName);
 }

@@ -1,6 +1,9 @@
-const CommentSearchProcessor = require('../../reddit_comment_reader/tools/CommentFinder.js');
-const DatabaseUtil = require('../../reddit_comment_reader/tools/DatabaseUtil.js');
-require('dotenv').config();
+import CommentSearchProcessor from '../../reddit_comment_reader/tools/CommentFinder.js';
+import DatabaseUtil from '../../reddit_comment_reader/tools/DatabaseUtil.js';
+import 'dotenv/config';
+import { CreateSimpleLogger } from '../../reddit-comment-reader/tools/logger.js';
+
+const Logger = CreateSimpleLogger('comment-finder-test');
 
 const EXPECTED_NUMBER_OF_ROWS = 17;
 const NO_REPLY = null;
@@ -12,7 +15,7 @@ if (!process.env.DATABASE_URL_TEST) {
 
 DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL_TEST).then(function(commentSearchObjects) {
   const CommentFinder = new CommentSearchProcessor(commentSearchObjects, COMMENT_CACHE_SIZE);
-  console.log('Connection to database finished, running tests...');
+  Logger.info('Connection to database finished, running tests...');
   testComments(commentSearchObjects, CommentFinder);
 });
 
@@ -39,7 +42,7 @@ function testComments(commentPredicateObjects, commentFinder) {
 
   testUsernameFilter(commentFinder);
 
-  console.log('tests finished');
+  Logger.info('tests finished');
 }
 
 /**
