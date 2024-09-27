@@ -1,5 +1,5 @@
-const Util = require('./CommonTools.js');
-const LogManager = require('./Logger.js');
+import Util from './common-tools.js';
+import LogManager from './logger.js';
 
 const Logger = LogManager.createInstance('CommentFinder.js');
 
@@ -8,21 +8,21 @@ class CommentSearchProcessor {
     this.CommentPredicateObjects = commentPredicateObjects;
     this.commentHistory = Util.getArrayWithLimitedLength(numberOfRowsInCache, false);
   }
-	
+
   searchComment(comment) {
     let foundPredicate = null;
-		
+
     if (!this.commentHistory.includes(comment.id)) {
       for (let i=0; i < this.CommentPredicateObjects.length; i++) {
-        let commentPredicateObj = this.CommentPredicateObjects[i];
-				
+        const commentPredicateObj = this.CommentPredicateObjects[i];
+
         if (commentSearchObjMatchesComment(comment, commentPredicateObj)) {
           foundPredicate = commentPredicateObj;
           Logger.debug('found: ' + foundPredicate + ' for comment: ' + comment);
           break;
         }
       }
-			
+
       if (foundPredicate != null) {
         this.commentHistory.push(comment.id);
       }
@@ -40,7 +40,7 @@ function stripCommentOfUserMentions(comment) {
   if (comment.includes('u/')) {
     return comment.replace(/u\/[A-Za-z0-9_-]+/, '');
   }
-  
+
   return comment;
 }
 
@@ -48,8 +48,8 @@ function commentSearchObjMatchesComment(comment, searcher) {
   if (searcher.SubredditMatch.test(comment.subreddit)) {
     return searcher.CommentMatch.test(stripCommentOfUserMentions(comment.body));
   }
-  
+
   return false;
 }
 
-module.exports = CommentSearchProcessor;
+export default CommentSearchProcessor;

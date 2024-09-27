@@ -1,2 +1,2 @@
 SET PGPASSWORD=postgresql
-psql -h localhost -U postgres -f create_local_database.sql
+psql -h localhost -U postgres -f %~dp0\create_local_database.sql

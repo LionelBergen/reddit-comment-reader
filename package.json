@@ -1,34 +1,50 @@
 {
   "name": "reddit-reader",
-  "version": "1.0.0",
-  "description": "Read comments from reddit, searching for specific ones and printing them somewhere",
+  "version": "2.0.0-beta.2",
+  "type": "module",
+  "description": "Continuously Reads live comments from all of reddit and sends the info for comments matching a regexp from a list",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "test": "mocha",
-    "livetest_regexp": "node live_test/regexp/CommentFinderTest.js",
-    "livetest_discord": "node live_test/discord/DiscordSenderLiveTest.js",
-    "livetest_general": "node live_test/general/DatabaseUtilTest.js",
+    "livetest_regexp": "node live-test/regexp/CommentFinderTest.js",
+    "livetest_discord": "node live-test/discord/DiscordSenderLiveTest.js",
+    "livetest_general": "node live-test/general/database-util-test.js",
     "eslint": "eslint --ignore-path .gitignore .",
     "lint_auto_fix": "eslint --fix --ignore-path .gitignore ."
   },
-  "author": "",
+  "author": "Lionel Bergen",
   "license": "ISC",
+  "keywords": [
+    "reddit",
+    "api",
+    "reddit-api",
+    "reddit-bot",
+    "ecmascript-2016",
+    "async",
+    "2024"
+  ],
+  "bugs": {
+    "url": "https://github.com/LionelBergen/reddit-comment-reader/issues"
+  },
+  "homepage": "https://github.com/LionelBergen/reddit-comment-reader#readme",
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "dependencies": {
     "discord-multi-bot": "^1.0.3",
-    "dotenv": "^8.2.0",
-    "fast-printf": "^1.3.0",
-    "faye": "^1.4.0",
-    "https": "^1.0.0",
-    "pg": "^8.4.1",
-    "ping": "^0.4.0",
-    "reddit-simple-client": "^1.0.6",
-    "winston": "^3.3.3"
+    "dotenv": "16.4.5",
+    "fast-printf": "1.6.9",
+    "faye": "1.4.0",
+    "pg": "8.12.0",
+    "ping": "0.4.4",
+    "winston": "3.14.2",
+    "reddit-simple-client": "2.0.0-beta.4"
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
-    "eslint-config-strongloop": "^2.1.0",
-    "mocha": "^8.2.1",
+    "eslint": "8.57.0",
+    "eslint-config-eslinter": "1.0.0",
+    "mocha": "10.7.3",
     "sinon": "^9.2.3"
   }
 }

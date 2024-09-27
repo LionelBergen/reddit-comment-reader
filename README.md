@@ -6,6 +6,13 @@ Reads comments from all of reddit and picks out *phrases*, then sends any found 
 `npm run test` - Runs tests, not including 'live' tests, which require environment variables filled with tokens.  
 `npm run eslint` - Used to keep consistent format. This should be pass before every commit  
 
+Quick Start  
+-----------  
+1) Have postgresql service running  
+2) Ensure you have a database user `postgres` with password `postgresql` (Or modify the batch file below to correct username/password)  
+3) Run `reddit-comment-reader\database\create_local_database.sql` **This will drop the database if it exists and recreate it**   
+4) 
+
 Database Connection
 -------------------
 Database connection is expected to be contained in an evironment variable 'DATABASE_URL'

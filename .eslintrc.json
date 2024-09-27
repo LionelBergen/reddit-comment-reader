@@ -1,23 +1,21 @@
 {
-	"extends": "eslint:recommended",
-	
-    "parserOptions": {
-        "ecmaVersion": 2017
-    },
-
-    "env": {
-		"browser": false,
-        "node": true,
-		"es6": true,
-		"mocha": true
-    },
-	
-	"rules": {
-		"indent": ["error", 2],
-		"linebreak-style": ["error", "unix"],
-		"semi": ["error", "always"],
-		"no-undef": 1,
-		"curly": ["error", "all"],
-		"brace-style": ["error", "1tbs"]
-	}
+	"extends": ["eslinter"],
+	"overrides": [
+    {
+      "files": [
+        "reddit-comment-reader/tools/logger.js"
+      ],
+			"rules": {
+				"no-console": "off" 
+			}
+	  },
+		{
+			"files": [
+				"live-test/**/*"
+			],
+			"rules": {
+				"max-len": "off"
+			}
+		}
+	]
 }

@@ -3,13 +3,20 @@ DROP DATABASE IF EXISTS reddit_comment_reader;
 CREATE DATABASE reddit_comment_reader;
 \c reddit_comment_reader;
 
+CREATE TABLE public."RegexpCommentHandle" (
+	"Handle" text NOT NULL UNIQUE,
+    "type" text NOT NULL
+);
+
+INSERT INTO public."RegexpCommentHandle"("Handle", "type") VALUES ('Agree-with-you', 'Reddit');
+
 CREATE TABLE public."RegexpComment" (
     "SubredditMatch" text DEFAULT '.*'::text NOT NULL,
     "CommentMatch" text NOT NULL,
     "ReplyMessage" text NOT NULL,
     "IsReplyRegexp" boolean DEFAULT false,
     id integer NOT NULL,
-    "Handle" text DEFAULT 'Agree-with-you'::text NOT NULL
+    "Handle" text NOT NULL
 );
 
 /*
@@ -30,12 +37,12 @@ INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessa
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '.*?(then|than) (everyone|everbody|everybody|all people|every one|every body) (stood up|standed up)? ?(and)? ?(clapped|applauded|appluaded|standing ovation).*', 'Can confirm this is true. I was also applauding.', false, 117, 'Agree-with-you');
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '^(.*)?(?i)((what|whats|what''s) ((the|da) (fudge|hell|heck|fuck|fucking) )?((is|does) )?this( supposed to)? ((fucking|flipping) )?mean)[?]?$', '>this\n>[th is]  \n>1.  \n>*(used to indicate a person, thing, idea, state, event, time, remark, etc., as present, near, just mentioned or pointed out, supposed to be understood, or by way of emphasis):    e.g **This is my coat.**', false, 118, 'Agree-with-you');
 INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '^(.*)?(?i)((what|whats|what''s) ((the|da) (fudge|hell|heck|fuck|fucking) )?((is|does) )?that( supposed to)? ((fucking|flipping) )?mean)[?]?$', '>that\n>[th at; unstressed th uh t]  \n>1.  \n>*(used to indicate a person, thing, idea, state, event, time, remark, etc., as pointed out or present, mentioned before, supposed to be understood, or by way of emphasis):*    e.g **That is her mother. After that we saw each other.**', false, 119, 'Agree-with-you');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 135, 'DISCORD');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 136, 'DISCORD');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(denton|dentan).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 137, 'DISCORD');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan))', 'hello', false, 138, 'DISCORD');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze))', 'hello', false, 139, 'DISCORD');
-INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(denton|dentan))', 'hello', false, 140, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 135, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 136, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(denton|dentan).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd))', 'hello', false, 137, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan))', 'hello', false, 138, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(denton|dentan).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze))', 'hello', false, 139, 'DISCORD');
+--INSERT INTO public."RegexpComment"("SubredditMatch", "CommentMatch", "ReplyMessage", "IsReplyRegexp", "id", "Handle") VALUES ('.*', '(?i)(.*(delivery|deliver|delivry|ship|shipped|delivered|delivrd).*(alcohol|beer|vodka|rum|alchol|wine|booz|booze).*(denton|dentan))', 'hello', false, 140, 'DISCORD');
 
 CREATE TABLE public."ErrorTable" (
     id integer NOT NULL,
