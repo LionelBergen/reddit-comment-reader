@@ -40,8 +40,7 @@ class DatabaseUtil {
       return commentSearchPredicates;
     } catch(err) {
       Logger.error('error getting data from database');
-      // Logger.error(err);
-      console.error(err);
+      Logger.error(err);
       throw err;
     }
   }
@@ -63,8 +62,7 @@ class DatabaseUtil {
         Logger.info(result);
         if (err) {
           Logger.error('error getting data from database');
-          // Logger.error(err);
-          console.error(err);
+          Logger.error(err);
           return reject(err);
         }
 

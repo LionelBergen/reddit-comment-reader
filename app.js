@@ -6,7 +6,7 @@ import { FayeMessagingClient } from './reddit-comment-reader/messaging/messaging
 import RedditCommentProcessor from './reddit-comment-reader/reddit-comment-processor.js';
 import LogManager from './reddit-comment-reader/tools/logger.js';
 
-import { CreateAuthedClient } from 'reddit-simple-client'
+import { CreateAuthedClient } from 'reddit-simple-client';
 import 'dotenv/config';
 
 const Logger = LogManager.createInstance('app.js');
@@ -85,7 +85,8 @@ function isLocal() {
 }
 
 (async () => {
-  const commentSearchObjects = await DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL, isLocal());
+  const commentSearchObjects =
+    await DatabaseUtil.getCommentSearchObjectsFromDatabase(process.env.DATABASE_URL, isLocal());
   Logger.info('Authenticating Reddit Client');
   const RedditClient = await CreateAuthedClient({ redditAuth });
 

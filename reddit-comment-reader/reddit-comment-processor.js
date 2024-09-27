@@ -128,7 +128,6 @@ async function processComment(comment, commentObject, redditClient, clientHandle
 }
 
 function publishComment(comment, commentObject, messagingClient) {
-  console.log(`Found comment: ${comment} redditReply: ${commentObject.ReplyMessage}`);
   return messagingClient.sendMessage({ redditComment: comment, redditReply: commentObject.ReplyMessage });
 }
 
