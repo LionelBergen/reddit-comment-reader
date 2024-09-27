@@ -29,7 +29,8 @@ class DatabaseUtil {
     const commentSearchPredicates = [];
 
     try {
-      const results = await Query(client, 'SELECT * FROM "RegexpComment').rows;
+      const result = await Query(client, 'SELECT * FROM "RegexpComment"');
+      const results = result.rows;
       for (let i=0; i<results.length; i++) {
         const commentSearchObject = createCommentSearchObjectFromDatabaseObject(results[i]);
         commentSearchPredicates.push(commentSearchObject);
@@ -39,7 +40,8 @@ class DatabaseUtil {
       return commentSearchPredicates;
     } catch(err) {
       Logger.error('error getting data from database');
-      Logger.error(err);
+      // Logger.error(err);
+      console.error(err);
       throw err;
     }
   }
@@ -61,7 +63,8 @@ class DatabaseUtil {
         Logger.info(result);
         if (err) {
           Logger.error('error getting data from database');
-          Logger.error(err);
+          // Logger.error(err);
+          console.error(err);
           return reject(err);
         }
 
