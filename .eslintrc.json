@@ -1,5 +1,6 @@
 {
 	"extends": ["eslinter"],
+	"rules": {},
 	"overrides": [
     {
       "files": [

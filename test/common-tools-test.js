@@ -6,7 +6,7 @@ describe('GetUniqueArray', () => {
     const subredditModsList = Util.getUniqueArray(3000);
 
     const var1 = { id: 'oneTwoThree' };
-    var1.modList = [1,2,3,4,5];
+    var1.modList = [1, 2, 3, 4, 5];
 
     subredditModsList.push(var1);
 

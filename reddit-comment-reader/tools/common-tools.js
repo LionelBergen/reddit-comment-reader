@@ -14,7 +14,7 @@ class Util {
         this.shift();
       }
 
-      return Array.prototype.push.apply(this,arguments);
+      return Array.prototype.push.apply(this, arguments);
     };
 
     return array;
@@ -42,7 +42,7 @@ class Util {
         this.shift();
       }
 
-      return Array.prototype.push.apply(this,arguments);
+      return Array.prototype.push.apply(this, arguments);
     };
 
     array.get = function(otherObject) {

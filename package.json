@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "eslint": "8.57.0",
-    "eslint-config-eslinter": "1.0.0",
+    "eslint-config-eslinter": "1.0.1",
     "mocha": "10.7.3",
     "sinon": "^9.2.3"
   }

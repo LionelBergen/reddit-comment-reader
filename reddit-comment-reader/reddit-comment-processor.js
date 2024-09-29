@@ -77,7 +77,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
   const thisSubredditModList = { id: comment.subreddit };
 
   if (messageClient.shouldIgnoreModeratorComments) {
-    // If we already have a moderator list for the comment, check if we should skip this comment
+    // If we already have a moderator list for the subreddit, check if we should skip this comment
     if (subredditModsList.includes(thisSubredditModList)) {
       if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author)) {
         Logger.info('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
