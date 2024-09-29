@@ -64,7 +64,8 @@ async function processComment(comment, commentObject, redditClient, clientHandle
       }
     // Otherwise, populate the moderator list and re-run this function
     } else {
-      thisSubredditModList.modList = await redditClient.getSubredditModList(thisSubredditModList.id);
+      const modList = await redditClient.getSubredditModList(thisSubredditModList.id);
+      thisSubredditModList.modList = modList.map(e => e.name);
       subredditModsList.push(thisSubredditModList);
       Logger.info('pushed: ' + thisSubredditModList.id);
 
