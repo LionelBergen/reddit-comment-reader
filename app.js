@@ -48,7 +48,7 @@ const redditAuth = {
   appSecret: process.env.REDDIT_APP_SECRET,
   redirectUrl: 'https://github.com/LionelBergen/reddit-comment-reader',
   accessToken: null,
-  userAgent: 'u/dusty-trash reddit-client/2.0.0 by Lionel Bergen'
+  userAgent: 'u/dusty-trash reddit-comment-reader/2.0.0 by Lionel Bergen'
 };
 
 // TODO: get discord clients from the database...
