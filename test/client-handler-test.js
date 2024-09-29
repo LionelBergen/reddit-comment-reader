@@ -1,26 +1,28 @@
-const ClientHandler = require('../reddit-comment-reader/messaging/client-handler.js').createNewClient();
-const MessagingClients = require('../reddit-comment-reader/messaging/messaging-client.js');
-const assert = require('assert');
+import { ClientHandler } from '../reddit-comment-reader/messaging/client-handler.js';
+import { FayeMessagingClient } from '../reddit-comment-reader/messaging/messaging-client.js';
+import assert from 'assert';
 
 describe('Client Handler addClients', () => {
   it('should add to a list of clients', () => {
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient());
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient());
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient(), new MessagingClients.FayeMessagingClient());
+    const ClientHandlerImpl = new ClientHandler();
+    ClientHandlerImpl.addClients(new FayeMessagingClient());
+    ClientHandlerImpl.addClients(new FayeMessagingClient());
+    ClientHandlerImpl.addClients(new FayeMessagingClient(), new FayeMessagingClient());
 
-    assert.equal(4, ClientHandler.clients.length);
+    assert.equal(4, ClientHandlerImpl.clients.length);
   });
 });
 
 describe('Client Handler getClientByTagName', () => {
   it('should find client by name', () => {
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({ clientTagName: 'test1' }));
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({ clientTagName: 'test2' }));
-    ClientHandler.addClients(new MessagingClients.FayeMessagingClient({ clientTagName: 'test3' }), new MessagingClients.FayeMessagingClient({ clientTagName: 'test4' }));
+    const ClientHandlerImpl = new ClientHandler();
+    ClientHandlerImpl.addClients(new FayeMessagingClient({ clientTagName: 'test1' }));
+    ClientHandlerImpl.addClients(new FayeMessagingClient({ clientTagName: 'test2' }));
+    ClientHandlerImpl.addClients(new FayeMessagingClient({ clientTagName: 'test3' }), new FayeMessagingClient({ clientTagName: 'test4' }));
 
-    assert.equal('test3', ClientHandler.getClientByTagName('test3').clientTagName);
-    assert.equal('test2', ClientHandler.getClientByTagName('test2').clientTagName);
-    assert.equal('test1', ClientHandler.getClientByTagName('test1').clientTagName);
-    assert.equal('test4', ClientHandler.getClientByTagName('test4').clientTagName);
+    assert.equal('test3', ClientHandlerImpl.getClientByTagName('test3').clientTagName);
+    assert.equal('test2', ClientHandlerImpl.getClientByTagName('test2').clientTagName);
+    assert.equal('test1', ClientHandlerImpl.getClientByTagName('test1').clientTagName);
+    assert.equal('test4', ClientHandlerImpl.getClientByTagName('test4').clientTagName);
   });
 });

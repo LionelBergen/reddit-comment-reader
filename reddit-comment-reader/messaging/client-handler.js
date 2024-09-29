@@ -1,4 +1,4 @@
-class ClientHandler {
+export class ClientHandler {
   constructor() {
     this.clients = [];
   }

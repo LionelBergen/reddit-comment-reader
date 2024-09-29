@@ -1,5 +1,5 @@
-const Util = require('../reddit-comment-reader/tools/common-tools.js');
-const assert = require('assert');
+import Util from '../reddit-comment-reader/tools/common-tools.js';
+import assert from 'assert';
 
 describe('GetUniqueArray', () => {
   it('should override duplicates', () => {
