@@ -21,48 +21,27 @@ class RedditCommentProcessor {
    * @param comments To process
    * @return A promise containing number of comments processed
   */
-  processCommentsList(comments) {
-    return new Promise((resolve, reject) => {
-      let numberOfCommentsProcessed = 0;
-      let numberOfCommentsRead = 0;
-      const errors = [];
+  async processCommentsList(comments) {
+    let numberOfCommentsProcessed = 0;
+    const errors = [];
 
-      // Don't use foreach here, because we're dealing with async
-      for (let i=0; i<comments.length; i++) {
-        const foundMessage = this.commentFinder.searchComment(comments[i]);
-        if (foundMessage) {
-          try {
-            processComment(comments[i], foundMessage, this.redditClient, this.clientHandler).then(function(data) {
-              numberOfCommentsRead++;
-              numberOfCommentsProcessed += data;
+    // Don't use foreach here, because we're dealing with async
+    for (let i=0; i<comments.length; i++) {
+      const foundMessage = this.commentFinder.searchComment(comments[i]);
 
-              if (numberOfCommentsRead == comments.length) {
-                return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
-              }
-            }).catch(function(error) {
-              numberOfCommentsRead++;
-              // If there's an error with a comment, we still want to continue with the rest of the comments
-              handleError(comments[i], error, errors);
-              if (numberOfCommentsRead == comments.length) {
-                return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
-              }
-            });
-          } catch(error) {
-            numberOfCommentsRead++;
-            // If there's an error with a comment, we still want to continue with the rest of the comments
-            handleError(comments[i], error, errors);
-            if (numberOfCommentsRead == comments.length) {
-              return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
-            }
-          }
-        } else {
-          numberOfCommentsRead++;
-          if (numberOfCommentsRead == comments.length) {
-            return errors.length == 0 ? resolve(numberOfCommentsProcessed) : reject(errors);
-          }
+      if (foundMessage) {
+        try {
+          const commentsProcessed =
+            await processComment(comments[i], foundMessage, this.redditClient, this.clientHandler);
+          numberOfCommentsProcessed += commentsProcessed;
+        } catch(error) {
+          // If there's an error with a comment, we still want to continue with the rest of the comments
+          handleError(comments[i], error, errors);
         }
       }
-    });
+    }
+
+    return errors.length == 0 ? numberOfCommentsProcessed : errors;
   }
 }
 
@@ -81,7 +60,7 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     if (subredditModsList.includes(thisSubredditModList)) {
       if (subredditModsList.get(thisSubredditModList).modList.includes(comment.author)) {
         Logger.info('Modderator comment!!! :' + comment.author + ' comment: ' + comment.body);
-        return Promise.resolve(0);
+        return 0;
       }
     // Otherwise, populate the moderator list and re-run this function
     } else {
@@ -93,41 +72,38 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     }
   }
 
-  return new Promise((resolve, reject) => {
-    if (userIgnoreList.includes(comment.author)) {
-      Logger.info('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
-      return resolve(0);
-    }
+  if (userIgnoreList.includes(comment.author)) {
+    Logger.info('Skipping comment, is posted by: ' + comment.author + ' comment: ' + comment.body);
+    return 0;
+  }
 
-    // filter by disallowed subreddits
-    if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase())) {
-      Logger.info('Ignoring comment, disallowed subreddit found for comment: ');
-      Logger.info(comment);
-      return resolve(0);
-    }
+  // filter by disallowed subreddits
+  if (messageClient.blacklistedSubreddits.includes(comment.subreddit.toLowerCase())) {
+    Logger.info('Ignoring comment, disallowed subreddit found for comment: ');
+    Logger.info(comment);
+    return 0;
+  }
 
-    if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit)) {
-      publishComment(comment, commentObject, messageClient).then(function() {
-        commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-        return resolve(1);
-      }).catch(reject);
+  if (!commentHistory.includes(timeThisReplyWasLastSubmittedOnThisSubreddit)) {
+    await publishComment(comment, commentObject, messageClient);
+    commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+    return 1;
+  } else {
+    const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
+
+    if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit) {
+      await publishComment(comment, commentObject, messageClient);
+
+      commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
+      return 1;
     } else {
-      const existingComment = commentHistory.get(timeThisReplyWasLastSubmittedOnThisSubreddit);
-
-      if (Util.getSecondsSinceUTCTimestamp(existingComment.created) > messageClient.timeBetweenSamePostInSubreddit) {
-        publishComment(comment, commentObject, messageClient).then(function() {
-          commentHistory.push(timeThisReplyWasLastSubmittedOnThisSubreddit);
-          return resolve(1);
-        }).catch(reject);
-      } else {
-        Logger.info('skipping comment, we\'ve already posted to this subreddit recently!');
-        return resolve(0);
-      }
+      Logger.info('skipping comment, we\'ve already posted to this subreddit recently!');
+      return 0;
     }
-  });
+  }
 }
 
-function publishComment(comment, commentObject, messagingClient) {
+async function publishComment(comment, commentObject, messagingClient) {
   return messagingClient.sendMessage({ redditComment: comment, redditReply: commentObject.ReplyMessage });
 }
 

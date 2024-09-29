@@ -52,7 +52,7 @@ export class FayeMessagingClient extends MessagingClient {
   sendMessage({ fayeMessagesUrl = this.fayeMessagesUrl, redditComment = undefined, redditReply = undefined } = {}) {
     super.sendMessage();
     this.client.publish(fayeMessagesUrl, { comment: redditComment, reply: redditReply });
-    return Promise.resolve(1);
+    return 1;
   }
 
   sendIdleMessageWhenInactive(secondsOfIdleToTriggerMessage) {
@@ -83,8 +83,8 @@ export class DiscordMessagingClient extends MessagingClient {
     this.discordTagName = await DiscordSender.initNewDiscordClient(this.discordToken);
   }
 
-  sendMessage({ redditComment = undefined } = {}) {
-    super.sendMessage();
+  async sendMessage({ redditComment = undefined } = {}) {
+    await super.sendMessage();
     let messageToSendToDiscord = `comment: ${redditComment.body}\r\n`
       + `link: https://www.reddit.com${redditComment.permalink}`;
     // Discord does not allow messages over 2000.
