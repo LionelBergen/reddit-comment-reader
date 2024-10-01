@@ -15,7 +15,7 @@ class ErrorHandler {
       await DatabaseUtil.writeErrorToDatabase(
         this.databaseConnectionUrl,
         error.error,
-        error.error.stack,
+        error.error?.stack,
         error.error,
         error.redditComment);
     } else {

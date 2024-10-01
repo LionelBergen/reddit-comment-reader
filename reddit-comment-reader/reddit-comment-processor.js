@@ -5,6 +5,7 @@ import LogManager from './tools/logger.js';
 const Logger = LogManager.createInstance('RedditCommentProcessor.js');
 
 const userIgnoreList = ['agree-with-you'];
+const subredditIgnoreList = [];
 const commentHistory = Util.getUniqueArray(3000);
 const subredditModsList = Util.getUniqueArray(3000);
 
@@ -55,6 +56,12 @@ async function processComment(comment, commentObject, redditClient, clientHandle
   const messageClient = clientHandler.getClientByTagName(commentObject.ClientHandler);
   const thisSubredditModList = { id: comment.subreddit };
 
+  if (subredditIgnoreList.includes(comment.subreddit)) {
+    Logger.error(`skipping subreddit: ${comment.subreddit} Possible banned.`);
+    Logger.info(`here is the subredditIgnoreList:`);
+    Logger.info(subredditIgnoreList);
+  }
+
   if (messageClient.shouldIgnoreModeratorComments) {
     // If we already have a moderator list for the subreddit, check if we should skip this comment
     if (subredditModsList.includes(thisSubredditModList)) {
@@ -65,11 +72,17 @@ async function processComment(comment, commentObject, redditClient, clientHandle
     // Otherwise, populate the moderator list and re-run this function
     } else {
       const modList = await redditClient.getSubredditModList(thisSubredditModList.id);
-      thisSubredditModList.modList = modList.map(e => e.name);
-      subredditModsList.push(thisSubredditModList);
-      Logger.info('pushed: ' + thisSubredditModList.id);
 
-      return processComment(comment, commentObject, redditClient, clientHandler);
+      if (modList && !modList.error) {
+        thisSubredditModList.modList = modList.map(e => e.name);
+        subredditModsList.push(thisSubredditModList);
+        Logger.info('pushed to subreddit mod list: ' + thisSubredditModList.id);
+        return processComment(comment, commentObject, redditClient, clientHandler);
+      } else {
+        Logger.error(`Could not get modlist from subreddit ${thisSubredditModList.id} ${modList.message} code: ${modList.error}`)
+        Logger.error(`added ${comment.subreddit} to list of skipped subreddits`);
+        subredditIgnoreList.push(comment.subreddit);
+      }
     }
   }
 
