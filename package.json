@@ -39,7 +39,7 @@
     "pg": "8.12.0",
     "ping": "0.4.4",
     "winston": "3.14.2",
-    "reddit-simple-client": "2.0.0-beta.5"
+    "reddit-simple-client": "2.0.0-beta.7"
   },
   "devDependencies": {
     "eslint": "8.57.0",
