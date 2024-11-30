@@ -19,7 +19,7 @@ Database Connection
 -------------------
 Database connection is expected to be contained in an evironment variable 'DATABASE_URL'
 
-Example: SET DATABASE_URL=DATABASE_URL=postgres://postgres:postgresql@localhost:5432/reddit_comment_reader  
+Example: SET DATABASE_URL=postgres://postgres:postgresql@localhost:5432/reddit_comment_reader  
 
 *Note on windows I get an error when setting the above, but it works regardless of error*
 
@@ -86,7 +86,8 @@ Database Tables
 
 Reddit API connection
 ---------------------
-This program does not use an authenticated client. Since none is required  for reading data from Reddit's api.
+~This program does not use an authenticated client. Since none is required  for reading data from Reddit's api.~    
+*Since Reddit's 2023 API changes, this program now uses an Authenticated client. Also the number of comments that can be retrieved has lessened.*  
 
 Uses an https client *require('https')* to make requests to 'reddit.com/all/comments.json' and occassionally 'reddit.com/subreddit/moderators.json'.
 
@@ -98,7 +99,8 @@ Other notes
 -----------
 **Program is hardcoded to ignore moderator comments**. Done by querying the URL for the appropriate subreddit. A variable is maintained and requests to a single subreddit are only made once per program duration
 
-**Makes a request to a Reddit URL every 1100 milliseconds**. Reddit may block connections that make requests less than 1000 milliseconds and I've found using that exact limit causes issues
+**Makes a request to a Reddit URL every 1100 milliseconds**. Reddit may block connections that make requests less than 1000 milliseconds and I've found using that exact limit causes issues  
+*Reddit as of 2023 has silently changed the number of comments that can be retrieved.*  
 
 **Ignores comments from blacklisted subreddits**. Some serious subreddits are hardcoded to be ignored, such as /r/depression
 
