@@ -11,7 +11,6 @@ Quick Start
 1) Have postgresql service running  
 2) Ensure you have a database user `postgres` with password `postgresql` (Or modify the batch file below to correct username/password)  
 3) Run `reddit-comment-reader\database\create_local_database.sql` **This will drop the database if it exists and recreate it**   
-4) 
 
 Database Connection
 -------------------
