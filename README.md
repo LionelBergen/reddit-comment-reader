@@ -10,13 +10,17 @@ Quick Start
 -----------  
 1) Have postgresql service running  
 2) Ensure you have a database user `postgres` with password `postgresql` (Or modify the batch file below to correct username/password)  
-3) Run `reddit-comment-reader\database\create_local_database.sql` **This will drop the database if it exists and recreate it**   
+3) Run `reddit-comment-reader\database\create_local_database.bat` *or .sh for linux* **This will drop the database if it exists and recreate it**   
+4) Create environment variables `DATABASE_URL` & `OUTPUT_URL`, or create an `.env` file with these values.  
+   E.G: (from project directory) `printf "DATABASE_URL=DATABASE_URL=postgres://postgres:postgresql@localhost:5432/reddit_comment_reader\nOUTPUT_URL=http://localhost:8000/" > .env`   
+5) Install dependencies by running `npm install`  
+6) Start the application by running `npm run start`  
 
 Database Connection
 -------------------
 Database connection is expected to be contained in an evironment variable 'DATABASE_URL'
 
-Example: SET DATABASE_URL=postgres://XXXXX<span>:</span>XXXX<span>@</span>ecX-50-1X-XXX-1XX.compute-1.amazonaws.com:5432/XdaXXXXXiuXevp?ssl=true&slfactory=org.postgresql.ssl.NonValidatingFactory
+Example: SET DATABASE_URL=DATABASE_URL=postgres://postgres:postgresql@localhost:5432/reddit_comment_reader  
 
 *Note on windows I get an error when setting the above, but it works regardless of error*
 

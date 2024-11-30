@@ -25,8 +25,8 @@ if (!process.env.DATABASE_URL) {
   throw 'please set process.env.DISCORD_TOKEN_PERSONAL!';
 } else if (!process.env.DISCORD_TOKEN_DENTON) {
   throw 'Please set DISCORD_TOKEN_DENTON.';*/
-} else if (!process.env.AGREE_WITH_YOU_URL) {
-  throw 'Please set Reddit client URL.';
+} else if (!process.env.OUTPUT_URL) {
+  throw 'Please set OUTPUT_URL environment variable.';
 }
 
 Logger.info('passed environment checks');
@@ -37,7 +37,7 @@ const errorHandler = new ErrorHandler(process.env.DATABASE_URL);
 const agreeWithYouClient = new FayeMessagingClient({
   clientTagName: 'Agree-with-you',
   blacklistedSubreddits: dissallowedSubreddits,
-  receivingMessagesURL: process.env.AGREE_WITH_YOU_URL,
+  receivingMessagesURL: process.env.OUTPUT_URL,
   timeBetweenSamePostInSubreddit: secondsTimeToWaitBetweenPostingSameCommentToASubreddit
 });
 
